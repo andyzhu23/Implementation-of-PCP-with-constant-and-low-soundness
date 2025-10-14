@@ -6,29 +6,26 @@
 
 #include "core.hpp"
 #include "csp.hpp"
+#include "three_col.hpp"
 
-enum class Color {
-    RED,
-    GREEN,
-    BLUE,
-};
-
-std::function<bool(Color, Color)> not_equal = [](Color a, Color b) -> bool { return a != b; };
+using namespace core;
+using namespace csp;
+using namespace three_col;
 
 // Test 1: simple CSP with not-equal constraints
 void test_case_1() {
     // build a 4-node CSP with simple not-equal constraints
     std::vector<Color> values { Color::RED, Color::GREEN, Color::BLUE, Color::RED };
-    std::vector<csp::Constraint<Color>> constraints {
+    std::vector<Constraint<Color>> constraints {
         {0, 1, not_equal},
         {1, 2, not_equal},
         {1, 3, not_equal},
     };
 
-    csp::CSP<2, Color> p(4, values, constraints);
+    CSP<2, Color> p(4, values, constraints);
 
     // radius = 1: each node's value in the powered CSP should include itself
-    auto powered = core::power_operation(p, 1);
+    auto powered = power_operation(p, 1);
     assert(powered.get_num_node() == 4);
     for (int i = 0; i < 4; ++i) {
         const auto &map_i = powered.get_value(i);
@@ -56,14 +53,14 @@ void test_case_1() {
 void test_case_2() {
     // same CSP as above; use radius = 2 to include nodes at distance 2
     std::vector<Color> values { Color::RED, Color::GREEN, Color::BLUE, Color::RED };
-    std::vector<csp::Constraint<Color>> constraints {
+    std::vector<Constraint<Color>> constraints {
         {0, 1, not_equal},
         {1, 2, not_equal},
         {1, 3, not_equal},
     };
 
-    csp::CSP<2, Color> p(4, values, constraints);
-    auto powered2 = core::power_operation(p, 2);
+    CSP<2, Color> p(4, values, constraints);
+    auto powered2 = power_operation(p, 2);
 
     // node 0 should see nodes 0,1 and 2 within radius 2 (0->1->2)
     const auto &map0 = powered2.get_value(0);
@@ -79,7 +76,7 @@ void test_case_2() {
 void test_case_3() {
     // 6 nodes, with a cycle and cross constraints
     std::vector<Color> values { Color::RED, Color::GREEN, Color::BLUE, Color::RED, Color::GREEN, Color::BLUE };
-    std::vector<csp::Constraint<Color>> constraints {
+    std::vector<Constraint<Color>> constraints {
         {0, 1, not_equal},
         {1, 2, not_equal},
         {2, 3, not_equal},
@@ -90,8 +87,8 @@ void test_case_3() {
         {2, 5, not_equal}  // cross constraint
     };
 
-    csp::CSP<2, Color> p(6, values, constraints);
-    auto powered3 = core::power_operation(p, 3);
+    CSP<2, Color> p(6, values, constraints);
+    auto powered3 = power_operation(p, 3);
 
 
     // For each node, check its neighborhood within radius 3 and values
