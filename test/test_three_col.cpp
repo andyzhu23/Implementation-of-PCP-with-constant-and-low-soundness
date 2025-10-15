@@ -2,6 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
+
 #include "three_col.hpp"
 #include "csp.hpp"
 
