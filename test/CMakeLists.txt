@@ -1,20 +1,16 @@
 # test/CMakeLists.txt
 
-# Add test executable
-add_executable(get_radius_nodes_test get_radius_nodes_test.cpp)
+# Add test executable for get_radius_nodes
+add_executable(test_get_radius_nodes test_get_radius_nodes.cpp)
+add_test(NAME Test_Get_Radius_Nodes COMMAND test_get_radius_nodes)
+target_include_directories(test_get_radius_nodes PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-# Add the test definition
-add_test(NAME Get_Radius_Nodes_Test COMMAND get_radius_nodes_test)
+# Add test executable for power_operation
+add_executable(test_power_operation test_power_operation.cpp)
+add_test(NAME Test_Power_Operation COMMAND test_power_operation)
+target_include_directories(test_power_operation PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-# Link to the main project's libraries or headers
-target_include_directories(get_radius_nodes_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
-# Add test executable
-add_executable(power_operation_test power_operation_test.cpp)
-
-# Add the test definition
-add_test(NAME Power_Operation_Test COMMAND power_operation_test)
-
-# Link to the main project's libraries or headers
-target_include_directories(power_operation_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+add_executable(test_three_col test_three_col.cpp ../../src/three_col.cpp)
+add_test(NAME Test_Three_Col COMMAND test_three_col)
+target_include_directories(test_three_col PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
