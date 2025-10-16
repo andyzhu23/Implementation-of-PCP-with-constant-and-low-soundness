@@ -18,6 +18,7 @@ public:
     BitPCP(size_t size);
 
     BitPCP(const std::vector<bool> &bits);
+    
     BitPCP(std::vector<bool> &&bits);
 
     BitPCP(const std::vector<bool> &bits, const std::vector<std::vector<std::pair<int, BitConstraint>>> &constraints);
