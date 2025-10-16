@@ -142,6 +142,45 @@ std::vector<std::function<void()>> test_cases = {
             assert(powered_vars[j] == bits[neighbors[j]]);
         }
         assert(powered.get_constraints(0).empty());
+    },
+    // Test 5: Large chain, just check it doesn't time out
+    []() -> void {
+            const int N = 1000;
+        std::vector<bool> bits(N, false);
+        pcp::BitPCP orig_pcp(bits);
+        for (int i = 0; i < N - 1; ++i) {
+            orig_pcp.add_constraint(i, i + 1, pcp::BitConstraint::UNDEFINED);
+        }
+        int radius = 100;
+        auto powered = core::powering_operation(orig_pcp, radius);
+        // Just check the size is correct
+        assert(powered.get_size() == N);
+    },
+    // Test 6: Large star, just check it doesn't time out
+    []() -> void {
+        const int N = 1000;
+        std::vector<bool> bits(N, false);
+        pcp::BitPCP orig_pcp(bits);
+        // Star: node 0 connected to all others
+        for (int i = 1; i < N; ++i) {
+            orig_pcp.add_constraint(0, i, pcp::BitConstraint::UNDEFINED);
+        }
+        int radius = 2;
+        auto powered = core::powering_operation(orig_pcp, radius);
+        assert(powered.get_size() == N);
+    },
+    // Test 7: Large star, just check it doesn't time out
+    []() -> void {
+        const int N = 10000;
+        std::vector<bool> bits(N, false);
+        pcp::BitPCP orig_pcp(bits);
+        // Star: node 0 connected to all others
+        for (int i = 1; i < N; ++i) {
+            orig_pcp.add_constraint(0, i, pcp::BitConstraint::UNDEFINED);
+        }
+        int radius = 1;
+        auto powered = core::powering_operation(orig_pcp, radius);
+        assert(powered.get_size() == N);
     }
 };
 
