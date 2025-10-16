@@ -1,3 +1,9 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-16 14:12:59
+ * @version 1.0.0
+ */
+
 #ifndef BITPCP_HPP
 #define BITPCP_HPP
 
@@ -6,7 +12,7 @@
 namespace pcp {
 
 enum class BitConstraint {
-    UNDEFINED,
+    UNDEFINED, // only used in unit tests
     EQUAL,
     NOT_EQUAL,
     ANY,
@@ -18,7 +24,7 @@ public:
     BitPCP(size_t size);
 
     BitPCP(const std::vector<bool> &bits);
-    
+
     BitPCP(std::vector<bool> &&bits);
 
     BitPCP(const std::vector<bool> &bits, const std::vector<std::vector<std::pair<int, BitConstraint>>> &constraints);

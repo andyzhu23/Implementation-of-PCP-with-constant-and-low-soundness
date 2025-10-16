@@ -1,8 +1,16 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-16 14:12:59
+ * @version 1.0.0
+ */
+
+#include <chrono>
+#include <random>
 #include <vector>
 
-#include "BitPCP.hpp"
-#include "core.hpp"
-#include "PoweringPCP.hpp"
+#include "pcp/BitPCP.hpp"
+#include "core/core.hpp"
+#include "pcp/PoweringPCP.hpp"
 
 namespace core {
 

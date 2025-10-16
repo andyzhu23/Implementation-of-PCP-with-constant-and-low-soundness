@@ -1,8 +1,14 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-16 14:12:59
+ * @version 1.0.0
+ */
+
 #include <queue>
 #include <vector>
 
-#include "BitPCP.hpp"
-#include "PoweringPCP.hpp"
+#include "pcp/BitPCP.hpp"
+#include "pcp/PoweringPCP.hpp"
 
 namespace pcp {
 

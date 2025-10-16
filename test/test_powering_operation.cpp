@@ -1,11 +1,17 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-16 14:12:59
+ * @version 1.0.0
+ */
+
 #include <functional>
 #include <iostream>
 #include <cassert>
 #include <vector>
 
-#include "core.hpp"
-#include "BitPCP.hpp"
-#include "PoweringPCP.hpp"
+#include "core/core.hpp"
+#include "pcp/BitPCP.hpp"
+#include "pcp/PoweringPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, radius 1
