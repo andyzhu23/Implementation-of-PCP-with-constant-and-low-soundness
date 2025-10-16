@@ -5,12 +5,12 @@
 
 namespace pcp {
 
-enum class BitConstraint : uint8_t {
-    UNDEFINED = 0,
-    EQUAL = 1,
-    NOT_EQUAL = 2,
-    ANY = 3,
-    NONE = 4,
+enum class BitConstraint {
+    UNDEFINED,
+    EQUAL,
+    NOT_EQUAL,
+    ANY,
+    NONE
 };
 
 class BitPCP {
