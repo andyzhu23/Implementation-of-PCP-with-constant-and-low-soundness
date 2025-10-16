@@ -14,10 +14,11 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++ cmake
+          sudo apt-get install -y g++-13 cmake
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_CXX_COMPILER=g++
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build
