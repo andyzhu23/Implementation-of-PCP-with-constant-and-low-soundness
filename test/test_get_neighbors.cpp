@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 
-#include "core.hpp"
 #include "BitPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {

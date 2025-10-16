@@ -1,4 +1,5 @@
 #include <queue>
+#include <vector>
 
 #include "BitPCP.hpp"
 #include "PoweringPCP.hpp"
