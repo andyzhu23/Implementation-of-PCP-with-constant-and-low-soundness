@@ -1,3 +1,9 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-17 16:04:24
+ * @version 1.0.0
+ */
+
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
@@ -8,9 +14,12 @@ namespace util {
 template <typename T>
 class index_map_guard {
 public:
-    index_map_guard(std::vector<size_t> &index_map, std::vector<T> &orig)
+    index_map_guard(std::vector<size_t> &index_map, const std::vector<T> &orig)
          : index_map(index_map), orig(orig) {
         for (size_t i = 0; i < orig.size(); ++i) {
+            if (orig[i] >= index_map.size()) {
+                throw std::out_of_range("index_map_guard: orig contains out-of-range index");
+            }
             index_map[orig[i]] = i;
         }
     }
@@ -20,20 +29,21 @@ public:
             index_map[x] = -1;
         }
     }
+    
 private:
     std::vector<size_t> &index_map;
-    std::vector<T> &orig;
+    const std::vector<T> &orig;
 };
 
 class visit_guard {
 public:
-    visit_guard(std::vector<bool> &visited, std::vector<int> &nodes);
+    visit_guard(std::vector<bool> &visited, const std::vector<int> &nodes);
     
     ~visit_guard();
 
 private:
     std::vector<bool> &visited;
-    std::vector<int> &nodes;
+    const std::vector<int> &nodes;
 };
 
 }

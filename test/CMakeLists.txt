@@ -16,3 +16,7 @@ target_include_directories(test_powering_operation PRIVATE ${CMAKE_SOURCE_DIR}/i
 add_executable(test_to_expander test_to_expander.cpp ../../src/core/to_expander.cpp ../../src/pcp/BitPCP.cpp ../../src/util.cpp)
 add_test(NAME Test_To_Expander COMMAND test_to_expander)
 target_include_directories(test_to_expander PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(test_reduce_degree test_reduce_degree.cpp ../../src/core/reduce_degree.cpp ../../src/pcp/BitPCP.cpp ../../src/util.cpp)
+add_test(NAME Test_Reduce_Degree COMMAND test_reduce_degree)
+target_include_directories(test_reduce_degree PRIVATE ${CMAKE_SOURCE_DIR}/include)

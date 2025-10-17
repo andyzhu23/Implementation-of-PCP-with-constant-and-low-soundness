@@ -26,14 +26,6 @@ public:
     BitPCP(const std::vector<bool> &bits);
 
     BitPCP(std::vector<bool> &&bits);
-
-    BitPCP(const std::vector<bool> &bits, const std::vector<std::vector<std::pair<int, BitConstraint>>> &constraints);
-
-    BitPCP(std::vector<bool> &&bits, const std::vector<std::vector<std::pair<int, BitConstraint>>> &constraints);
-
-    BitPCP(const std::vector<bool> &bits, std::vector<std::vector<std::pair<int, BitConstraint>>> &&constraints);
-
-    BitPCP(std::vector<bool> &&bits, std::vector<std::vector<std::pair<int, BitConstraint>>> &&constraints);
     
     // Member functions
     size_t get_size() const;
@@ -44,6 +36,8 @@ public:
 
     const std::vector<std::pair<int, BitConstraint>>& get_constraints(int index) const;
 
+    const std::vector<std::pair<int, int>>& get_constraints_indices(int index) const;
+
     void add_constraint(int index, int other_index, BitConstraint constraint);
 
     // BFS to get all neighbors within a certain radius
@@ -53,6 +47,8 @@ private:
     size_t size;
     std::vector<bool> bits;
     std::vector<std::vector<std::pair<int, BitConstraint>>> constraints;
+    // storing indexes of constraint in neighbor's list for quick access
+    std::vector<std::vector<std::pair<int, int>>> constraint_indices;
     mutable std::vector<bool> visited; // For BFS
 };
 

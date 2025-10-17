@@ -14,23 +14,26 @@ namespace pcp {
 
 // BitPCP class implementation
 // Constructors
-BitPCP::BitPCP(size_t size) : size(size), bits(size, false), constraints(size), visited(size, false) {}
+BitPCP::BitPCP(size_t size)
+ : size(size), 
+   bits(size, false), 
+   constraints(size), 
+   constraint_indices(size), 
+   visited(size, false) {}
 
-BitPCP::BitPCP(const std::vector<bool> &bits) : size(bits.size()), bits(bits), constraints(bits.size()), visited(size, false) {}
+BitPCP::BitPCP(const std::vector<bool> &bits)
+ : size(bits.size()), 
+   bits(bits), 
+   constraints(bits.size()), 
+   constraint_indices(bits.size()), 
+   visited(size, false) {}
 
-BitPCP::BitPCP(std::vector<bool> &&bits) : size(bits.size()), bits(std::move(bits)), constraints(size), visited(size, false) {}
-
-BitPCP::BitPCP(const std::vector<bool> &bits, const std::vector<std::vector<std::pair<int, BitConstraint>>> &constraints)
-    : size(bits.size()), bits(bits), constraints(constraints), visited(size, false) {}
-
-BitPCP::BitPCP(std::vector<bool> &&bits, const std::vector<std::vector<std::pair<int, BitConstraint>>> &constraints)
-    : size(bits.size()), bits(std::move(bits)), constraints(constraints), visited(size, false) {}
-
-BitPCP::BitPCP(const std::vector<bool> &bits, std::vector<std::vector<std::pair<int, BitConstraint>>> &&constraints)
-    : size(bits.size()), bits(bits), constraints(std::move(constraints)), visited(size, false) {}
-
-BitPCP::BitPCP(std::vector<bool> &&bits, std::vector<std::vector<std::pair<int, BitConstraint>>> &&constraints)
-    : size(bits.size()), bits(std::move(bits)), constraints(std::move(constraints)), visited(size, false) {}
+BitPCP::BitPCP(std::vector<bool> &&bits)
+ : size(bits.size()), 
+   bits(std::move(bits)), 
+   constraints(size), 
+   constraint_indices(size), 
+   visited(size, false) {}
 
 // Member functions
 size_t BitPCP::get_size() const { return size; }
@@ -39,11 +42,23 @@ bool BitPCP::get_bit(int index) const { return bits[index]; }
 
 void BitPCP::set_bit(int index, bool value) { bits[index] = value; }
 
-const std::vector<std::pair<int, BitConstraint>>& BitPCP::get_constraints(int index) const { return constraints[index]; }
+const std::vector<std::pair<int, BitConstraint>>& BitPCP::get_constraints(int index) const { 
+    return constraints[index]; 
+}
+
+const std::vector<std::pair<int, int>>& BitPCP::get_constraints_indices(int index) const { 
+    return constraint_indices[index]; 
+}
 
 void BitPCP::add_constraint(int index, int other_index, BitConstraint constraint) {
+    if (index < 0 || index >= static_cast<int>(size) 
+        || other_index < 0 || other_index >= static_cast<int>(size)) {
+        throw std::out_of_range("BitPCP::add_constraint: index out of range");
+    }
     constraints[index].emplace_back(other_index, constraint);
     constraints[other_index].emplace_back(index, constraint);
+    constraint_indices[index].emplace_back(other_index, constraints[other_index].size() - 1);
+    constraint_indices[other_index].emplace_back(index, constraints[index].size() - 1);
 }
 
 std::vector<int> BitPCP::get_neighbors(int index, int radius) const {
