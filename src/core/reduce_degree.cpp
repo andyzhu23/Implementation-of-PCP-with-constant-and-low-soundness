@@ -6,6 +6,7 @@
 
 #include <chrono>
 #include <random>
+#include <stdexcept>
 
 #include "core/core.hpp"
 #include "pcp/BitPCP.hpp"
