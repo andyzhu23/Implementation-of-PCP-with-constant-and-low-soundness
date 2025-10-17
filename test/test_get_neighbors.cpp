@@ -1,9 +1,15 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-16 14:12:59
+ * @version 1.0.0
+ */
+
 #include <cassert>
 #include <functional>
 #include <iostream>
 #include <vector>
 
-#include "BitPCP.hpp"
+#include "pcp/BitPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, alternating constraints

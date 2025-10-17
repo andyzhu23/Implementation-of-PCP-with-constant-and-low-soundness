@@ -1,8 +1,15 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-16 14:12:59
+ * @version 1.0.0
+ */
+
 #include <queue>
+#include <stdexcept>
 #include <vector>
 
-#include "BitPCP.hpp"
-#include "PoweringPCP.hpp"
+#include "pcp/BitPCP.hpp"
+#include "pcp/PoweringPCP.hpp"
 
 namespace pcp {
 
@@ -60,10 +67,18 @@ const std::vector<std::pair<int, PoweringConstraint>>& PoweringPCP::get_constrai
 }
 
 void PoweringPCP::add_constraint(int index, int other_index, const PoweringConstraint &constraint) {
+    if (index < 0 || index >= static_cast<int>(size) 
+            || other_index < 0 || other_index >= static_cast<int>(size)) {
+        throw std::out_of_range("PoweringPCP::add_constraint: index out of range");
+    }
     constraints[index].emplace_back(other_index, constraint);
 }
 
 void PoweringPCP::add_constraint(int index, int other_index, PoweringConstraint &&constraint) {
+    if (index < 0 || index >= static_cast<int>(size) 
+            || other_index < 0 || other_index >= static_cast<int>(size)) {
+        throw std::out_of_range("PoweringPCP::add_constraint: index out of range");
+    }
     constraints[index].emplace_back(other_index, constraint);
 }
 

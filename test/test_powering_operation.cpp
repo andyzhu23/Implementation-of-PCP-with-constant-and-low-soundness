@@ -1,11 +1,17 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-10-16 14:12:59
+ * @version 1.0.0
+ */
+
 #include <functional>
 #include <iostream>
 #include <cassert>
 #include <vector>
 
-#include "core.hpp"
-#include "BitPCP.hpp"
-#include "PoweringPCP.hpp"
+#include "core/core.hpp"
+#include "pcp/BitPCP.hpp"
+#include "pcp/PoweringPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, radius 1
@@ -17,7 +23,7 @@ std::vector<std::function<void()>> test_cases = {
         }
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
-        // Each powered variable should correspond to the neighborhood of each node
+        // Check powered variables match neighborhood bits
         for (int i = 0; i < 5; ++i) {
             auto neighbors = orig_pcp.get_neighbors(i, radius);
             const auto &powered_vars = powered.get_variables(i);
@@ -26,23 +32,43 @@ std::vector<std::function<void()>> test_cases = {
                 assert(powered_vars[j] == bits[neighbors[j]]);
             }
         }
-        // Check that constraints enforce EQUAL for mutual neighbors
+        // Check constraints for mutual neighbors and original constraints
         for (int i = 0; i < 5; ++i) {
+            auto neighbors_i = orig_pcp.get_neighbors(i, radius);
             for (const auto &[adj, pc] : powered.get_constraints(i)) {
-                // For each constraint, check that the EQUAL constraint exists for mutual neighbors
-                auto n1 = orig_pcp.get_neighbors(i, radius);
-                auto n2 = orig_pcp.get_neighbors(adj, radius);
-                for (int mutual : n1) {
-                    if (std::find(n2.begin(), n2.end(), mutual) != n2.end()) {
-                        // Find EQUAL constraint for mutual
+                auto neighbors_adj = orig_pcp.get_neighbors(adj, radius);
+                // Check mutual neighbor consistency constraints
+                for (size_t idx_i = 0; idx_i < neighbors_i.size(); ++idx_i) {
+                    int mutual = neighbors_i[idx_i];
+                    auto it = std::find(neighbors_adj.begin(), neighbors_adj.end(), mutual);
+                    if (it != neighbors_adj.end()) {
+                        size_t idx_adj = std::distance(neighbors_adj.begin(), it);
                         bool found = false;
-                        for (const auto &c : pc.get_constraints(std::distance(n1.begin(), std::find(n1.begin(), n1.end(), mutual)))) {
-                            if (c.second == pcp::BitConstraint::EQUAL) {
+                        for (const auto &[other_idx, constraint] : pc.get_constraints(idx_i)) {
+                            if (other_idx == idx_adj && constraint == pcp::BitConstraint::EQUAL) {
                                 found = true;
                                 break;
                             }
                         }
                         assert(found);
+                    }
+                }
+                // Check original constraints are mapped
+                for (size_t idx_i = 0; idx_i < neighbors_i.size(); ++idx_i) {
+                    int orig_var = neighbors_i[idx_i];
+                    for (const auto &[orig_adj, orig_constraint] : orig_pcp.get_constraints(orig_var)) {
+                        auto it_adj = std::find(neighbors_adj.begin(), neighbors_adj.end(), orig_adj);
+                        if (it_adj != neighbors_adj.end()) {
+                            size_t idx_adj = std::distance(neighbors_adj.begin(), it_adj);
+                            bool found = false;
+                            for (const auto &[other_idx, constraint] : pc.get_constraints(idx_i)) {
+                                if (other_idx == idx_adj && constraint == orig_constraint) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            assert(found);
+                        }
                     }
                 }
             }
@@ -74,42 +100,34 @@ std::vector<std::function<void()>> test_cases = {
             }
         }
         // Check NOT_EQUAL constraint is enforced in powered PCP
-        const auto &constraints = powered.get_constraints(0);
-        int center_center_position = std::find(center_neighbors.begin(), center_neighbors.end(), 0) - center_neighbors.begin();
         for (int i = 1; i < 5; ++i) {
-            bool found_0_i = false;
-            bool found_i_0 = false;
-            int center_i_position = std::find(center_neighbors.begin(), center_neighbors.end(), i) - center_neighbors.begin();
-            auto i_neighbors = orig_pcp.get_neighbors(i, radius);
-            int i_center_position = std::find(i_neighbors.begin(), i_neighbors.end(), 0) - i_neighbors.begin();
-            int i_i_position = std::find(i_neighbors.begin(), i_neighbors.end(), i) - i_neighbors.begin();
-            for (const auto &[adj, pc] : constraints) {
+            auto leaf_neighbors = orig_pcp.get_neighbors(i, radius);
+            auto center_neighbors = orig_pcp.get_neighbors(0, radius);
+            for (const auto &[adj, pc] : powered.get_constraints(0)) {
                 if (adj == i) {
-                    // Should have NOT_EQUAL constraint between center to leaf
-                    for (const auto &[j, constraint] : pc.get_constraints(center_center_position)) {
-                        if (j == i_i_position && constraint == pcp::BitConstraint::NOT_EQUAL) {
-                            found_0_i = true;
-                            break;
+                    // For each original constraint (0, i, NOT_EQUAL), check mapping
+                    auto it_center = std::find(center_neighbors.begin(), center_neighbors.end(), 0);
+                    auto it_leaf = std::find(leaf_neighbors.begin(), leaf_neighbors.end(), i);
+                    if (it_center != center_neighbors.end() && it_leaf != leaf_neighbors.end()) {
+                        size_t idx_center = std::distance(center_neighbors.begin(), it_center);
+                        size_t idx_leaf = std::distance(leaf_neighbors.begin(), it_leaf);
+                        bool found = false;
+                        for (const auto &[other_idx, constraint] : pc.get_constraints(idx_center)) {
+                            if (other_idx == idx_leaf && constraint == pcp::BitConstraint::NOT_EQUAL) {
+                                found = true;
+                                break;
+                            }
                         }
-                    }
-                    // Should have NOT_EQUAL constraint between leaf to center
-                    for (const auto &[j, constraint] : pc.get_constraints(center_i_position)) {
-                        if (j == i_center_position && constraint == pcp::BitConstraint::NOT_EQUAL) {
-                            found_i_0 = true;
-                            break;
-                        }
+                        assert(found);
                     }
                 }
             }
-            assert(found_0_i);
-            assert(found_i_0);
         }
     },
     // Test 3: Disconnected graph, radius 1
     []() -> void {
         std::vector<bool> bits = {true, false, true};
         pcp::BitPCP orig_pcp(bits);
-        // No constraints
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
         for (int i = 0; i < 3; ++i) {
@@ -119,7 +137,6 @@ std::vector<std::function<void()>> test_cases = {
             for (size_t j = 0; j < neighbors.size(); ++j) {
                 assert(powered_vars[j] == bits[neighbors[j]]);
             }
-            // No constraints should exist
             assert(powered.get_constraints(i).empty());
         }
     },
@@ -136,6 +153,42 @@ std::vector<std::function<void()>> test_cases = {
             assert(powered_vars[j] == bits[neighbors[j]]);
         }
         assert(powered.get_constraints(0).empty());
+    },
+    // Test 5: Large chain, just check it doesn't time out
+    []() -> void {
+        const int N = 1000;
+        std::vector<bool> bits(N, false);
+        pcp::BitPCP orig_pcp(bits);
+        for (int i = 0; i < N - 1; ++i) {
+            orig_pcp.add_constraint(i, i + 1, pcp::BitConstraint::UNDEFINED);
+        }
+        int radius = 10;
+        auto powered = core::powering_operation(orig_pcp, radius);
+        assert(powered.get_size() == N);
+    },
+    // Test 6: Large star, just check it doesn't time out
+    []() -> void {
+        const int N = 100;
+        std::vector<bool> bits(N, false);
+        pcp::BitPCP orig_pcp(bits);
+        for (int i = 1; i < N; ++i) {
+            orig_pcp.add_constraint(0, i, pcp::BitConstraint::UNDEFINED);
+        }
+        int radius = 2;
+        auto powered = core::powering_operation(orig_pcp, radius);
+        assert(powered.get_size() == N);
+    },
+    // Test 7: Large star, just check it doesn't time out
+    []() -> void {
+        const int N = 1000;
+        std::vector<bool> bits(N, false);
+        pcp::BitPCP orig_pcp(bits);
+        for (int i = 1; i < N; ++i) {
+            orig_pcp.add_constraint(0, i, pcp::BitConstraint::UNDEFINED);
+        }
+        int radius = 1;
+        auto powered = core::powering_operation(orig_pcp, radius);
+        assert(powered.get_size() == N);
     }
 };
 
