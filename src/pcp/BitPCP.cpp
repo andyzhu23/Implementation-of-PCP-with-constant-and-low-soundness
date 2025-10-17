@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <queue>
+#include <stdexcept>
 
 #include "pcp/BitPCP.hpp"
 #include "util.hpp"
@@ -53,7 +54,7 @@ const std::vector<std::pair<int, int>>& BitPCP::get_constraints_indices(int inde
 void BitPCP::add_constraint(int index, int other_index, BitConstraint constraint) {
     if (index < 0 || index >= static_cast<int>(size) 
         || other_index < 0 || other_index >= static_cast<int>(size)) {
-        throw std::runtime_error("BitPCP::add_constraint: index out of range");
+        throw std::out_of_range("BitPCP::add_constraint: index out of range");
     }
     constraints[index].emplace_back(other_index, constraint);
     constraints[other_index].emplace_back(index, constraint);
