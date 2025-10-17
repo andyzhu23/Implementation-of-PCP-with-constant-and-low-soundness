@@ -8,6 +8,7 @@
 #include <queue>
 
 #include "pcp/BitPCP.hpp"
+#include "util.hpp"
 
 namespace pcp {
 
@@ -47,6 +48,7 @@ void BitPCP::add_constraint(int index, int other_index, BitConstraint constraint
 
 std::vector<int> BitPCP::get_neighbors(int index, int radius) const {
     std::vector<int> neighbors;
+    util::visit_guard visit_guard(visited, neighbors); // RAII to manage visited state
     std::queue<std::pair<int, int>> q; // pair of (node, current_depth)
     q.emplace(index, 0);
     visited[index] = true;
@@ -63,10 +65,6 @@ std::vector<int> BitPCP::get_neighbors(int index, int radius) const {
                 }
             }
         }
-    }
-    // Reset visited for future calls
-    for (int node : neighbors) {
-        visited[node] = false;
     }
 
     return neighbors;
