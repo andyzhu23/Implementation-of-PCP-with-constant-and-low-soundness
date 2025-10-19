@@ -17,12 +17,12 @@ class PoweringConstraint {
 public:
     PoweringConstraint(int size);
 
-    void add_constraint(int index, int other_index, BitConstraint constraint);
+    void add_constraint(int index, int other_index, BinaryConstraint constraint);
 
-    const std::vector<std::pair<int, BitConstraint>>& get_constraints(int index) const;
+    const std::vector<std::pair<int, BinaryConstraint>>& get_constraints(int index) const;
 
 private:
-    std::vector<std::vector<std::pair<int, BitConstraint>>> constraints;
+    std::vector<std::vector<std::pair<int, BinaryConstraint>>> constraints;
 };
 
 class PoweringPCP {

@@ -43,7 +43,7 @@ bool BitPCP::get_bit(int index) const { return bits[index]; }
 
 void BitPCP::set_bit(int index, bool value) { bits[index] = value; }
 
-const std::vector<std::pair<int, BitConstraint>>& BitPCP::get_constraints(int index) const { 
+const std::vector<std::pair<int, BinaryConstraint>>& BitPCP::get_constraints(int index) const { 
     return constraints[index]; 
 }
 
@@ -51,7 +51,7 @@ const std::vector<std::pair<int, int>>& BitPCP::get_constraints_indices(int inde
     return constraint_indices[index]; 
 }
 
-void BitPCP::add_constraint(int index, int other_index, BitConstraint constraint) {
+void BitPCP::add_constraint(int index, int other_index, BinaryConstraint constraint) {
     if (index < 0 || index >= static_cast<int>(size) 
         || other_index < 0 || other_index >= static_cast<int>(size)) {
         throw std::out_of_range("BitPCP::add_constraint: index out of range");

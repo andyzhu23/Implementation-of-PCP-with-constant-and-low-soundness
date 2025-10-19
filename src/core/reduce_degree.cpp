@@ -34,7 +34,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
-            reduced_pcp.add_constraint(curr, next, pcp::BitConstraint::EQUAL);
+            reduced_pcp.add_constraint(curr, next, pcp::BinaryConstraint::EQUAL);
             // Set bits to match original variable
             reduced_pcp.set_bit(curr, pcp.get_bit(i));
         }
@@ -43,7 +43,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             int adj = constraints[j].first; // original neighbor index
-            pcp::BitConstraint constraint = constraints[j].second;
+            pcp::BinaryConstraint constraint = constraints[j].second;
             int constraint_pos = pcp.get_constraints_indices(i)[j].second;
             size_t adj_new_index = offsets[adj] + constraint_pos;
             reduced_pcp.add_constraint(curr, adj_new_index, constraint);
@@ -57,7 +57,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
                     if (rand_neighbor == curr) {
                         rand_neighbor = offsets[i];
                     } 
-                    reduced_pcp.add_constraint(curr, rand_neighbor, pcp::BitConstraint::EQUAL);
+                    reduced_pcp.add_constraint(curr, rand_neighbor, pcp::BinaryConstraint::EQUAL);
                 }
             }
         }
