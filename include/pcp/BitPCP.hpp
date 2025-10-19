@@ -23,9 +23,9 @@ class BitPCP {
 public:
     BitPCP(size_t size);
 
-    BitPCP(const std::vector<bool> &bits);
+    BitPCP(const std::vector<bool> &variables);
 
-    BitPCP(std::vector<bool> &&bits);
+    BitPCP(std::vector<bool> &&variables);
     
     // Member functions
     size_t get_size() const;
@@ -45,7 +45,7 @@ public:
 
 private:
     size_t size;
-    std::vector<bool> bits;
+    std::vector<bool> variables;
     std::vector<std::vector<std::pair<int, BinaryConstraint>>> constraints;
     // storing indexes of constraint in neighbor's list for quick access
     std::vector<std::vector<std::pair<int, int>>> constraint_indices;
