@@ -39,9 +39,9 @@ BitPCP::BitPCP(std::vector<bool> &&variables)
 // Member functions
 size_t BitPCP::get_size() const { return size; }
 
-bool BitPCP::get_bit(int index) const { return variables[index]; }
+bool BitPCP::get_variable(int index) const { return variables[index]; }
 
-void BitPCP::set_bit(int index, bool value) { variables[index] = value; }
+void BitPCP::set_variable(int index, bool value) { variables[index] = value; }
 
 const std::vector<std::pair<int, BinaryConstraint>>& BitPCP::get_constraints(int index) const { 
     return constraints[index]; 

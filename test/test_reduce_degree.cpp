@@ -27,7 +27,7 @@ std::vector<std::function<void()>> test_cases = {
         // Check bits are preserved
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 2; ++j) {
-                assert(reduced.get_bit(i * 2 + j) == bits[i]);
+                assert(reduced.get_variable(i * 2 + j) == bits[i]);
             }
         }
         // Check cycle constraints
@@ -72,7 +72,7 @@ std::vector<std::function<void()>> test_cases = {
         for (int i = 0; i < 5; ++i) {
             for (size_t j = 0; j < orig_pcp.get_constraints(i).size(); ++j) {
                 int idx = (i == 0) ? j : 4 + (i - 1);
-                assert(reduced.get_bit(idx) == bits[i]);
+                assert(reduced.get_variable(idx) == bits[i]);
             }
         }
         // Check cycle constraints for center
@@ -122,7 +122,7 @@ std::vector<std::function<void()>> test_cases = {
         auto reduced = core::reduce_degree(orig_pcp, degree);
         // Check bits are preserved
         for (int i = 0; i < reduced.get_size(); ++i) {
-            assert(reduced.get_bit(i) == true);
+            assert(reduced.get_variable(i) == true);
         }
         // Check cycle constraints for each original node
         int offset = 0;
@@ -172,7 +172,7 @@ std::vector<std::function<void()>> test_cases = {
         auto reduced = core::reduce_degree(orig_pcp, degree);
         // Check bits are preserved
         for (int i = 0; i < reduced.get_size(); ++i) {
-            assert(reduced.get_bit(i) == false);
+            assert(reduced.get_variable(i) == false);
         }
         // Check cycle constraints for center
         int center_sz = orig_pcp.get_constraints(0).size();

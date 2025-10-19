@@ -30,9 +30,9 @@ public:
     // Member functions
     size_t get_size() const;
 
-    bool get_bit(int index) const;
+    bool get_variable(int index) const;
 
-    void set_bit(int index, bool value);
+    void set_variable(int index, bool value);
 
     const std::vector<std::pair<int, BinaryConstraint>>& get_constraints(int index) const;
 

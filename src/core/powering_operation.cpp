@@ -36,7 +36,7 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
         // Build i_index_map, and RAII guard to reset after use
         util::index_map_guard<int> i_map_guard(i_index_map, neighbors[i]);
         for (size_t j = 0; j < neighbors[i].size(); ++j) {
-            combined_vars.push_back(pcp.get_bit(neighbors[i][j]));
+            combined_vars.push_back(pcp.get_variable(neighbors[i][j]));
             // Collect constraints from original PCP
             for (const auto &[adj, bc] : pcp.get_constraints(neighbors[i][j])) {
                 constraints_to_add.emplace_back(std::make_pair(neighbors[i][j], adj), bc);
