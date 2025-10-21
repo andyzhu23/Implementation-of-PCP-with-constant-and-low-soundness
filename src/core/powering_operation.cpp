@@ -32,11 +32,11 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
     for (size_t i = 0; i < pcp.get_size(); ++i) {
         std::vector<bool> combined_vars;
         combined_vars.reserve(neighbors[i].size());
-        std::vector<std::pair<std::pair<int, int>, pcp::BitConstraint>> constraints_to_add;
+        std::vector<std::pair<std::pair<int, int>, pcp::BinaryConstraint>> constraints_to_add;
         // Build i_index_map, and RAII guard to reset after use
         util::index_map_guard<int> i_map_guard(i_index_map, neighbors[i]);
         for (size_t j = 0; j < neighbors[i].size(); ++j) {
-            combined_vars.push_back(pcp.get_bit(neighbors[i][j]));
+            combined_vars.push_back(pcp.get_variable(neighbors[i][j]));
             // Collect constraints from original PCP
             for (const auto &[adj, bc] : pcp.get_constraints(neighbors[i][j])) {
                 constraints_to_add.emplace_back(std::make_pair(neighbors[i][j], adj), bc);
@@ -59,7 +59,7 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
                     pc.add_constraint(
                         i_index_map[mutual_neighbor], 
                         neighbor_index_map[mutual_neighbor], 
-                        pcp::BitConstraint::EQUAL
+                        pcp::BinaryConstraint::EQUAL
                     );
                 }
             }
@@ -77,16 +77,6 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
 
             // add to result
             result.add_constraint(i, neighbor, std::move(pc));
-
-            // reset neighbor_index_map
-            for (const int neighbor : neighbors[neighbor]) {
-                neighbor_index_map[neighbor] = -1;
-            }
-        }
-
-        // Reset i_index_map
-        for (const int neighbor : neighbors[i]) {
-            i_index_map[neighbor] = -1;
         }
     }
 

@@ -17,21 +17,21 @@ namespace pcp {
 // Constructors
 BitPCP::BitPCP(size_t size)
  : size(size), 
-   bits(size, false), 
+   variables(size, false), 
    constraints(size), 
    constraint_indices(size), 
    visited(size, false) {}
 
-BitPCP::BitPCP(const std::vector<bool> &bits)
- : size(bits.size()), 
-   bits(bits), 
-   constraints(bits.size()), 
-   constraint_indices(bits.size()), 
+BitPCP::BitPCP(const std::vector<bool> &variables)
+ : size(variables.size()), 
+   variables(variables), 
+   constraints(variables.size()), 
+   constraint_indices(variables.size()), 
    visited(size, false) {}
 
-BitPCP::BitPCP(std::vector<bool> &&bits)
- : size(bits.size()), 
-   bits(std::move(bits)), 
+BitPCP::BitPCP(std::vector<bool> &&variables)
+ : size(variables.size()), 
+   variables(std::move(variables)), 
    constraints(size), 
    constraint_indices(size), 
    visited(size, false) {}
@@ -39,11 +39,11 @@ BitPCP::BitPCP(std::vector<bool> &&bits)
 // Member functions
 size_t BitPCP::get_size() const { return size; }
 
-bool BitPCP::get_bit(int index) const { return bits[index]; }
+bool BitPCP::get_variable(int index) const { return variables[index]; }
 
-void BitPCP::set_bit(int index, bool value) { bits[index] = value; }
+void BitPCP::set_variable(int index, bool value) { variables[index] = value; }
 
-const std::vector<std::pair<int, BitConstraint>>& BitPCP::get_constraints(int index) const { 
+const std::vector<std::pair<int, BinaryConstraint>>& BitPCP::get_constraints(int index) const { 
     return constraints[index]; 
 }
 
@@ -51,7 +51,7 @@ const std::vector<std::pair<int, int>>& BitPCP::get_constraints_indices(int inde
     return constraint_indices[index]; 
 }
 
-void BitPCP::add_constraint(int index, int other_index, BitConstraint constraint) {
+void BitPCP::add_constraint(int index, int other_index, BinaryConstraint constraint) {
     if (index < 0 || index >= static_cast<int>(size) 
         || other_index < 0 || other_index >= static_cast<int>(size)) {
         throw std::out_of_range("BitPCP::add_constraint: index out of range");

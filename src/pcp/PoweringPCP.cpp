@@ -18,12 +18,12 @@ namespace pcp {
 PoweringConstraint::PoweringConstraint(int size) : constraints(size) {}
 
 // Member functions
-void PoweringConstraint::add_constraint(int index, int other_index, BitConstraint constraint) {
+void PoweringConstraint::add_constraint(int index, int other_index, BinaryConstraint constraint) {
     constraints[index].emplace_back(other_index, constraint);
 }
 
 // Overloaded operator
-const std::vector<std::pair<int, BitConstraint>>& PoweringConstraint::get_constraints(int index) const {
+const std::vector<std::pair<int, BinaryConstraint>>& PoweringConstraint::get_constraints(int index) const {
     return constraints[index];
 }
 

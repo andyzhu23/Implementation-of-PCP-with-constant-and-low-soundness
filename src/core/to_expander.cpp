@@ -29,7 +29,7 @@ pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient) {
     for (size_t i = 0; i < pcp.get_size(); ++i) {
         for (int j = 0; j < expanding_coefficient; ++j) {
             int target = dist(rng);
-            pcp.add_constraint(i, target, pcp::BitConstraint::ANY);
+            pcp.add_constraint(i, target, pcp::BinaryConstraint::ANY);
         }
         // swap current node to front to avoid self-loop
         std::swap(options[0], options[i]);
