@@ -77,16 +77,6 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
 
             // add to result
             result.add_constraint(i, neighbor, std::move(pc));
-
-            // reset neighbor_index_map
-            for (const int neighbor : neighbors[neighbor]) {
-                neighbor_index_map[neighbor] = -1;
-            }
-        }
-
-        // Reset i_index_map
-        for (const int neighbor : neighbors[i]) {
-            i_index_map[neighbor] = -1;
         }
     }
 
