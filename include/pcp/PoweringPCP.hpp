@@ -15,8 +15,6 @@
 
 namespace pcp {
 
-using PoweringDomain = std::vector<SimpleDomain>;
-
 class PoweringPCP {
 public:
     // Constructors
