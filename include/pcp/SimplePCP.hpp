@@ -11,12 +11,9 @@
 #include <vector>
 
 #include "constraint/BinaryConstraint.hpp"
+#include "PCP.hpp"
 
 namespace pcp {
-
-using SimpleDomain = int;
-using Variable = size_t;
-using Index = size_t;
 
 class SimplePCP {
 public:
