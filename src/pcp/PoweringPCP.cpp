@@ -8,78 +8,64 @@
 #include <stdexcept>
 #include <vector>
 
-#include "pcp/BitPCP.hpp"
+#include "pcp/SimplePCP.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 namespace pcp {
-
-// PoweringConstraint class implementation
-// Constructor
-PoweringConstraint::PoweringConstraint(int size) : constraints(size) {}
-
-// Member functions
-void PoweringConstraint::add_constraint(int index, int other_index, BinaryConstraint constraint) {
-    constraints[index].emplace_back(other_index, constraint);
-}
-
-// Overloaded operator
-const std::vector<std::pair<int, BinaryConstraint>>& PoweringConstraint::get_constraints(int index) const {
-    return constraints[index];
-}
 
 // PoweringPCP class implementation
 // Constructors
 PoweringPCP::PoweringPCP(size_t size) : size(size), variables(size), constraints(size) {}
 
-PoweringPCP::PoweringPCP(size_t size, const std::vector<std::vector<bool>> &variables)
+PoweringPCP::PoweringPCP(size_t size, const std::vector<PoweringDomain> &variables)
     : size(size), variables(variables), constraints(size) {}
 
-PoweringPCP::PoweringPCP(size_t size, std::vector<std::vector<bool>> &&variables)
+PoweringPCP::PoweringPCP(size_t size, std::vector<PoweringDomain> &&variables)
     : size(size), variables(std::move(variables)), constraints(size) {}
 
-PoweringPCP::PoweringPCP(const std::vector<std::vector<bool>> &variables,
-                         const std::vector<std::vector<std::pair<int, PoweringConstraint>>> &constraints)
+PoweringPCP::PoweringPCP(const std::vector<PoweringDomain> &variables,
+                         const std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &constraints)
     : size(variables.size()), variables(variables), constraints(constraints) {}
 
-PoweringPCP::PoweringPCP(std::vector<std::vector<bool>> &&variables,
-                         const std::vector<std::vector<std::pair<int, PoweringConstraint>>> &constraints)
+PoweringPCP::PoweringPCP(std::vector<PoweringDomain> &&variables,
+                         const std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &constraints)
     : size(variables.size()), variables(std::move(variables)), constraints(constraints) {}
 
-PoweringPCP::PoweringPCP(const std::vector<std::vector<bool>> &variables,
-                         std::vector<std::vector<std::pair<int, PoweringConstraint>>> &&constraints)
+PoweringPCP::PoweringPCP(const std::vector<PoweringDomain> &variables,
+                         std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &&constraints)
     : size(variables.size()), variables(variables), constraints(std::move(constraints)) {}
 
-PoweringPCP::PoweringPCP(std::vector<std::vector<bool>> &&variables,
-                         std::vector<std::vector<std::pair<int, PoweringConstraint>>> &&constraints)
+PoweringPCP::PoweringPCP(std::vector<PoweringDomain> &&variables,
+                         std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &&constraints)
     : size(variables.size()), variables(std::move(variables)), constraints(std::move(constraints)) {}
 
 // Member functions
 size_t PoweringPCP::get_size() const { return size; }
 
-const std::vector<bool>& PoweringPCP::get_variables(int index) const { return variables[index]; }
+const PoweringDomain& PoweringPCP::get_variables(Variable var) const { return variables[var]; }
 
-void PoweringPCP::set_variables(int index, const std::vector<bool> &vars) { variables[index] = vars; }
+void PoweringPCP::set_variables(Variable var, const PoweringDomain &vars) { variables[var] = vars; }
 
-void PoweringPCP::set_variables(int index, std::vector<bool> &&vars) { variables[index] = std::move(vars); }
+void PoweringPCP::set_variables(Variable var, PoweringDomain &&vars) { variables[var] = std::move(vars); }
 
-const std::vector<std::pair<int, PoweringConstraint>>& PoweringPCP::get_constraints(int index) const { 
-    return constraints[index]; 
+const std::vector<std::pair<Variable, constraint::PoweringConstraint>>& PoweringPCP::get_constraints(Variable var) const { 
+    return constraints[var]; 
 }
 
-void PoweringPCP::add_constraint(int index, int other_index, const PoweringConstraint &constraint) {
-    if (index < 0 || index >= static_cast<int>(size) 
-            || other_index < 0 || other_index >= static_cast<int>(size)) {
+void PoweringPCP::add_constraint(Variable var, Variable other_var, const constraint::PoweringConstraint &constraint) {
+    if (var < 0 || var >= static_cast<Variable>(size) 
+            || other_var < 0 || other_var >= static_cast<Variable>(size)) {
         throw std::out_of_range("PoweringPCP::add_constraint: index out of range");
     }
-    constraints[index].emplace_back(other_index, constraint);
+    constraints[var].emplace_back(other_var, constraint);
 }
 
-void PoweringPCP::add_constraint(int index, int other_index, PoweringConstraint &&constraint) {
-    if (index < 0 || index >= static_cast<int>(size) 
-            || other_index < 0 || other_index >= static_cast<int>(size)) {
+void PoweringPCP::add_constraint(Variable var, Variable other_var, constraint::PoweringConstraint &&constraint) {
+    if (var < 0 || var >= static_cast<Variable>(size) 
+            || other_var < 0 || other_var >= static_cast<Variable>(size)) {
         throw std::out_of_range("PoweringPCP::add_constraint: index out of range");
     }
-    constraints[index].emplace_back(other_index, constraint);
+    constraints[var].emplace_back(other_var, std::move(constraint));
 }
 
 }

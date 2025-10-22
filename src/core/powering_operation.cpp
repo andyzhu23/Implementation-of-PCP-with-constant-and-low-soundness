@@ -8,15 +8,15 @@
 #include <random>
 #include <vector>
 
-#include "pcp/BitPCP.hpp"
+#include "pcp/SimplePCP.hpp"
 #include "core/core.hpp"
 #include "pcp/PoweringPCP.hpp"
 #include "util.hpp"
 
 namespace core {
 
-pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
-    std::vector<std::vector<int>> neighbors;
+pcp::PoweringPCP powering_operation(const pcp::SimplePCP &pcp, int radius) {
+    std::vector<std::vector<pcp::Variable>> neighbors;
     neighbors.reserve(pcp.get_size());
     // Get neighbors for each variable in the original PCP
     for (size_t i = 0; i < pcp.get_size(); ++i) {
@@ -30,11 +30,11 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
     std::vector<size_t> neighbor_index_map(pcp.get_size(), -1);
 
     for (size_t i = 0; i < pcp.get_size(); ++i) {
-        std::vector<bool> combined_vars;
+        std::vector<pcp::SimpleDomain> combined_vars;
         combined_vars.reserve(neighbors[i].size());
-        std::vector<std::pair<std::pair<int, int>, pcp::BinaryConstraint>> constraints_to_add;
+        std::vector<std::pair<std::pair<int, int>, constraint::BinaryConstraint>> constraints_to_add;
         // Build i_index_map, and RAII guard to reset after use
-        util::index_map_guard<int> i_map_guard(i_index_map, neighbors[i]);
+        util::index_map_guard<pcp::Variable> i_map_guard(i_index_map, neighbors[i]);
         for (size_t j = 0; j < neighbors[i].size(); ++j) {
             combined_vars.push_back(pcp.get_variable(neighbors[i][j]));
             // Collect constraints from original PCP
@@ -49,8 +49,8 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
         for (const auto &neighbor : neighbors[i]) {
             if (neighbor == i) continue; // skip self-loop
             // Build neighbor_index_map and RAII guard
-            util::index_map_guard<int> neighbor_map_guard(neighbor_index_map, neighbors[neighbor]);
-            pcp::PoweringConstraint pc(neighbors[i].size());
+            util::index_map_guard<pcp::Variable> neighbor_map_guard(neighbor_index_map, neighbors[neighbor]);
+            constraint::PoweringConstraint pc(neighbors[i].size());
             
             // add consistency constraints
             for (const int mutual_neighbor : neighbors[i]) {
@@ -59,7 +59,7 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
                     pc.add_constraint(
                         i_index_map[mutual_neighbor], 
                         neighbor_index_map[mutual_neighbor], 
-                        pcp::BinaryConstraint::EQUAL
+                        constraint::BinaryEQUAL
                     );
                 }
             }

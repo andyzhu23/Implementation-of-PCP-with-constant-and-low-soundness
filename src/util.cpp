@@ -11,7 +11,7 @@
 
 namespace util {
 
-visit_guard::visit_guard(std::vector<bool> &visited, const std::vector<int> &nodes)
+visit_guard::visit_guard(std::vector<bool> &visited, const std::vector<pcp::Variable> &nodes)
     : visited(visited), nodes(nodes) {}
 
 visit_guard::~visit_guard() {

@@ -14,10 +14,10 @@
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, to_expander should add ANY constraints
     []() -> void {
-        std::vector<bool> bits = {true, false, true, false, true};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1, 0, 1};
+        pcp::SimplePCP pcp(bits);
         for (int i = 0; i < 5; ++i) {
-            pcp.add_constraint(i, (i + 1) % 5, pcp::BinaryConstraint::UNDEFINED);
+            pcp.add_constraint(i, (i + 1) % 5, constraint::BinaryEQUAL);
         }
         int expanding_coefficient = 2;
         auto &expander = core::to_expander(pcp, expanding_coefficient);
@@ -25,62 +25,62 @@ std::vector<std::function<void()>> test_cases = {
         for (int i = 0; i < 5; ++i) {
             int any_count = 0;
             for (const auto &[adj, constraint] : expander.get_constraints(i)) {
-                if (constraint == pcp::BinaryConstraint::ANY) ++any_count;
+                if (constraint == constraint::BinaryANY) ++any_count;
             }
             assert(any_count >= expanding_coefficient);
         }
     },
     // Test 2: Star graph, check that new ANY constraints are added
     []() -> void {
-        std::vector<bool> bits = {true, false, true, false, true};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1, 0, 1};
+        pcp::SimplePCP pcp(bits);
         for (int i = 1; i < 5; ++i) {
-            pcp.add_constraint(0, i, pcp::BinaryConstraint::NOT_EQUAL);
+            pcp.add_constraint(0, i, constraint::BinaryNOTEQUAL);
         }
         int expanding_coefficient = 3;
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         for (int i = 0; i < 5; ++i) {
             int any_count = 0;
             for (const auto &[adj, constraint] : expander.get_constraints(i)) {
-                if (constraint == pcp::BinaryConstraint::ANY) ++any_count;
+                if (constraint == constraint::BinaryANY) ++any_count;
             }
             assert(any_count >= expanding_coefficient);
         }
     },
     // Test 3: Disconnected graph, all nodes should get ANY constraints
     []() -> void {
-        std::vector<bool> bits = {true, false, true};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1};
+        pcp::SimplePCP pcp(bits);
         int expanding_coefficient = 2;
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         for (int i = 0; i < 3; ++i) {
             int any_count = 0;
             for (const auto &[adj, constraint] : expander.get_constraints(i)) {
-                if (constraint == pcp::BinaryConstraint::ANY) ++any_count;
+                if (constraint == constraint::BinaryANY) ++any_count;
             }
             assert(any_count >= expanding_coefficient);
         }
     },
     // Test 4: Single node, should not add self-loop ANY constraints
     []() -> void {
-        std::vector<bool> bits = {true};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::SimpleDomain> bits = {1};
+        pcp::SimplePCP pcp(bits);
         int expanding_coefficient = 5;
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         // Should not have ANY constraints to itself
         for (const auto &[adj, constraint] : expander.get_constraints(0)) {
-            assert(adj != 0 || constraint != pcp::BinaryConstraint::ANY);
+            assert(adj != 0 || constraint != constraint::BinaryANY);
         }
     },
     // Test 5: Extreme case - chain of 100,000 nodes, check max shortest path (diameter)
     []() -> void {
         const int N = 100'000;
         const int expanding_coefficient = 10;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::SimpleDomain> bits(N, 0);
+        pcp::SimplePCP pcp(bits);
         // Create a chain
         for (int i = 0; i < N - 1; ++i) {
-            pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
+            pcp.add_constraint(i, i + 1, constraint::BinaryEQUAL);
         }
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         // BFS from node 0 to find the farthest node (diameter)
@@ -110,10 +110,10 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 100'000;
         const int expanding_coefficient = 10;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::SimpleDomain> bits(N, 0);
+        pcp::SimplePCP pcp(bits);
         for (int i = 0; i < N - 1; ++i) {
-            pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
+            pcp.add_constraint(i, i + 1, constraint::BinaryEQUAL);
         }
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         int start = N / 2;
@@ -142,10 +142,10 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 100'000;
         const int expanding_coefficient = 10;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::SimpleDomain> bits(N, 0);
+        pcp::SimplePCP pcp(bits);
         for (int i = 0; i < N - 1; ++i) {
-            pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
+            pcp.add_constraint(i, i + 1, constraint::BinaryEQUAL);
         }
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         int start = N - 1;

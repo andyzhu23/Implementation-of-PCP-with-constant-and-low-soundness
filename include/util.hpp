@@ -10,6 +10,8 @@
 #include <vector>
 #include <stdexcept>
 
+#include "pcp/SimplePCP.hpp"
+
 namespace util {
 
 template <typename T>
@@ -38,13 +40,13 @@ private:
 
 class visit_guard {
 public:
-    visit_guard(std::vector<bool> &visited, const std::vector<int> &nodes);
+    visit_guard(std::vector<bool> &visited, const std::vector<pcp::Variable> &nodes);
     
     ~visit_guard();
 
 private:
     std::vector<bool> &visited;
-    const std::vector<int> &nodes;
+    const std::vector<pcp::Variable> &nodes;
 };
 
 }
