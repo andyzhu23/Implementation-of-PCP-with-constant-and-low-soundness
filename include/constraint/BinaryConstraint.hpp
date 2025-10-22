@@ -14,16 +14,16 @@ namespace constraint {
 
 class BinaryConstraint {
 public:
-    BinaryConstraint(std::function<bool(int, int)> *f);
+    BinaryConstraint(const std::function<bool(int, int)> *f);
 
     bool operator()(int x, int y) const;
 
     bool operator==(const BinaryConstraint &other) const;
 
     bool operator!=(const BinaryConstraint &other) const;
-    
+
 private:
-    std::function<bool(int, int)> *f;
+    const std::function<bool(int, int)> *f;
 };
 
 extern const BinaryConstraint BinaryANY;
