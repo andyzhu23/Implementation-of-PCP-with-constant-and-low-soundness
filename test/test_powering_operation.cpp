@@ -10,14 +10,14 @@
 #include <vector>
 
 #include "core/core.hpp"
-#include "pcp/PCP.hpp"
+#include "pcp/SimplePCP.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, radius 1
     []() -> void {
         std::vector<int> bits = {1, 0, 1, 0, 1};
-        pcp::PCP orig_pcp(bits);
+        pcp::SimplePCP orig_pcp(bits);
         for (int i = 0; i < 5; ++i) {
             orig_pcp.add_constraint(i, (i + 1) % 5, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -77,7 +77,7 @@ std::vector<std::function<void()>> test_cases = {
     // Test 2: Star graph, center 0, radius 1
     []() -> void {
         std::vector<int> bits = {1, 0, 1, 0, 1};
-        pcp::PCP orig_pcp(bits);
+        pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < 5; ++i) {
             orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::NOT_EQUAL);
         }
@@ -127,7 +127,7 @@ std::vector<std::function<void()>> test_cases = {
     // Test 3: Disconnected graph, radius 1
     []() -> void {
         std::vector<int> bits = {1, 0, 1};
-        pcp::PCP orig_pcp(bits);
+        pcp::SimplePCP orig_pcp(bits);
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
         for (int i = 0; i < 3; ++i) {
@@ -143,7 +143,7 @@ std::vector<std::function<void()>> test_cases = {
     // Test 4: Single node, radius 1
     []() -> void {
         std::vector<int> bits = {1};
-        pcp::PCP orig_pcp(bits);
+        pcp::SimplePCP orig_pcp(bits);
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
         auto neighbors = orig_pcp.get_neighbors(0, radius);
@@ -158,7 +158,7 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 1000;
         std::vector<int> bits(N, 0);
-        pcp::PCP orig_pcp(bits);
+        pcp::SimplePCP orig_pcp(bits);
         for (int i = 0; i < N - 1; ++i) {
             orig_pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -170,7 +170,7 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 100;
         std::vector<int> bits(N, 0);
-        pcp::PCP orig_pcp(bits);
+        pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
             orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -182,7 +182,7 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 1000;
         std::vector<int> bits(N, 0);
-        pcp::PCP orig_pcp(bits);
+        pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
             orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::UNDEFINED);
         }

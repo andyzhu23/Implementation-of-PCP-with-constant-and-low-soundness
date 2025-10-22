@@ -9,11 +9,11 @@
 #include <stdexcept>
 
 #include "core/core.hpp"
-#include "pcp/PCP.hpp"
+#include "pcp/SimplePCP.hpp"
 
 namespace core {
 
-pcp::PCP reduce_degree(const pcp::PCP &pcp, int degree) {
+pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
     // generate random seed
     static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     if (degree < 3) {
@@ -28,7 +28,7 @@ pcp::PCP reduce_degree(const pcp::PCP &pcp, int degree) {
         new_size += sizes.back();
         offsets.push_back(new_size - sizes.back());
     }
-    pcp::PCP reduced_pcp(new_size);
+    pcp::SimplePCP reduced_pcp(new_size);
     for (size_t i = 0; i < original_size; ++i) {
         // Connect in a cycle
         for (size_t j = 0; j < sizes[i]; ++j) {

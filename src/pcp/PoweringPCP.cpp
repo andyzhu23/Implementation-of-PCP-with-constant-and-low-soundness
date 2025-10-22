@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "pcp/PCP.hpp"
+#include "pcp/SimplePCP.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 namespace pcp {

@@ -8,14 +8,14 @@
 #include <random>
 #include <vector>
 
-#include "pcp/PCP.hpp"
+#include "pcp/SimplePCP.hpp"
 #include "core/core.hpp"
 #include "pcp/PoweringPCP.hpp"
 #include "util.hpp"
 
 namespace core {
 
-pcp::PoweringPCP powering_operation(const pcp::PCP &pcp, int radius) {
+pcp::PoweringPCP powering_operation(const pcp::SimplePCP &pcp, int radius) {
     std::vector<std::vector<int>> neighbors;
     neighbors.reserve(pcp.get_size());
     // Get neighbors for each variable in the original PCP

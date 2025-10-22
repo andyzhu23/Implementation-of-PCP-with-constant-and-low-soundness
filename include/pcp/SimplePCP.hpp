@@ -4,8 +4,8 @@
  * @version 1.0.0
  */
 
-#ifndef BITPCP_HPP
-#define BITPCP_HPP
+#ifndef SIMPLEPCP_HPP
+#define SIMPLEPCP_HPP
 
 #include <vector>
 
@@ -19,13 +19,13 @@ enum class BinaryConstraint {
     NONE
 };
 
-class PCP {
+class SimplePCP {
 public:
-    PCP(size_t size);
+    SimplePCP(size_t size);
 
-    PCP(const std::vector<int> &variables);
+    SimplePCP(const std::vector<int> &variables);
 
-    PCP(std::vector<int> &&variables);
+    SimplePCP(std::vector<int> &&variables);
     
     // Member functions
     size_t get_size() const;

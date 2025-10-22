@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "PCP.hpp"
+#include "SimplePCP.hpp"
 
 namespace pcp {
 

@@ -8,13 +8,13 @@
 #include <random>
 #include <vector>
 
-#include "pcp/PCP.hpp"
+#include "pcp/SimplePCP.hpp"
 #include "core/core.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 namespace core {
 
-pcp::PCP& to_expander(pcp::PCP &pcp, int expanding_coefficient) {
+pcp::SimplePCP& to_expander(pcp::SimplePCP &pcp, int expanding_coefficient) {
     // generate random seed
     static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     if (pcp.get_size() <= 1) {

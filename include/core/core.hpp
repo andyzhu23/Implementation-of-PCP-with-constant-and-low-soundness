@@ -7,19 +7,19 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include "pcp/PCP.hpp"
+#include "pcp/SimplePCP.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 namespace core {
 
 // Powering operation on a BitPCP to produce a PoweringPCP from Dinur's PCP proof
-pcp::PoweringPCP powering_operation(const pcp::PCP &pcp, int radius);
+pcp::PoweringPCP powering_operation(const pcp::SimplePCP &pcp, int radius);
 
 // to_expander turns a BitPCP into a BitPCP where the graph is an expander
-pcp::PCP& to_expander(pcp::PCP &pcp, int expanding_coefficient);
+pcp::SimplePCP& to_expander(pcp::SimplePCP &pcp, int expanding_coefficient);
 
 // reduce_degree reduces the degree of a BitPCP to degree by replacing each variable with a graph of variables
-pcp::PCP reduce_degree(const pcp::PCP &pcp, int degree);
+pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree);
 
 }
 
