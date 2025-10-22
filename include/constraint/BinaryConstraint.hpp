@@ -10,7 +10,7 @@
 
 #include <functional>
 
-#include "pcp/PCP.hpp"
+#include "pcp/Aliases.hpp"
 
 namespace constraint {
 

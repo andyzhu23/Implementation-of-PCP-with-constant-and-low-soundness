@@ -9,6 +9,7 @@
 
 #include <vector>
 
+#include "Aliases.hpp"
 #include "SimplePCP.hpp"
 #include "constraint/BinaryConstraint.hpp"
 #include "constraint/PoweringConstraint.hpp"

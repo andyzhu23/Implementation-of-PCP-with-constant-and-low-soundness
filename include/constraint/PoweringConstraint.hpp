@@ -10,6 +10,7 @@
 
 #include <vector>
 
+#include "pcp/Aliases.hpp"
 #include "constraint/BinaryConstraint.hpp"
 #include "pcp/SimplePCP.hpp"
 

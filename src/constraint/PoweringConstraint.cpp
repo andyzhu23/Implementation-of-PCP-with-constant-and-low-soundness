@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "pcp/Aliases.hpp"
 #include "constraint/PoweringConstraint.hpp"
 #include "pcp/SimplePCP.hpp"
 
