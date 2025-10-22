@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "pcp/BitPCP.hpp"
+#include "pcp/PCP.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 namespace pcp {
@@ -31,36 +31,36 @@ const std::vector<std::pair<int, BinaryConstraint>>& PoweringConstraint::get_con
 // Constructors
 PoweringPCP::PoweringPCP(size_t size) : size(size), variables(size), constraints(size) {}
 
-PoweringPCP::PoweringPCP(size_t size, const std::vector<std::vector<bool>> &variables)
+PoweringPCP::PoweringPCP(size_t size, const std::vector<std::vector<int>> &variables)
     : size(size), variables(variables), constraints(size) {}
 
-PoweringPCP::PoweringPCP(size_t size, std::vector<std::vector<bool>> &&variables)
+PoweringPCP::PoweringPCP(size_t size, std::vector<std::vector<int>> &&variables)
     : size(size), variables(std::move(variables)), constraints(size) {}
 
-PoweringPCP::PoweringPCP(const std::vector<std::vector<bool>> &variables,
+PoweringPCP::PoweringPCP(const std::vector<std::vector<int>> &variables,
                          const std::vector<std::vector<std::pair<int, PoweringConstraint>>> &constraints)
     : size(variables.size()), variables(variables), constraints(constraints) {}
 
-PoweringPCP::PoweringPCP(std::vector<std::vector<bool>> &&variables,
+PoweringPCP::PoweringPCP(std::vector<std::vector<int>> &&variables,
                          const std::vector<std::vector<std::pair<int, PoweringConstraint>>> &constraints)
     : size(variables.size()), variables(std::move(variables)), constraints(constraints) {}
 
-PoweringPCP::PoweringPCP(const std::vector<std::vector<bool>> &variables,
+PoweringPCP::PoweringPCP(const std::vector<std::vector<int>> &variables,
                          std::vector<std::vector<std::pair<int, PoweringConstraint>>> &&constraints)
     : size(variables.size()), variables(variables), constraints(std::move(constraints)) {}
 
-PoweringPCP::PoweringPCP(std::vector<std::vector<bool>> &&variables,
+PoweringPCP::PoweringPCP(std::vector<std::vector<int>> &&variables,
                          std::vector<std::vector<std::pair<int, PoweringConstraint>>> &&constraints)
     : size(variables.size()), variables(std::move(variables)), constraints(std::move(constraints)) {}
 
 // Member functions
 size_t PoweringPCP::get_size() const { return size; }
 
-const std::vector<bool>& PoweringPCP::get_variables(int index) const { return variables[index]; }
+const std::vector<int>& PoweringPCP::get_variables(int index) const { return variables[index]; }
 
-void PoweringPCP::set_variables(int index, const std::vector<bool> &vars) { variables[index] = vars; }
+void PoweringPCP::set_variables(int index, const std::vector<int> &vars) { variables[index] = vars; }
 
-void PoweringPCP::set_variables(int index, std::vector<bool> &&vars) { variables[index] = std::move(vars); }
+void PoweringPCP::set_variables(int index, std::vector<int> &&vars) { variables[index] = std::move(vars); }
 
 const std::vector<std::pair<int, PoweringConstraint>>& PoweringPCP::get_constraints(int index) const { 
     return constraints[index]; 

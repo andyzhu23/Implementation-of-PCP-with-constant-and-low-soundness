@@ -10,14 +10,14 @@
 #include <vector>
 
 #include "core/core.hpp"
-#include "pcp/BitPCP.hpp"
+#include "pcp/PCP.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, radius 1
     []() -> void {
-        std::vector<bool> bits = {true, false, true, false, true};
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<int> bits = {1, 0, 1, 0, 1};
+        pcp::PCP orig_pcp(bits);
         for (int i = 0; i < 5; ++i) {
             orig_pcp.add_constraint(i, (i + 1) % 5, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -76,8 +76,8 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Star graph, center 0, radius 1
     []() -> void {
-        std::vector<bool> bits = {true, false, true, false, true};
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<int> bits = {1, 0, 1, 0, 1};
+        pcp::PCP orig_pcp(bits);
         for (int i = 1; i < 5; ++i) {
             orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::NOT_EQUAL);
         }
@@ -126,8 +126,8 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 3: Disconnected graph, radius 1
     []() -> void {
-        std::vector<bool> bits = {true, false, true};
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<int> bits = {1, 0, 1};
+        pcp::PCP orig_pcp(bits);
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
         for (int i = 0; i < 3; ++i) {
@@ -142,8 +142,8 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 4: Single node, radius 1
     []() -> void {
-        std::vector<bool> bits = {true};
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<int> bits = {1};
+        pcp::PCP orig_pcp(bits);
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
         auto neighbors = orig_pcp.get_neighbors(0, radius);
@@ -157,8 +157,8 @@ std::vector<std::function<void()>> test_cases = {
     // Test 5: Large chain, just check it doesn't time out
     []() -> void {
         const int N = 1000;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<int> bits(N, 0);
+        pcp::PCP orig_pcp(bits);
         for (int i = 0; i < N - 1; ++i) {
             orig_pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -169,8 +169,8 @@ std::vector<std::function<void()>> test_cases = {
     // Test 6: Large star, just check it doesn't time out
     []() -> void {
         const int N = 100;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<int> bits(N, 0);
+        pcp::PCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
             orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -181,8 +181,8 @@ std::vector<std::function<void()>> test_cases = {
     // Test 7: Large star, just check it doesn't time out
     []() -> void {
         const int N = 1000;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<int> bits(N, 0);
+        pcp::PCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
             orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::UNDEFINED);
         }

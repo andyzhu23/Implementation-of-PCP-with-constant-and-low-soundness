@@ -14,8 +14,8 @@
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, to_expander should add ANY constraints
     []() -> void {
-        std::vector<bool> bits = {true, false, true, false, true};
-        pcp::BitPCP pcp(bits);
+        std::vector<int> bits = {1, 0, 1, 0, 1};
+        pcp::PCP pcp(bits);
         for (int i = 0; i < 5; ++i) {
             pcp.add_constraint(i, (i + 1) % 5, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -32,8 +32,8 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Star graph, check that new ANY constraints are added
     []() -> void {
-        std::vector<bool> bits = {true, false, true, false, true};
-        pcp::BitPCP pcp(bits);
+        std::vector<int> bits = {1, 0, 1, 0, 1};
+        pcp::PCP pcp(bits);
         for (int i = 1; i < 5; ++i) {
             pcp.add_constraint(0, i, pcp::BinaryConstraint::NOT_EQUAL);
         }
@@ -49,8 +49,8 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 3: Disconnected graph, all nodes should get ANY constraints
     []() -> void {
-        std::vector<bool> bits = {true, false, true};
-        pcp::BitPCP pcp(bits);
+        std::vector<int> bits = {1, 0, 1};
+        pcp::PCP pcp(bits);
         int expanding_coefficient = 2;
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         for (int i = 0; i < 3; ++i) {
@@ -63,8 +63,8 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 4: Single node, should not add self-loop ANY constraints
     []() -> void {
-        std::vector<bool> bits = {true};
-        pcp::BitPCP pcp(bits);
+        std::vector<int> bits = {1};
+        pcp::PCP pcp(bits);
         int expanding_coefficient = 5;
         auto &expander = core::to_expander(pcp, expanding_coefficient);
         // Should not have ANY constraints to itself
@@ -76,8 +76,8 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 100'000;
         const int expanding_coefficient = 10;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP pcp(bits);
+        std::vector<int> bits(N, 0);
+        pcp::PCP pcp(bits);
         // Create a chain
         for (int i = 0; i < N - 1; ++i) {
             pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
@@ -110,8 +110,8 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 100'000;
         const int expanding_coefficient = 10;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP pcp(bits);
+        std::vector<int> bits(N, 0);
+        pcp::PCP pcp(bits);
         for (int i = 0; i < N - 1; ++i) {
             pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
         }
@@ -142,8 +142,8 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         const int N = 100'000;
         const int expanding_coefficient = 10;
-        std::vector<bool> bits(N, false);
-        pcp::BitPCP pcp(bits);
+        std::vector<int> bits(N, 0);
+        pcp::PCP pcp(bits);
         for (int i = 0; i < N - 1; ++i) {
             pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
         }

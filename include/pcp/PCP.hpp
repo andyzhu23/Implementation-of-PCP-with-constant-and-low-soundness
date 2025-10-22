@@ -19,20 +19,20 @@ enum class BinaryConstraint {
     NONE
 };
 
-class BitPCP {
+class PCP {
 public:
-    BitPCP(size_t size);
+    PCP(size_t size);
 
-    BitPCP(const std::vector<bool> &variables);
+    PCP(const std::vector<int> &variables);
 
-    BitPCP(std::vector<bool> &&variables);
+    PCP(std::vector<int> &&variables);
     
     // Member functions
     size_t get_size() const;
 
-    bool get_variable(int index) const;
+    int get_variable(int index) const;
 
-    void set_variable(int index, bool value);
+    void set_variable(int index, int value);
 
     const std::vector<std::pair<int, BinaryConstraint>>& get_constraints(int index) const;
 
@@ -45,7 +45,7 @@ public:
 
 private:
     size_t size;
-    std::vector<bool> variables;
+    std::vector<int> variables;
     std::vector<std::vector<std::pair<int, BinaryConstraint>>> constraints;
     // storing indexes of constraint in neighbor's list for quick access
     std::vector<std::vector<std::pair<int, int>>> constraint_indices;

@@ -8,14 +8,14 @@
 #include <random>
 #include <vector>
 
-#include "pcp/BitPCP.hpp"
+#include "pcp/PCP.hpp"
 #include "core/core.hpp"
 #include "pcp/PoweringPCP.hpp"
 #include "util.hpp"
 
 namespace core {
 
-pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
+pcp::PoweringPCP powering_operation(const pcp::PCP &pcp, int radius) {
     std::vector<std::vector<int>> neighbors;
     neighbors.reserve(pcp.get_size());
     // Get neighbors for each variable in the original PCP
@@ -30,7 +30,7 @@ pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius) {
     std::vector<size_t> neighbor_index_map(pcp.get_size(), -1);
 
     for (size_t i = 0; i < pcp.get_size(); ++i) {
-        std::vector<bool> combined_vars;
+        std::vector<int> combined_vars;
         combined_vars.reserve(neighbors[i].size());
         std::vector<std::pair<std::pair<int, int>, pcp::BinaryConstraint>> constraints_to_add;
         // Build i_index_map, and RAII guard to reset after use
