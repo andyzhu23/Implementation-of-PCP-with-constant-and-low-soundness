@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "constraint/BinaryConstraint.hpp"
-#include "PCP.hpp"
+#include "Aliases.hpp"
 
 namespace pcp {
 
