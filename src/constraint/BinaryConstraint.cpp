@@ -6,21 +6,26 @@
 
 #include <functional>
 
-#include <constraint/BinaryConstraint.hpp>
+#include "constraint/BinaryConstraint.hpp"
+#include "pcp/SimplePCP.hpp"
 
 namespace constraint {
 
-BinaryConstraint::BinaryConstraint(const std::function<bool(int, int)> *f) : f(f) {}
+BinaryConstraint::BinaryConstraint(const std::function<bool(pcp::SimpleDomain, pcp::SimpleDomain)> *f)
+     : f(f) {}
 
-bool BinaryConstraint::operator()(int x, int y) const { return (*f)(x, y); }
+bool BinaryConstraint::operator()(pcp::SimpleDomain x, pcp::SimpleDomain y) const { return (*f)(x, y); }
 
 bool BinaryConstraint::operator==(const BinaryConstraint &other) const { return f == other.f; };
 
 bool BinaryConstraint::operator!=(const BinaryConstraint &other) const { return f != other.f; };
 
-const std::function<bool(int, int)> _BinaryANY = [](int x, int y) -> bool { return true; };
-const std::function<bool(int, int)> _BinaryEQUAL = [](int x, int y) -> bool { return x == y; };
-const std::function<bool(int, int)> _BinaryNOTEQUAL = [](int x, int y) -> bool { return x != y; };
+const std::function<bool(pcp::SimpleDomain, pcp::SimpleDomain)> _BinaryANY = 
+    [](pcp::SimpleDomain x, pcp::SimpleDomain y) -> bool { return true; };
+const std::function<bool(pcp::SimpleDomain, pcp::SimpleDomain)> _BinaryEQUAL = 
+    [](pcp::SimpleDomain x, pcp::SimpleDomain y) -> bool { return x == y; };
+const std::function<bool(pcp::SimpleDomain, pcp::SimpleDomain)> _BinaryNOTEQUAL = 
+    [](pcp::SimpleDomain x, pcp::SimpleDomain y) -> bool { return x != y; };
 
 const BinaryConstraint BinaryANY(&_BinaryANY);
 const BinaryConstraint BinaryEQUAL(&_BinaryEQUAL);

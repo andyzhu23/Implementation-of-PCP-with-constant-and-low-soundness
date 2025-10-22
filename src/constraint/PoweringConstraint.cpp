@@ -6,22 +6,22 @@
 
 #include <vector>
 
-#include <constraint/PoweringConstraint.hpp>
+#include "constraint/PoweringConstraint.hpp"
+#include "pcp/SimplePCP.hpp"
 
 namespace constraint {
 
 // PoweringConstraint class implementation
 // Constructor
-PoweringConstraint::PoweringConstraint(int size) : constraints(size) {}
+PoweringConstraint::PoweringConstraint(size_t size) : constraints(size) {}
 
 // Member functions
-void PoweringConstraint::add_constraint(int index, int other_index, BinaryConstraint constraint) {
-    constraints[index].emplace_back(other_index, constraint);
+void PoweringConstraint::add_constraint(pcp::Variable var, pcp::Variable other_var, BinaryConstraint constraint) {
+    constraints[var].emplace_back(other_var, constraint);
 }
 
-// Overloaded operator
-const std::vector<std::pair<int, BinaryConstraint>>& PoweringConstraint::get_constraints(int index) const {
-    return constraints[index];
+const std::vector<std::pair<pcp::Variable, BinaryConstraint>>& PoweringConstraint::get_constraints(pcp::Variable var) const {
+    return constraints[var];
 }
 
 }

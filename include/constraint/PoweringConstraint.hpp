@@ -10,20 +10,21 @@
 
 #include <vector>
 
-#include <constraint/BinaryConstraint.hpp>
+#include "constraint/BinaryConstraint.hpp"
+#include "pcp/SimplePCP.hpp"
 
 namespace constraint {
 
 class PoweringConstraint {
 public:
-    PoweringConstraint(int size);
+    PoweringConstraint(size_t size);
 
-    void add_constraint(int index, int other_index, BinaryConstraint constraint);
+    void add_constraint(pcp::Variable var, pcp::Variable other_var, BinaryConstraint constraint);
 
-    const std::vector<std::pair<int, BinaryConstraint>>& get_constraints(int index) const;
+    const std::vector<std::pair<pcp::Variable, BinaryConstraint>>& get_constraints(pcp::Variable var) const;
 
 private:
-    std::vector<std::vector<std::pair<int, BinaryConstraint>>> constraints;
+    std::vector<std::vector<std::pair<pcp::Variable, BinaryConstraint>>> constraints;
 };
 
 }

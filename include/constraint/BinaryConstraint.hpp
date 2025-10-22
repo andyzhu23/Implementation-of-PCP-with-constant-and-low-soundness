@@ -10,20 +10,22 @@
 
 #include <functional>
 
+#include "pcp/SimplePCP.hpp"
+
 namespace constraint {
 
 class BinaryConstraint {
 public:
-    BinaryConstraint(const std::function<bool(int, int)> *f);
+    BinaryConstraint(const std::function<bool(pcp::SimpleDomain, pcp::SimpleDomain)> *f);
 
-    bool operator()(int x, int y) const;
+    bool operator()(pcp::SimpleDomain x, pcp::SimpleDomain y) const;
 
     bool operator==(const BinaryConstraint &other) const;
 
     bool operator!=(const BinaryConstraint &other) const;
 
 private:
-    const std::function<bool(int, int)> *f;
+    const std::function<bool(pcp::SimpleDomain, pcp::SimpleDomain)> *f;
 };
 
 extern const BinaryConstraint BinaryANY;

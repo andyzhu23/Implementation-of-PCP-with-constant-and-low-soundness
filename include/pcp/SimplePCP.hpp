@@ -14,7 +14,7 @@
 
 namespace pcp {
 
-using SimpleDomain = uint32_t;
+using SimpleDomain = int;
 using Variable = size_t;
 using Index = size_t;
 
