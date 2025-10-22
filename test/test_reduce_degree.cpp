@@ -18,7 +18,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits = {1, 0, 1};
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 0; i < 3; ++i) {
-            orig_pcp.add_constraint(i, (i + 1) % 3, pcp::BinaryConstraint::UNDEFINED);
+            orig_pcp.add_constraint(i, (i + 1) % 3, constraint::BinaryEQUAL);
         }
         int degree = 3;
         auto reduced = core::reduce_degree(orig_pcp, degree);
@@ -37,7 +37,7 @@ std::vector<std::function<void()>> test_cases = {
             if (next >= 6) next -= 2;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == pcp::BinaryConstraint::EQUAL) found = true;
+                if (adj == next && c == constraint::BinaryEQUAL) found = true;
             }
             assert(found);
         }
@@ -46,7 +46,7 @@ std::vector<std::function<void()>> test_cases = {
             auto orig_constraints = orig_pcp.get_constraints(i);
             for (size_t j = 0; j < orig_constraints.size(); ++j) {
                 int adj = orig_constraints[j].first;
-                pcp::BinaryConstraint c = orig_constraints[j].second;
+                constraint::BinaryConstraint c = orig_constraints[j].second;
                 int reduced_idx = i * 2 + j;
                 int adj_reduced_idx_offset = adj * 2;
                 bool found = false;
@@ -62,7 +62,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < 5; ++i) {
-            orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::NOT_EQUAL);
+            orig_pcp.add_constraint(0, i, constraint::BinaryNOTEQUAL);
         }
         int degree = 4;
         auto reduced = core::reduce_degree(orig_pcp, degree);
@@ -80,7 +80,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % 4;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == pcp::BinaryConstraint::EQUAL) found = true;
+                if (adj == next && c == constraint::BinaryEQUAL) found = true;
             }
             assert(found);
         }
@@ -89,7 +89,7 @@ std::vector<std::function<void()>> test_cases = {
             int idx = 4 + (i - 1);
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(idx)) {
-                if (adj < 4 && c == pcp::BinaryConstraint::NOT_EQUAL) found = true;
+                if (adj < 4 && c == constraint::BinaryNOTEQUAL) found = true;
             }
             assert(found);
         }
@@ -115,7 +115,7 @@ std::vector<std::function<void()>> test_cases = {
         // Complete graph: every node connected to every other
         for (int i = 0; i < N; ++i) {
             for (int j = i + 1; j < N; ++j) {
-                orig_pcp.add_constraint(i, j, pcp::BinaryConstraint::NOT_EQUAL);
+                orig_pcp.add_constraint(i, j, constraint::BinaryNOTEQUAL);
             }
         }
         int degree = 4;
@@ -133,7 +133,7 @@ std::vector<std::function<void()>> test_cases = {
                 int next = offset + (j + 1) % sz;
                 bool found = false;
                 for (const auto &[adj, c] : reduced.get_constraints(curr)) {
-                    if (adj == next && c == pcp::BinaryConstraint::EQUAL) found = true;
+                    if (adj == next && c == constraint::BinaryEQUAL) found = true;
                 }
                 assert(found);
             }
@@ -145,7 +145,7 @@ std::vector<std::function<void()>> test_cases = {
             auto orig_constraints = orig_pcp.get_constraints(i);
             for (size_t j = 0; j < orig_constraints.size(); ++j) {
                 int adj = orig_constraints[j].first;
-                pcp::BinaryConstraint c = orig_constraints[j].second;
+                constraint::BinaryConstraint c = orig_constraints[j].second;
                 int constraint_pos = orig_pcp.get_constraints_indices(i)[j].second;
                 int adj_new_index = 0;
                 for (int k = 0; k < adj; ++k) adj_new_index += orig_pcp.get_constraints(k).size();
@@ -166,7 +166,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits(N, 0);
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
-            orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::NOT_EQUAL);
+            orig_pcp.add_constraint(0, i, constraint::BinaryNOTEQUAL);
         }
         int degree = 4;
         auto reduced = core::reduce_degree(orig_pcp, degree);
@@ -180,7 +180,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % center_sz;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == pcp::BinaryConstraint::EQUAL) found = true;
+                if (adj == next && c == constraint::BinaryEQUAL) found = true;
             }
             assert(found);
         }
@@ -189,7 +189,7 @@ std::vector<std::function<void()>> test_cases = {
         for (int i = 1; i < N; ++i) {
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(offset + (i - 1))) {
-                if (adj < center_sz && c == pcp::BinaryConstraint::NOT_EQUAL) found = true;
+                if (adj < center_sz && c == constraint::BinaryNOTEQUAL) found = true;
             }
             assert(found);
         }

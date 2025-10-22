@@ -34,7 +34,7 @@ pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
-            reduced_pcp.add_constraint(curr, next, pcp::BinaryConstraint::EQUAL);
+            reduced_pcp.add_constraint(curr, next, constraint::BinaryEQUAL);
             // Set bits to match original variable
             reduced_pcp.set_variable(curr, pcp.get_variable(i));
         }
@@ -43,10 +43,10 @@ pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             int adj = constraints[j].first; // original neighbor index
-            pcp::BinaryConstraint constraint = constraints[j].second;
+            constraint::BinaryConstraint con = constraints[j].second;
             int constraint_pos = pcp.get_constraints_indices(i)[j].second;
             size_t adj_new_index = offsets[adj] + constraint_pos;
-            reduced_pcp.add_constraint(curr, adj_new_index, constraint);
+            reduced_pcp.add_constraint(curr, adj_new_index, con);
             // Fill additional edges to make local expander graph
             if (sizes[i] - 1 > 1) {
                 std::uniform_int_distribution<int> dist(1, sizes[i] - 1);
@@ -57,7 +57,7 @@ pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
                     if (rand_neighbor == curr) {
                         rand_neighbor = offsets[i];
                     } 
-                    reduced_pcp.add_constraint(curr, rand_neighbor, pcp::BinaryConstraint::EQUAL);
+                    reduced_pcp.add_constraint(curr, rand_neighbor, constraint::BinaryEQUAL);
                 }
             }
         }

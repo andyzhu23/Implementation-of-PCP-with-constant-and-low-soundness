@@ -13,20 +13,6 @@
 
 namespace pcp {
 
-// PoweringConstraint class implementation
-// Constructor
-PoweringConstraint::PoweringConstraint(int size) : constraints(size) {}
-
-// Member functions
-void PoweringConstraint::add_constraint(int index, int other_index, BinaryConstraint constraint) {
-    constraints[index].emplace_back(other_index, constraint);
-}
-
-// Overloaded operator
-const std::vector<std::pair<int, BinaryConstraint>>& PoweringConstraint::get_constraints(int index) const {
-    return constraints[index];
-}
-
 // PoweringPCP class implementation
 // Constructors
 PoweringPCP::PoweringPCP(size_t size) : size(size), variables(size), constraints(size) {}
@@ -38,19 +24,19 @@ PoweringPCP::PoweringPCP(size_t size, std::vector<std::vector<int>> &&variables)
     : size(size), variables(std::move(variables)), constraints(size) {}
 
 PoweringPCP::PoweringPCP(const std::vector<std::vector<int>> &variables,
-                         const std::vector<std::vector<std::pair<int, PoweringConstraint>>> &constraints)
+                         const std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &constraints)
     : size(variables.size()), variables(variables), constraints(constraints) {}
 
 PoweringPCP::PoweringPCP(std::vector<std::vector<int>> &&variables,
-                         const std::vector<std::vector<std::pair<int, PoweringConstraint>>> &constraints)
+                         const std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &constraints)
     : size(variables.size()), variables(std::move(variables)), constraints(constraints) {}
 
 PoweringPCP::PoweringPCP(const std::vector<std::vector<int>> &variables,
-                         std::vector<std::vector<std::pair<int, PoweringConstraint>>> &&constraints)
+                         std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &&constraints)
     : size(variables.size()), variables(variables), constraints(std::move(constraints)) {}
 
 PoweringPCP::PoweringPCP(std::vector<std::vector<int>> &&variables,
-                         std::vector<std::vector<std::pair<int, PoweringConstraint>>> &&constraints)
+                         std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &&constraints)
     : size(variables.size()), variables(std::move(variables)), constraints(std::move(constraints)) {}
 
 // Member functions
@@ -62,11 +48,11 @@ void PoweringPCP::set_variables(int index, const std::vector<int> &vars) { varia
 
 void PoweringPCP::set_variables(int index, std::vector<int> &&vars) { variables[index] = std::move(vars); }
 
-const std::vector<std::pair<int, PoweringConstraint>>& PoweringPCP::get_constraints(int index) const { 
+const std::vector<std::pair<int, constraint::PoweringConstraint>>& PoweringPCP::get_constraints(int index) const { 
     return constraints[index]; 
 }
 
-void PoweringPCP::add_constraint(int index, int other_index, const PoweringConstraint &constraint) {
+void PoweringPCP::add_constraint(int index, int other_index, const constraint::PoweringConstraint &constraint) {
     if (index < 0 || index >= static_cast<int>(size) 
             || other_index < 0 || other_index >= static_cast<int>(size)) {
         throw std::out_of_range("PoweringPCP::add_constraint: index out of range");
@@ -74,7 +60,7 @@ void PoweringPCP::add_constraint(int index, int other_index, const PoweringConst
     constraints[index].emplace_back(other_index, constraint);
 }
 
-void PoweringPCP::add_constraint(int index, int other_index, PoweringConstraint &&constraint) {
+void PoweringPCP::add_constraint(int index, int other_index, constraint::PoweringConstraint &&constraint) {
     if (index < 0 || index >= static_cast<int>(size) 
             || other_index < 0 || other_index >= static_cast<int>(size)) {
         throw std::out_of_range("PoweringPCP::add_constraint: index out of range");

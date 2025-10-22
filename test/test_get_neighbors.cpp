@@ -17,7 +17,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP pcp(bits);
         for (int i = 0; i < 5; ++i) {
-            pcp.add_constraint(i, (i + 1) % 5, pcp::BinaryConstraint::UNDEFINED);
+            pcp.add_constraint(i, (i + 1) % 5, constraint::BinaryEQUAL);
         }
         // Radius 1 from node 0
         auto neighbors1 = pcp.get_neighbors(0, 1);
@@ -36,7 +36,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP pcp(bits);
         for (int i = 1; i < 5; ++i) {
-            pcp.add_constraint(0, i, pcp::BinaryConstraint::UNDEFINED);
+            pcp.add_constraint(0, i, constraint::BinaryEQUAL);
         }
         // Center node, radius 1
         auto neighbors = pcp.get_neighbors(0, 1);
@@ -55,7 +55,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits = {1, 0, 1, 0, 1, 0};
         pcp::SimplePCP pcp(bits);
         for (int i = 0; i < 5; ++i) {
-            pcp.add_constraint(i, i+1, pcp::BinaryConstraint::UNDEFINED);
+            pcp.add_constraint(i, i+1, constraint::BinaryEQUAL);
         }
         // Middle node, radius 2
         auto neighbors = pcp.get_neighbors(3, 2);
@@ -71,7 +71,7 @@ std::vector<std::function<void()>> test_cases = {
         pcp::SimplePCP pcp(bits);
         for (int i = 0; i < 4; ++i) {
             for (int j = i+1; j < 4; ++j) {
-                pcp.add_constraint(i, j, pcp::BinaryConstraint::UNDEFINED);
+                pcp.add_constraint(i, j, constraint::BinaryEQUAL);
             }
         }
         // Any node, radius 1

@@ -19,7 +19,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 0; i < 5; ++i) {
-            orig_pcp.add_constraint(i, (i + 1) % 5, pcp::BinaryConstraint::UNDEFINED);
+            orig_pcp.add_constraint(i, (i + 1) % 5, constraint::BinaryEQUAL);
         }
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
@@ -44,8 +44,8 @@ std::vector<std::function<void()>> test_cases = {
                     if (it != neighbors_adj.end()) {
                         size_t idx_adj = std::distance(neighbors_adj.begin(), it);
                         bool found = false;
-                        for (const auto &[other_idx, constraint] : pc.get_constraints(idx_i)) {
-                            if (other_idx == idx_adj && constraint == pcp::BinaryConstraint::EQUAL) {
+                        for (const auto &[other_idx, cons] : pc.get_constraints(idx_i)) {
+                            if (other_idx == idx_adj && cons == constraint::BinaryEQUAL) {
                                 found = true;
                                 break;
                             }
@@ -61,8 +61,8 @@ std::vector<std::function<void()>> test_cases = {
                         if (it_adj != neighbors_adj.end()) {
                             size_t idx_adj = std::distance(neighbors_adj.begin(), it_adj);
                             bool found = false;
-                            for (const auto &[other_idx, constraint] : pc.get_constraints(idx_i)) {
-                                if (other_idx == idx_adj && constraint == orig_constraint) {
+                            for (const auto &[other_idx, cons] : pc.get_constraints(idx_i)) {
+                                if (other_idx == idx_adj && cons == orig_constraint) {
                                     found = true;
                                     break;
                                 }
@@ -79,7 +79,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < 5; ++i) {
-            orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::NOT_EQUAL);
+            orig_pcp.add_constraint(0, i, constraint::BinaryNOTEQUAL);
         }
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);
@@ -113,7 +113,7 @@ std::vector<std::function<void()>> test_cases = {
                         size_t idx_leaf = std::distance(leaf_neighbors.begin(), it_leaf);
                         bool found = false;
                         for (const auto &[other_idx, constraint] : pc.get_constraints(idx_center)) {
-                            if (other_idx == idx_leaf && constraint == pcp::BinaryConstraint::NOT_EQUAL) {
+                            if (other_idx == idx_leaf && constraint == constraint::BinaryNOTEQUAL) {
                                 found = true;
                                 break;
                             }
@@ -160,7 +160,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits(N, 0);
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 0; i < N - 1; ++i) {
-            orig_pcp.add_constraint(i, i + 1, pcp::BinaryConstraint::UNDEFINED);
+            orig_pcp.add_constraint(i, i + 1, constraint::BinaryEQUAL);
         }
         int radius = 10;
         auto powered = core::powering_operation(orig_pcp, radius);
@@ -172,7 +172,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits(N, 0);
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
-            orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::UNDEFINED);
+            orig_pcp.add_constraint(0, i, constraint::BinaryEQUAL);
         }
         int radius = 2;
         auto powered = core::powering_operation(orig_pcp, radius);
@@ -184,7 +184,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<int> bits(N, 0);
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
-            orig_pcp.add_constraint(0, i, pcp::BinaryConstraint::UNDEFINED);
+            orig_pcp.add_constraint(0, i, constraint::BinaryEQUAL);
         }
         int radius = 1;
         auto powered = core::powering_operation(orig_pcp, radius);

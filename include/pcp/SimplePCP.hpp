@@ -7,17 +7,12 @@
 #ifndef SIMPLEPCP_HPP
 #define SIMPLEPCP_HPP
 
+#include <functional>
 #include <vector>
 
-namespace pcp {
+#include "constraint/BinaryConstraint.hpp"
 
-enum class BinaryConstraint {
-    UNDEFINED, // only used in unit tests
-    EQUAL,
-    NOT_EQUAL,
-    ANY,
-    NONE
-};
+namespace pcp {
 
 class SimplePCP {
 public:
@@ -34,11 +29,11 @@ public:
 
     void set_variable(int index, int value);
 
-    const std::vector<std::pair<int, BinaryConstraint>>& get_constraints(int index) const;
+    const std::vector<std::pair<int, constraint::BinaryConstraint>>& get_constraints(int index) const;
 
     const std::vector<std::pair<int, int>>& get_constraints_indices(int index) const;
 
-    void add_constraint(int index, int other_index, BinaryConstraint constraint);
+    void add_constraint(int index, int other_index, constraint::BinaryConstraint constraint);
 
     // BFS to get all neighbors within a certain radius
     std::vector<int> get_neighbors(int index, int radius) const;
@@ -46,7 +41,7 @@ public:
 private:
     size_t size;
     std::vector<int> variables;
-    std::vector<std::vector<std::pair<int, BinaryConstraint>>> constraints;
+    std::vector<std::vector<std::pair<int, constraint::BinaryConstraint>>> constraints;
     // storing indexes of constraint in neighbor's list for quick access
     std::vector<std::vector<std::pair<int, int>>> constraint_indices;
     mutable std::vector<bool> visited; // For BFS

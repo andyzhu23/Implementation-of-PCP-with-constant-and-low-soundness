@@ -43,7 +43,7 @@ int SimplePCP::get_variable(int index) const { return variables[index]; }
 
 void SimplePCP::set_variable(int index, int value) { variables[index] = value; }
 
-const std::vector<std::pair<int, BinaryConstraint>>& SimplePCP::get_constraints(int index) const { 
+const std::vector<std::pair<int, constraint::BinaryConstraint>>& SimplePCP::get_constraints(int index) const { 
     return constraints[index]; 
 }
 
@@ -51,7 +51,7 @@ const std::vector<std::pair<int, int>>& SimplePCP::get_constraints_indices(int i
     return constraint_indices[index]; 
 }
 
-void SimplePCP::add_constraint(int index, int other_index, BinaryConstraint constraint) {
+void SimplePCP::add_constraint(int index, int other_index, constraint::BinaryConstraint constraint) {
     if (index < 0 || index >= static_cast<int>(size) 
         || other_index < 0 || other_index >= static_cast<int>(size)) {
         throw std::out_of_range("SimplePCP::add_constraint: index out of range");
