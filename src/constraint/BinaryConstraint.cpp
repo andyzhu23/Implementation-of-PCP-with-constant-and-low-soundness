@@ -11,8 +11,11 @@
 namespace constraint {
 
 BinaryConstraint::BinaryConstraint(std::function<bool(int, int)> *f) : f(f) {}
+
 bool BinaryConstraint::operator()(int x, int y) const { return (*f)(x, y); }
+
 bool BinaryConstraint::operator==(const BinaryConstraint &other) const { return f == other.f; };
+
 bool BinaryConstraint::operator!=(const BinaryConstraint &other) const { return f != other.f; };
 
 std::function<bool(int, int)> _BinaryANY = [](int x, int y) -> bool { return true; };
