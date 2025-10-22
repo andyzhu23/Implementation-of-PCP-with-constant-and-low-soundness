@@ -15,7 +15,7 @@
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 3-node cycle, degree 3
     []() -> void {
-        std::vector<int> bits = {1, 0, 1};
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1};
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 0; i < 3; ++i) {
             orig_pcp.add_constraint(i, (i + 1) % 3, constraint::BinaryEQUAL);
@@ -59,7 +59,7 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Star graph, degree 4
     []() -> void {
-        std::vector<int> bits = {1, 0, 1, 0, 1};
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < 5; ++i) {
             orig_pcp.add_constraint(0, i, constraint::BinaryNOTEQUAL);
@@ -96,7 +96,7 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 3: Throws on degree < 3
     []() -> void {
-        std::vector<int> bits = {1, 0};
+        std::vector<pcp::SimpleDomain> bits = {1, 0};
         pcp::SimplePCP orig_pcp(bits);
         bool thrown = false;
         try {
@@ -110,7 +110,7 @@ std::vector<std::function<void()>> test_cases = {
     // Test 4: Large complete graph, degree 4
     []() -> void {
         const int N = 10;
-        std::vector<int> bits(N, 1);
+        std::vector<pcp::SimpleDomain> bits(N, 1);
         pcp::SimplePCP orig_pcp(bits);
         // Complete graph: every node connected to every other
         for (int i = 0; i < N; ++i) {
@@ -163,7 +163,7 @@ std::vector<std::function<void()>> test_cases = {
     // Test 5: Large star graph, degree 4
     []() -> void {
         const int N = 20;
-        std::vector<int> bits(N, 0);
+        std::vector<pcp::SimpleDomain> bits(N, 0);
         pcp::SimplePCP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
             orig_pcp.add_constraint(0, i, constraint::BinaryNOTEQUAL);

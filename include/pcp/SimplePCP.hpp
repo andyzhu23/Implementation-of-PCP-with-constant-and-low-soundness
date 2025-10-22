@@ -14,36 +14,40 @@
 
 namespace pcp {
 
+using SimpleDomain = uint32_t;
+using Variable = size_t;
+using Index = size_t;
+
 class SimplePCP {
 public:
     SimplePCP(size_t size);
 
-    SimplePCP(const std::vector<int> &variables);
+    SimplePCP(const std::vector<SimpleDomain> &variables);
 
-    SimplePCP(std::vector<int> &&variables);
+    SimplePCP(std::vector<SimpleDomain> &&variables);
     
     // Member functions
     size_t get_size() const;
 
-    int get_variable(int index) const;
+    SimpleDomain get_variable(Variable var) const;
 
-    void set_variable(int index, int value);
+    void set_variable(Variable var, SimpleDomain value);
 
-    const std::vector<std::pair<int, constraint::BinaryConstraint>>& get_constraints(int index) const;
+    const std::vector<std::pair<Variable, constraint::BinaryConstraint>>& get_constraints(Variable var) const;
 
-    const std::vector<std::pair<int, int>>& get_constraints_indices(int index) const;
+    const std::vector<std::pair<Variable, Index>>& get_constraints_indices(Variable var) const;
 
-    void add_constraint(int index, int other_index, constraint::BinaryConstraint constraint);
+    void add_constraint(Variable var, Variable other_var, constraint::BinaryConstraint constraint);
 
     // BFS to get all neighbors within a certain radius
-    std::vector<int> get_neighbors(int index, int radius) const;
+    std::vector<Variable> get_neighbors(Variable var, int radius) const;
 
 private:
     size_t size;
-    std::vector<int> variables;
-    std::vector<std::vector<std::pair<int, constraint::BinaryConstraint>>> constraints;
+    std::vector<SimpleDomain> variables;
+    std::vector<std::vector<std::pair<Variable, constraint::BinaryConstraint>>> constraints;
     // storing indexes of constraint in neighbor's list for quick access
-    std::vector<std::vector<std::pair<int, int>>> constraint_indices;
+    std::vector<std::vector<std::pair<Variable, Index>>> constraint_indices;
     mutable std::vector<bool> visited; // For BFS
 };
 

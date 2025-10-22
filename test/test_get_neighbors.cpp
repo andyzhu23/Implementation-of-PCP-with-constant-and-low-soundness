@@ -14,7 +14,7 @@
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, alternating constraints
     []() -> void {
-        std::vector<int> bits = {1, 0, 1, 0, 1};
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP pcp(bits);
         for (int i = 0; i < 5; ++i) {
             pcp.add_constraint(i, (i + 1) % 5, constraint::BinaryEQUAL);
@@ -33,7 +33,7 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Star graph, center 0, leaves 1-4
     []() -> void {
-        std::vector<int> bits = {1, 0, 1, 0, 1};
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1, 0, 1};
         pcp::SimplePCP pcp(bits);
         for (int i = 1; i < 5; ++i) {
             pcp.add_constraint(0, i, constraint::BinaryEQUAL);
@@ -52,7 +52,7 @@ std::vector<std::function<void()>> test_cases = {
     }, 
     // Test 3: 6-node chain, alternating constraints
     []() -> void {
-        std::vector<int> bits = {1, 0, 1, 0, 1, 0};
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1, 0, 1, 0};
         pcp::SimplePCP pcp(bits);
         for (int i = 0; i < 5; ++i) {
             pcp.add_constraint(i, i+1, constraint::BinaryEQUAL);
@@ -67,7 +67,7 @@ std::vector<std::function<void()>> test_cases = {
     }, 
     // Test 4: 4-node complete graph
     []() -> void {
-        std::vector<int> bits = {1, 0, 1, 0};
+        std::vector<pcp::SimpleDomain> bits = {1, 0, 1, 0};
         pcp::SimplePCP pcp(bits);
         for (int i = 0; i < 4; ++i) {
             for (int j = i+1; j < 4; ++j) {

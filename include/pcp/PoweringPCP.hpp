@@ -15,46 +15,48 @@
 
 namespace pcp {
 
+using PoweringDomain = std::vector<SimpleDomain>;
+
 class PoweringPCP {
 public:
     // Constructors
     PoweringPCP(size_t size);
 
-    PoweringPCP(size_t size, const std::vector<std::vector<int>> &variables);
+    PoweringPCP(size_t size, const std::vector<PoweringDomain> &variables);
 
-    PoweringPCP(size_t size, std::vector<std::vector<int>> &&variables);
+    PoweringPCP(size_t size, std::vector<PoweringDomain> &&variables);
 
-    PoweringPCP(const std::vector<std::vector<int>> &variables,
-                 const std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &constraints);
+    PoweringPCP(const std::vector<PoweringDomain> &variables,
+                 const std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &constraints);
 
-    PoweringPCP(std::vector<std::vector<int>> &&variables,
-                 const std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &constraints);
+    PoweringPCP(std::vector<PoweringDomain> &&variables,
+                 const std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &constraints);
 
-    PoweringPCP(const std::vector<std::vector<int>> &variables,
-                 std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &&constraints);
+    PoweringPCP(const std::vector<PoweringDomain> &variables,
+                 std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &&constraints);
 
-    PoweringPCP(std::vector<std::vector<int>> &&variables,
-                 std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> &&constraints);
+    PoweringPCP(std::vector<PoweringDomain> &&variables,
+                 std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> &&constraints);
     
     // Member functions
     size_t get_size() const;
 
-    const std::vector<int>& get_variables(int index) const;
+    const PoweringDomain& get_variables(Variable var) const;
 
-    void set_variables(int index, const std::vector<int> &vars);
+    void set_variables(Variable var, const PoweringDomain &vars);
     
-    void set_variables(int index, std::vector<int> &&vars);
+    void set_variables(Variable var, PoweringDomain &&vars);
 
-    const std::vector<std::pair<int, constraint::PoweringConstraint>>& get_constraints(int index) const;
+    const std::vector<std::pair<Variable, constraint::PoweringConstraint>>& get_constraints(Variable var) const;
 
-    void add_constraint(int index, int other_index, const constraint::PoweringConstraint &constraint);
+    void add_constraint(Variable var, Variable other_var, const constraint::PoweringConstraint &constraint);
     
-    void add_constraint(int index, int other_index, constraint::PoweringConstraint &&constraint);
+    void add_constraint(Variable var, Variable other_var, constraint::PoweringConstraint &&constraint);
     
 private:
     size_t size;
-    std::vector<std::vector<int>> variables;
-    std::vector<std::vector<std::pair<int, constraint::PoweringConstraint>>> constraints;
+    std::vector<PoweringDomain> variables;
+    std::vector<std::vector<std::pair<Variable, constraint::PoweringConstraint>>> constraints;
 };
 
 }
