@@ -34,6 +34,8 @@ public:
 
     const std::vector<std::pair<Variable, Index>>& get_constraints_indices(Variable var) const;
 
+    const std::vector<std::tuple<Variable, Variable, constraint::BinaryConstraint>>& get_constraints_list() const;
+
     void add_constraint(Variable var, Variable other_var, constraint::BinaryConstraint constraint);
 
     // BFS to get all neighbors within a certain radius
@@ -42,7 +44,10 @@ public:
 private:
     size_t size;
     std::vector<SimpleDomain> variables;
+    // adjacent list representation of constraints used for graph traversal
     std::vector<std::vector<std::pair<Variable, constraint::BinaryConstraint>>> constraints;
+    // edge list representation of constraints used for fast access to query constraints
+    std::vector<std::tuple<Variable, Variable, constraint::BinaryConstraint>> constraints_list;
     // storing indexes of constraint in neighbor's list for quick access
     std::vector<std::vector<std::pair<Variable, Index>>> constraint_indices;
     mutable std::vector<bool> visited; // For BFS

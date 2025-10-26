@@ -51,6 +51,10 @@ const std::vector<std::pair<Variable, Index>>& SimplePCP::get_constraints_indice
     return constraint_indices[var]; 
 }
 
+const std::vector<std::tuple<Variable, Variable, constraint::BinaryConstraint>>& SimplePCP::get_constraints_list() const {
+    return constraints_list;
+}
+
 void SimplePCP::add_constraint(Variable var, Variable other_var, constraint::BinaryConstraint constraint) {
     if (var < 0 || var >= static_cast<Variable>(size) 
         || other_var < 0 || other_var >= static_cast<Variable>(size)) {
@@ -60,6 +64,7 @@ void SimplePCP::add_constraint(Variable var, Variable other_var, constraint::Bin
     constraints[other_var].emplace_back(var, constraint);
     constraint_indices[var].emplace_back(other_var, constraints[other_var].size() - 1);
     constraint_indices[other_var].emplace_back(var, constraints[var].size() - 1);
+    constraints_list.emplace_back(var, other_var, constraint);
 }
 
 std::vector<Variable> SimplePCP::get_neighbors(Variable var, int radius) const {

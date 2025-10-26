@@ -6,7 +6,8 @@
 #
 
 add_executable(
-    test_get_neighbors test_get_neighbors.cpp 
+    test_get_neighbors 
+    test_get_neighbors.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp 
     ../../src/constraint/BinaryConstraint.cpp
@@ -14,6 +15,17 @@ add_executable(
 )
 add_test(NAME Test_Get_Neighbors COMMAND test_get_neighbors)
 target_include_directories(test_get_neighbors PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
+    test_PCPAnalyzer 
+    test_PCPAnalyzer.cpp 
+    ../../src/pcp/SimplePCP.cpp 
+    ../../src/constraint/BinaryConstraint.cpp
+    ../../src/util.cpp
+    ../../src/analyzer/PCPAnalyzer.cpp
+)
+add_test(NAME Test_PCPAnalyzer COMMAND test_PCPAnalyzer)
+target_include_directories(test_PCPAnalyzer PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_powering_operation 
