@@ -21,6 +21,9 @@ pcp::SimplePCP& to_expander(pcp::SimplePCP &pcp, int expanding_coefficient);
 // reduce_degree reduces the degree of a BitPCP to degree by replacing each variable with a graph of variables
 pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree);
 
+// reduce_alphabet reduces the alphabet size of a PoweringPCP to binary using Hadamard codes
+pcp::SimplePCP reduce_alphabet(const pcp::PoweringPCP &pcp);
+
 }
 
 #endif
