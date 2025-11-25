@@ -18,6 +18,9 @@ public:
     Hadamard(const std::vector<bool> value);
 
     bool query(int idx) const;
+
+    const std::vector<bool>& getCode() const;
+
 private:
     std::vector<bool> code;
 };

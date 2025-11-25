@@ -73,3 +73,23 @@ add_executable(
 )
 add_test(NAME Test_Reduce_Degree COMMAND test_reduce_degree)
 target_include_directories(test_reduce_degree PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
+    test_Hadamard
+    test_Hadamard.cpp
+    ../../src/hadamard/Hadamard.cpp
+)
+add_test(NAME Test_Hadamard COMMAND test_Hadamard)
+target_include_directories(test_Hadamard PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
+    test_Tester
+    test_Tester.cpp
+    ../../src/hadamard/Tester.cpp
+    ../../src/hadamard/Hadamard.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/constraint/PoweringConstraint.cpp
+    ../../src/util.cpp
+)
+add_test(NAME Test_Tester COMMAND test_Tester)
+target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
