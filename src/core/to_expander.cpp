@@ -8,13 +8,13 @@
 #include <random>
 #include <vector>
 
-#include "pcp/SimplePCP.hpp"
+#include "pcp/BitPCP.hpp"
 #include "core/core.hpp"
 #include "pcp/PoweringPCP.hpp"
 
 namespace core {
 
-pcp::SimplePCP& to_expander(pcp::SimplePCP &pcp, int expanding_coefficient) {
+pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient) {
     // generate random seed
     static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     if (pcp.get_size() <= 1) {
@@ -29,7 +29,7 @@ pcp::SimplePCP& to_expander(pcp::SimplePCP &pcp, int expanding_coefficient) {
     for (size_t i = 0; i < pcp.get_size(); ++i) {
         for (int j = 0; j < expanding_coefficient; ++j) {
             int target = dist(rng);
-            pcp.add_constraint(i, target, constraint::BinaryANY);
+            pcp.add_constraint(i, target, constraint::BitConstraint::ANY);
         }
         // swap current node to front to avoid self-loop
         std::swap(options[0], options[i]);

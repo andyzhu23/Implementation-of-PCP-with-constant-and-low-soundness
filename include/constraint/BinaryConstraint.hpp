@@ -34,6 +34,5 @@ extern const BinaryConstraint BinaryNOTEQUAL;
 
 }
 
-
 #endif
 

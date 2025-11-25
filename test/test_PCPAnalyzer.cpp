@@ -4,14 +4,13 @@
 #include <vector>
 
 #include "analyzer/PCPAnalyzer.hpp"
-#include "constraint/BinaryConstraint.hpp"
-#include "pcp/SimplePCP.hpp"
+#include "pcp/BitPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     []() -> void {
         // Test case 1: Simple PCP with no constraints
-        pcp::SimplePCP pcp1(3);  // 3 variables, no constraints
-        std::vector<std::pair<pcp::SimplePCP, analyzer::Satisfiability>> samples = {
+        pcp::BitPCP pcp1(3);  // 3 variables, no constraints
+        std::vector<std::pair<pcp::BitPCP, analyzer::Satisfiability>> samples = {
             {pcp1, true},
         };
         analyzer::PCPAnalyzer analyzer(samples, 10);
@@ -26,11 +25,11 @@ std::vector<std::function<void()>> test_cases = {
     },
     []() -> void {
         // Test case 2: Simple PCP with one constraint
-        pcp::SimplePCP pcp2_1(std::move(std::vector<pcp::SimpleDomain>{0, 0}));
-        pcp::SimplePCP pcp2_2(std::move(std::vector<pcp::SimpleDomain>{0, 1}));
-        pcp2_1.add_constraint(0, 1, constraint::BinaryEQUAL);
-        pcp2_2.add_constraint(0, 1, constraint::BinaryEQUAL);
-        std::vector<std::pair<pcp::SimplePCP, analyzer::Satisfiability>> samples = {
+        pcp::BitPCP pcp2_1(std::move(std::vector<pcp::BitDomain>{0, 0}));
+        pcp::BitPCP pcp2_2(std::move(std::vector<pcp::BitDomain>{0, 1}));
+        pcp2_1.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp2_2.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        std::vector<std::pair<pcp::BitPCP, analyzer::Satisfiability>> samples = {
             {pcp2_1, true},
             {pcp2_2, false},
         };
@@ -46,11 +45,11 @@ std::vector<std::function<void()>> test_cases = {
     },
     []() -> void {
         // Test case 3: Complex PCP with multiple constraints
-        pcp::SimplePCP pcp3(std::vector<pcp::SimpleDomain>{0, 1, 1, 0});
-        pcp3.add_constraint(0, 1, constraint::BinaryEQUAL);
-        pcp3.add_constraint(1, 2, constraint::BinaryEQUAL);
-        pcp3.add_constraint(2, 3, constraint::BinaryNOTEQUAL);
-        std::vector<std::pair<pcp::SimplePCP, analyzer::Satisfiability>> samples = {
+        pcp::BitPCP pcp3(std::vector<pcp::BitDomain>{0, 1, 1, 0});
+        pcp3.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp3.add_constraint(1, 2, constraint::BitConstraint::EQUAL);
+        pcp3.add_constraint(2, 3, constraint::BitConstraint::NOTEQUAL);
+        std::vector<std::pair<pcp::BitPCP, analyzer::Satisfiability>> samples = {
             {pcp3, false},
         };
         analyzer::PCPAnalyzer analyzer(samples, 10000);
@@ -65,13 +64,13 @@ std::vector<std::function<void()>> test_cases = {
     },
     []() -> void {
         // Test case 4: Complex PCP with more constraints
-        pcp::SimplePCP pcp4(std::vector<pcp::SimpleDomain>{0, 1, 1, 0, 1});
-        pcp4.add_constraint(0, 1, constraint::BinaryEQUAL);
-        pcp4.add_constraint(1, 2, constraint::BinaryEQUAL);
-        pcp4.add_constraint(2, 3, constraint::BinaryNOTEQUAL);
-        pcp4.add_constraint(3, 4, constraint::BinaryEQUAL);
-        pcp4.add_constraint(0, 4, constraint::BinaryNOTEQUAL);
-        std::vector<std::pair<pcp::SimplePCP, analyzer::Satisfiability>> samples = {
+        pcp::BitPCP pcp4(std::vector<pcp::BitDomain>{0, 1, 1, 0, 1});
+        pcp4.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp4.add_constraint(1, 2, constraint::BitConstraint::EQUAL);
+        pcp4.add_constraint(2, 3, constraint::BitConstraint::NOTEQUAL);
+        pcp4.add_constraint(3, 4, constraint::BitConstraint::EQUAL);
+        pcp4.add_constraint(0, 4, constraint::BitConstraint::NOTEQUAL);
+        std::vector<std::pair<pcp::BitPCP, analyzer::Satisfiability>> samples = {
             {pcp4, false},
         };
         analyzer::PCPAnalyzer analyzer(samples, 10000);

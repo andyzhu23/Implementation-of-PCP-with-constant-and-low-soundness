@@ -67,28 +67,4 @@ void SimplePCP::add_constraint(Variable var, Variable other_var, constraint::Bin
     constraints_list.emplace_back(var, other_var, constraint);
 }
 
-std::vector<Variable> SimplePCP::get_neighbors(Variable var, int radius) const {
-    std::vector<Variable> neighbors;
-    util::visit_guard visit_guard(visited, neighbors); // RAII to manage visited state
-    std::queue<std::pair<int, int>> q; // pair of (node, current_depth)
-    q.emplace(var, 0);
-    visited[var] = true;
-
-    while (!q.empty()) {
-        auto [current, depth] = q.front();
-        q.pop();
-        neighbors.push_back(current);
-        if (depth < radius) {
-            for (const auto& [neighbor, _] : constraints[current]) {
-                if (!visited[neighbor]) {
-                    visited[neighbor] = true;
-                    q.emplace(neighbor, depth + 1);
-                }
-            }
-        }
-    }
-
-    return neighbors;
-}
-
 }

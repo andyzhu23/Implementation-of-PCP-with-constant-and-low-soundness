@@ -9,11 +9,11 @@
 #include <stdexcept>
 
 #include "core/core.hpp"
-#include "pcp/SimplePCP.hpp"
+#include "pcp/BitPCP.hpp"
 
 namespace core {
 
-pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
+pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
     // generate random seed
     static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     if (degree < 3) {
@@ -28,13 +28,13 @@ pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
         new_size += sizes.back();
         offsets.push_back(new_size - sizes.back());
     }
-    pcp::SimplePCP reduced_pcp(new_size);
+    pcp::BitPCP reduced_pcp(new_size);
     for (size_t i = 0; i < original_size; ++i) {
         // Connect in a cycle
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
-            reduced_pcp.add_constraint(curr, next, constraint::BinaryEQUAL);
+            reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::EQUAL);
             // Set bits to match original variable
             reduced_pcp.set_variable(curr, pcp.get_variable(i));
         }
@@ -43,7 +43,7 @@ pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             int adj = constraints[j].first; // original neighbor index
-            constraint::BinaryConstraint con = constraints[j].second;
+            constraint::BitConstraint con = constraints[j].second;
             int constraint_pos = pcp.get_constraints_indices(i)[j].second;
             size_t adj_new_index = offsets[adj] + constraint_pos;
             reduced_pcp.add_constraint(curr, adj_new_index, con);
@@ -57,7 +57,7 @@ pcp::SimplePCP reduce_degree(const pcp::SimplePCP &pcp, int degree) {
                     if (rand_neighbor == curr) {
                         rand_neighbor = offsets[i];
                     } 
-                    reduced_pcp.add_constraint(curr, rand_neighbor, constraint::BinaryEQUAL);
+                    reduced_pcp.add_constraint(curr, rand_neighbor, constraint::BitConstraint::EQUAL);
                 }
             }
         }

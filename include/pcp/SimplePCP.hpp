@@ -38,9 +38,6 @@ public:
 
     void add_constraint(Variable var, Variable other_var, constraint::BinaryConstraint constraint);
 
-    // BFS to get all neighbors within a certain radius
-    std::vector<Variable> get_neighbors(Variable var, int radius) const;
-
 private:
     size_t size;
     std::vector<SimpleDomain> variables;
