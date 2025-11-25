@@ -77,7 +77,7 @@ target_include_directories(test_reduce_degree PRIVATE ${CMAKE_SOURCE_DIR}/includ
 add_executable(
     test_Hadamard
     test_Hadamard.cpp
-    ../../src/hadamard/Hadamard.cpp
+    ../../src/pcpp/Hadamard.cpp
 )
 add_test(NAME Test_Hadamard COMMAND test_Hadamard)
 target_include_directories(test_Hadamard PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -85,8 +85,8 @@ target_include_directories(test_Hadamard PRIVATE ${CMAKE_SOURCE_DIR}/include)
 add_executable(
     test_Tester
     test_Tester.cpp
-    ../../src/hadamard/Tester.cpp
-    ../../src/hadamard/Hadamard.cpp
+    ../../src/pcpp/Tester.cpp
+    ../../src/pcpp/Hadamard.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/PoweringConstraint.cpp
     ../../src/util.cpp

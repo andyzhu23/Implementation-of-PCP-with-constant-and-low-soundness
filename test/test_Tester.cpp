@@ -10,7 +10,7 @@
 #include <vector>
 #include <numeric>
 
-#include "hadamard/Tester.hpp"
+#include "pcpp/Tester.hpp"
 #include "constraint/PoweringConstraint.hpp"
 #include "pcp/Aliases.hpp"
 

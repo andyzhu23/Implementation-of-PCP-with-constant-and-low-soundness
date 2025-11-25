@@ -14,7 +14,7 @@
 #include "pcp/BitPCP.hpp"
 #include "pcp/PoweringPCP.hpp"
 #include "constraint/PoweringConstraint.hpp"
-#include "hadamard/Hadamard.hpp"
+#include "pcpp/Hadamard.hpp"
 
 namespace pcpp {
 
