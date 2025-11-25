@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "pcp/Aliases.hpp"
-#include "constraint/BinaryConstraint.hpp"
+#include "constraint/BitConstraint.hpp"
 #include "pcp/SimplePCP.hpp"
 
 namespace constraint {
@@ -20,12 +20,12 @@ class PoweringConstraint {
 public:
     PoweringConstraint(size_t size);
 
-    void add_constraint(pcp::Variable var, pcp::Variable other_var, BinaryConstraint constraint);
+    void add_constraint(pcp::Variable var, pcp::Variable other_var, BitConstraint constraint);
 
-    const std::vector<std::pair<pcp::Variable, BinaryConstraint>>& get_constraints(pcp::Variable var) const;
+    const std::vector<std::pair<pcp::Variable, BitConstraint>>& get_constraints(pcp::Variable var) const;
 
 private:
-    std::vector<std::vector<std::pair<pcp::Variable, BinaryConstraint>>> constraints;
+    std::vector<std::vector<std::pair<pcp::Variable, BitConstraint>>> constraints;
 };
 
 }

@@ -8,6 +8,7 @@
 add_executable(
     test_get_neighbors 
     test_get_neighbors.cpp 
+    ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp 
     ../../src/constraint/BinaryConstraint.cpp
@@ -19,6 +20,7 @@ target_include_directories(test_get_neighbors PRIVATE ${CMAKE_SOURCE_DIR}/includ
 add_executable(
     test_PCPAnalyzer 
     test_PCPAnalyzer.cpp 
+    ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/constraint/BinaryConstraint.cpp
     ../../src/util.cpp
@@ -31,6 +33,7 @@ add_executable(
     test_powering_operation 
     test_powering_operation.cpp 
     ../../src/core/powering_operation.cpp 
+    ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/pcp/PoweringPCP.cpp 
     ../../src/util.cpp
@@ -44,6 +47,7 @@ add_executable(
     test_to_expander 
     test_to_expander.cpp 
     ../../src/core/to_expander.cpp 
+    ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp
     ../../src/constraint/BinaryConstraint.cpp
@@ -56,6 +60,7 @@ add_executable(
     test_reduce_degree 
     test_reduce_degree.cpp 
     ../../src/core/reduce_degree.cpp 
+    ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp
     ../../src/constraint/BinaryConstraint.cpp

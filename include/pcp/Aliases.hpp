@@ -1,3 +1,9 @@
+/*
+ * Author: Andy Zhu
+ * @date    2025-11-22 10:27:26
+ * @version 1.0.0
+ */
+
 #ifndef PCP_HPP
 #define PCP_HPP
 
@@ -15,8 +21,10 @@ using Variable = size_t;
 using Index = size_t;
 // type used to represent domain of values in SimplePCP
 using SimpleDomain = std::bitset<SimpleDomainSize>;
+// type used to represent domain of values in BitPCP
+using BitDomain = bool;
 // type used to represent domain of values in PoweringPCP
-using PoweringDomain = std::vector<SimpleDomain>;
+using PoweringDomain = std::vector<BitDomain>;
 
 }
 
