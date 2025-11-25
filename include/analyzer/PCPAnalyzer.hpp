@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "pcp/SimplePCP.hpp"
+#include "pcp/BitPCP.hpp"
 
 namespace analyzer {
 
@@ -13,7 +13,7 @@ using Satisfiability = bool;
 
 class PCPAnalyzer {
 public:
-    PCPAnalyzer(const std::vector<std::pair<pcp::SimplePCP, Satisfiability>> &samples, const int num_trial);
+    PCPAnalyzer(const std::vector<std::pair<pcp::BitPCP, Satisfiability>> &samples, const int num_trial);
 
     double getSoundness();
 
@@ -22,7 +22,7 @@ public:
     double getGap();
 
 private:
-    const std::vector<std::pair<pcp::SimplePCP, Satisfiability>> &samples;
+    const std::vector<std::pair<pcp::BitPCP, Satisfiability>> &samples;
     const int num_trial;
     double soundness;
     double completeness;
@@ -30,7 +30,7 @@ private:
 
 };
 
-bool query(const pcp::SimplePCP &sample);
+bool query(const pcp::BitPCP &sample);
 
 }
 

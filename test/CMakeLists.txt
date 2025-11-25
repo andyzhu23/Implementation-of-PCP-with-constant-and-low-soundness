@@ -12,6 +12,7 @@ add_executable(
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp 
     ../../src/constraint/BinaryConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/constraint/PoweringConstraint.cpp
 )
 add_test(NAME Test_Get_Neighbors COMMAND test_get_neighbors)
@@ -23,6 +24,7 @@ add_executable(
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/constraint/BinaryConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/util.cpp
     ../../src/analyzer/PCPAnalyzer.cpp
 )
@@ -38,6 +40,7 @@ add_executable(
     ../../src/pcp/PoweringPCP.cpp 
     ../../src/util.cpp
     ../../src/constraint/BinaryConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/constraint/PoweringConstraint.cpp
 )
 add_test(NAME Test_Powering_Operation COMMAND test_powering_operation)
@@ -51,6 +54,7 @@ add_executable(
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp
     ../../src/constraint/BinaryConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/constraint/PoweringConstraint.cpp
 )
 add_test(NAME Test_To_Expander COMMAND test_to_expander)
@@ -64,6 +68,7 @@ add_executable(
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp
     ../../src/constraint/BinaryConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/constraint/PoweringConstraint.cpp
 )
 add_test(NAME Test_Reduce_Degree COMMAND test_reduce_degree)

@@ -10,6 +10,8 @@
 
 #include <functional>
 
+#include "pcp/Aliases.hpp"
+
 namespace constraint {
 
 enum class BitConstraint {
@@ -17,6 +19,9 @@ enum class BitConstraint {
     EQUAL,
     NOTEQUAL
 };
+
+// Evaluate the BitConstraint on two BitDomain values
+bool evaluateBitConstraint(BitConstraint constraint, pcp::BitDomain x, pcp::BitDomain y);
 
 }
 
