@@ -53,6 +53,8 @@ private:
     mutable std::vector<BitDomain> visited; // For BFS
 };
 
+BitPCP merge_BitPCP(BitPCP &&pcp1, BitPCP &&pcp2);
+
 }
 
 #endif

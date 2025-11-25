@@ -93,3 +93,19 @@ add_executable(
 )
 add_test(NAME Test_Tester COMMAND test_Tester)
 target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+add_executable(
+    test_reduce_alphabet
+    test_reduce_alphabet.cpp
+    ../../src/core/reduce_alphabet.cpp
+    ../../src/pcpp/Tester.cpp
+    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/PoweringPCP.cpp
+    ../../src/util.cpp
+    ../../src/constraint/PoweringConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
+)
+add_test(NAME Test_Reduce_Alphabet COMMAND test_reduce_alphabet)
+target_include_directories(test_reduce_alphabet PRIVATE ${CMAKE_SOURCE_DIR}/include)

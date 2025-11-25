@@ -23,7 +23,7 @@ public:
     Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::PoweringConstraint constraint);
 
     // Build a BitPCP from the constraint matrix and hadamard code
-    pcp::BitPCP buildBitPCP(int linearity_sampling_coefficient);
+    pcp::BitPCP buildBitPCP(int linearity_sampling_coeff);
 
 private:
     

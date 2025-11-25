@@ -92,5 +92,25 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     return neighbors;
 }
 
+BitPCP merge_BitPCP(BitPCP &&pcp1, BitPCP &&pcp2) {
+    BitPCP result(pcp1.get_size() + pcp2.get_size());
+    // Copy variables
+    for (size_t i = 0; i < pcp1.get_size(); ++i) {
+        result.set_variable(i, pcp1.get_variable(i));
+    }
+    for (size_t i = 0; i < pcp2.get_size(); ++i) {
+        result.set_variable(i + pcp1.get_size(), pcp2.get_variable(i));
+    }
+    // Copy constraints from pcp1
+    for (const auto& [u, v, constraint] : pcp1.get_constraints_list()) {
+        result.add_constraint(u, v, constraint);
+    }
+    // Copy constraints from pcp2 with offset
+    for (const auto& [u, v, constraint] : pcp2.get_constraints_list()) {
+        result.add_constraint(u + pcp1.get_size(), v + pcp1.get_size(), constraint);
+    }
+    return result;
+}
+
 }
 
