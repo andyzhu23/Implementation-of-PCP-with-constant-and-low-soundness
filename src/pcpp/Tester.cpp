@@ -37,7 +37,7 @@ Tester::Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::Powerin
     }
 }
 
-pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coefficient) {
+pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coeff) {
     std::vector<pcp::BitDomain> variables = assignment;
 
     variables.reserve(variables.size() + hadamard.getCode().size() + 1);
@@ -59,7 +59,7 @@ pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coefficient) {
     // Add constraints from the constraint matrix by sampling
 
     std::uniform_int_distribution<size_t> dist(0, 1 << constraint_matrix.size());
-    for (size_t _ = 0; _ < linearity_sampling_coefficient; ++_) {
+    for (size_t _ = 0; _ < linearity_sampling_coeff; ++_) {
         pcp::Variable position = 0;
         size_t sample = dist(rng);
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {

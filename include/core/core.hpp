@@ -22,7 +22,10 @@ pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient);
 pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree);
 
 // reduce_alphabet reduces the alphabet size of a PoweringPCP to binary using Hadamard codes
-pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp);
+pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp, int linearity_sampling_coeff);
+
+// soundness_amplification amplifies the soundness of a BitPCP to constant
+pcp::BitPCP soundness_amplification(const pcp::BitPCP &pcp);
 
 }
 
