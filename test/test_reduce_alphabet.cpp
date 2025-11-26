@@ -1,9 +1,3 @@
-/*
- * Author: GitHub Copilot
- * @date    2025-11-25
- * @version 1.1.0
- */
-
 #include <functional>
 #include <iostream>
 #include <cassert>

@@ -1,10 +1,3 @@
-
-/*
- * Author: Andy Zhu
- * @date    2025-11-25 15:47:34
- * @version 1.0.0
- */
-
 #include <cstdint>
 #include <queue>
 #include <stdexcept>

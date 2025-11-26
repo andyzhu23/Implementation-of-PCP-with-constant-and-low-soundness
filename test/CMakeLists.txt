@@ -1,9 +1,3 @@
-# test/CMakeLists.txt
-#
-# Author: Andy Zhu
-# @date    2025-10-16 14:12:59
-# @version 1.0.0
-#
 
 add_executable(
     test_get_neighbors 
