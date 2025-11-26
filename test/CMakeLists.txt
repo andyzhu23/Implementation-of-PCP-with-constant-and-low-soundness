@@ -103,3 +103,13 @@ add_executable(
 )
 add_test(NAME Test_Reduce_Alphabet COMMAND test_reduce_alphabet)
 target_include_directories(test_reduce_alphabet PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+add_executable(
+    test_three_color_generators
+    test_three_color_generators.cpp
+    ../../src/three_color/generators.cpp
+    ../../src/three_color/three_color.cpp
+)
+add_test(NAME Test_Three_Color_Generators COMMAND test_three_color_generators)
+target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DIR}/include)
