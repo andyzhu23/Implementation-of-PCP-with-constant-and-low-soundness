@@ -81,6 +81,7 @@ add_executable(
     test_Tester.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
+    ../../src/three_color/three_color.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/PoweringConstraint.cpp
     ../../src/util.cpp
@@ -97,6 +98,7 @@ add_executable(
     ../../src/pcpp/Hadamard.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/PoweringPCP.cpp
+    ../../src/three_color/three_color.cpp
     ../../src/util.cpp
     ../../src/constraint/PoweringConstraint.cpp
     ../../src/constraint/BitConstraint.cpp
@@ -108,7 +110,13 @@ target_include_directories(test_reduce_alphabet PRIVATE ${CMAKE_SOURCE_DIR}/incl
 add_executable(
     test_three_color_generators
     test_three_color_generators.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/PoweringPCP.cpp
+    ../../src/pcpp/Tester.cpp
+    ../../src/pcpp/Hadamard.cpp
+    ../../src/util.cpp
     ../../src/three_color/generators.cpp
+    ../../src/constraint/PoweringConstraint.cpp
     ../../src/three_color/three_color.cpp
 )
 add_test(NAME Test_Three_Color_Generators COMMAND test_three_color_generators)

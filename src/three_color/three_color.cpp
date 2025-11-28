@@ -48,7 +48,10 @@ pcp::BitPCP ThreeColor::to_BitPCP() const {
     for (Node u = 0; u < colors.size(); ++u) {
         for (Node v : adj_list[u]) if (v > u) {
             pcpp::Tester tester(colors[u], colors[v]);
-            result = pcp::merge_BitPCP(std::move(result), std::move(tester.buildBitPCP(3)));
+            pcp::BitPCP tmp = tester.buildBitPCP(3);
+            // reduce unnecessary variables
+            tmp.clean();
+            result = pcp::merge_BitPCP(std::move(result), std::move(tmp));
         }
     }
     return result;

@@ -38,7 +38,7 @@ Tester::Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::Powerin
     }
 }
 
-const int THREE_COLOR_ASSIGNMENT;
+const int THREE_COLOR_ASSIGNMENT = 3 + 3 + 3 * 3;
 
 Tester::Tester(three_color::Color u, three_color::Color v) : rng(std::chrono::steady_clock::now().time_since_epoch().count()), assignment(THREE_COLOR_ASSIGNMENT) {
     std::bitset<2> ubits = three_color::color_to_bits(u);
@@ -104,8 +104,6 @@ pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coeff) {
         }
         result.add_constraint(offset + position, result.get_size() - 1, constraint::BitConstraint::EQUAL);
     }
-
-    result.clean();
 
     return result;
 }

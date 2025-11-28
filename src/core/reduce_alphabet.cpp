@@ -18,7 +18,10 @@ pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp, int linearity_sampling_
                 pcp.get_variables(v), 
                 constraint
             );
-            result = pcp::merge_BitPCP(std::move(result), std::move(tester.buildBitPCP(linearity_sampling_coeff)));
+            pcp::BitPCP tmp = tester.buildBitPCP(linearity_sampling_coeff);
+            // reduce unnecessary variables
+            tmp.clean();
+            result = pcp::merge_BitPCP(std::move(result), std::move(tmp));
         }
     }
     return result;

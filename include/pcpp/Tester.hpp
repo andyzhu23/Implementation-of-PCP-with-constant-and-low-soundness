@@ -15,6 +15,7 @@
 #include "pcp/PoweringPCP.hpp"
 #include "constraint/PoweringConstraint.hpp"
 #include "pcpp/Hadamard.hpp"
+#include "three_color/three_color.hpp"
 
 namespace pcpp {
 
