@@ -2,6 +2,7 @@
 #define THREE_COLOR_HPP
 
 #include <vector>
+#include <bitset>
 
 #include "pcp/BitPCP.hpp"
 
@@ -15,6 +16,8 @@ enum class Color {
     GREEN,
     BLUE
 };
+
+std::bitset<2> color_to_bits(Color c);
 
 class ThreeColor {
 public:

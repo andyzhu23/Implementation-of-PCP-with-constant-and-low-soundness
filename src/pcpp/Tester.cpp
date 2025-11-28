@@ -1,6 +1,7 @@
 
 #include "pcpp/Tester.hpp"
 #include "pcp/Aliases.hpp"
+#include "three_color/three_color.hpp"
 
 namespace pcpp {
 
@@ -35,6 +36,35 @@ Tester::Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::Powerin
             }
         }
     }
+}
+
+const int THREE_COLOR_ASSIGNMENT;
+
+Tester::Tester(three_color::Color u, three_color::Color v) : rng(std::chrono::steady_clock::now().time_since_epoch().count()), assignment(THREE_COLOR_ASSIGNMENT) {
+    std::bitset<2> ubits = three_color::color_to_bits(u);
+    std::bitset<2> vbits = three_color::color_to_bits(v);
+
+    // stores 3 bits per variable, and their products
+    // hardcode products
+    assignment[0] = ubits[0];
+    assignment[1] = ubits[1];
+    assignment[2] = ubits[0] * ubits[1];
+    assignment[3] = vbits[0];
+    assignment[4] = vbits[1];
+    assignment[5] = vbits[0] * vbits[0];
+    assignment[6] = ubits[0] * vbits[1];
+    assignment[7] = ubits[0] * vbits[2];
+    assignment[8] = ubits[1] * vbits[0];
+    assignment[9] = ubits[1] * vbits[1];
+    assignment[10] = ubits[1] * vbits[2];
+    assignment[11] = ubits[2] * vbits[0];
+    assignment[12] = ubits[2] * vbits[1];
+    assignment[13] = ubits[2] * vbits[2];
+    assignment[14] = 1;
+
+    hadamard = Hadamard(assignment);
+
+    constraint_matrix = std::vector<std::vector<pcp::BitDomain>>(1, std::vector<pcp::BitDomain>(THREE_COLOR_ASSIGNMENT, 1));
 }
 
 pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coeff) {
@@ -74,6 +104,8 @@ pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coeff) {
         }
         result.add_constraint(offset + position, result.get_size() - 1, constraint::BitConstraint::EQUAL);
     }
+
+    result.clean();
 
     return result;
 }

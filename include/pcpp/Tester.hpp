@@ -22,6 +22,8 @@ class Tester {
 public:
     Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::PoweringConstraint constraint);
 
+    Tester(three_color::Color u, three_color::Color v);
+
     // Build a BitPCP from the constraint matrix and hadamard code
     pcp::BitPCP buildBitPCP(int linearity_sampling_coeff);
 

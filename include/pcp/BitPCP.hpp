@@ -36,6 +36,9 @@ public:
     // BFS to get all neighbors within a certain radius
     std::vector<Variable> get_neighbors(Variable var, int radius) const;
 
+    // getting rid of variables with no constraints running through it
+    void clean();
+
 private:
     size_t size;
     std::vector<BitDomain> variables;

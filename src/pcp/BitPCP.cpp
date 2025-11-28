@@ -85,6 +85,28 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     return neighbors;
 }
 
+void BitPCP::clean() {
+    // do coordinate compression on variables
+    std::vector<Variable> map(size, -1);
+    std::vector<BitDomain> new_variables;
+    Variable new_size = 0;
+    for (Variable i = 0; i < size; ++i) {
+        if (!constraints[i].empty()) {
+            map[i] = new_size++;
+            new_variables.push_back(variables[i]);
+        }
+    }
+    BitPCP new_bitpcp = std::move(new_variables);
+
+    // rebuild all constraints to new_bitpcp
+    for (const auto &[u, v, c] : constraints_list) {
+        new_bitpcp.add_constraint(map[u], map[v], c);
+    }
+
+    // reset current object
+    *this = std::move(new_bitpcp);
+}
+
 BitPCP merge_BitPCP(BitPCP &&pcp1, BitPCP &&pcp2) {
     BitPCP result(pcp1.get_size() + pcp2.get_size());
     // Copy variables
@@ -95,11 +117,11 @@ BitPCP merge_BitPCP(BitPCP &&pcp1, BitPCP &&pcp2) {
         result.set_variable(i + pcp1.get_size(), pcp2.get_variable(i));
     }
     // Copy constraints from pcp1
-    for (const auto& [u, v, constraint] : pcp1.get_constraints_list()) {
+    for (const auto &[u, v, constraint] : pcp1.get_constraints_list()) {
         result.add_constraint(u, v, constraint);
     }
     // Copy constraints from pcp2 with offset
-    for (const auto& [u, v, constraint] : pcp2.get_constraints_list()) {
+    for (const auto &[u, v, constraint] : pcp2.get_constraints_list()) {
         result.add_constraint(u + pcp1.get_size(), v + pcp1.get_size(), constraint);
     }
     return result;
