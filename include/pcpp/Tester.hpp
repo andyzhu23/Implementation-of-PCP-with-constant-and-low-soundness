@@ -26,11 +26,9 @@ public:
     Tester(three_color::Color u, three_color::Color v);
 
     // Build a BitPCP from the constraint matrix and hadamard code
-    pcp::BitPCP buildBitPCP(int linearity_sampling_coeff);
+    pcp::BitPCP buildBitPCP();
 
 private:
-    
-    std::mt19937 rng; 
     std::vector<pcp::BitDomain> assignment;
     Hadamard hadamard;
     std::vector<std::vector<pcp::BitDomain>> constraint_matrix;

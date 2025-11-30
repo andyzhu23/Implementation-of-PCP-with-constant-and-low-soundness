@@ -8,7 +8,7 @@
 
 namespace core {
 
-pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp, int linearity_sampling_coeff) {
+pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp) {
     pcp::BitPCP result(0);
     for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(pcp.get_size()); ++u) {
         auto constraints = pcp.get_constraints(u);
@@ -18,7 +18,7 @@ pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp, int linearity_sampling_
                 pcp.get_variables(v), 
                 constraint
             );
-            pcp::BitPCP tmp = tester.buildBitPCP(linearity_sampling_coeff);
+            pcp::BitPCP tmp = tester.buildBitPCP();
             // reduce unnecessary variables
             tmp.clean();
             result = pcp::merge_BitPCP(std::move(result), std::move(tmp));

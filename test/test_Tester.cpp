@@ -58,8 +58,7 @@ std::vector<std::function<void()>> test_cases = {
         constraint.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
 
         pcpp::Tester tester(u, v, constraint);
-        int sampling_coeff = 10;
-        pcp::BitPCP pcp = tester.buildBitPCP(sampling_coeff);
+        pcp::BitPCP pcp = tester.buildBitPCP();
 
         size_t assignment_size = u.size() + v.size() + 1;
         size_t hadamard_size = 1 << assignment_size;
@@ -81,8 +80,7 @@ std::vector<std::function<void()>> test_cases = {
         constraint::PoweringConstraint constraint(u.size());
 
         pcpp::Tester tester(u, v, constraint);
-        int sampling_coeff = 5;
-        pcp::BitPCP pcp = tester.buildBitPCP(sampling_coeff);
+        pcp::BitPCP pcp = tester.buildBitPCP();
 
         size_t assignment_size = u.size() + v.size() + 1;
         size_t hadamard_size = 1 << assignment_size;
@@ -105,7 +103,7 @@ std::vector<std::function<void()>> test_cases = {
         constraint.add_constraint(2, 2, constraint::BitConstraint::EQUAL);
 
         pcpp::Tester tester(u, v, constraint);
-        pcp::BitPCP pcp = tester.buildBitPCP(20);
+        pcp::BitPCP pcp = tester.buildBitPCP();
 
         std::vector<pcp::BitDomain> pcp_assignment = build_intended_assignment(u, v);
         assert(check_assignment(pcp, pcp_assignment) && "PCP from satisfiable assignment should be satisfied by that assignment");
@@ -123,7 +121,7 @@ std::vector<std::function<void()>> test_cases = {
         constraint.add_constraint(2, 2, constraint::BitConstraint::EQUAL);
 
         pcpp::Tester tester(u, v, constraint);
-        pcp::BitPCP pcp = tester.buildBitPCP(20);
+        pcp::BitPCP pcp = tester.buildBitPCP();
 
         std::vector<pcp::BitDomain> pcp_assignment = build_intended_assignment(u, v);
         assert(!check_assignment(pcp, pcp_assignment) && "PCP from unsatisfiable assignment should not be satisfied by that assignment");

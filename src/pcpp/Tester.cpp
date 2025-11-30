@@ -5,7 +5,7 @@
 
 namespace pcpp {
 
-Tester::Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::PoweringConstraint constraint) : rng(std::chrono::steady_clock::now().time_since_epoch().count()) {
+Tester::Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::PoweringConstraint constraint) {
     // Reserve variables to hold u, v, and one extra for negation
     assignment.reserve(u.size() + v.size() + 1);
 
@@ -38,36 +38,36 @@ Tester::Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::Powerin
     }
 }
 
-const int THREE_COLOR_ASSIGNMENT = 3 + 3 + 3 * 3;
+const int THREE_COLOR_ASSIGNMENT = 2 + 2 + 2 * 2 + 1; // 2 bits per color, 4 products, and 1 for negation
 
-Tester::Tester(three_color::Color u, three_color::Color v) : rng(std::chrono::steady_clock::now().time_since_epoch().count()), assignment(THREE_COLOR_ASSIGNMENT) {
+Tester::Tester(three_color::Color u, three_color::Color v) : assignment(THREE_COLOR_ASSIGNMENT) {
     std::bitset<2> ubits = three_color::color_to_bits(u);
     std::bitset<2> vbits = three_color::color_to_bits(v);
+    std::bitset<2> bit0;
+    bit0[0] = ubits[0];
+    bit0[1] = vbits[0];
+    std::bitset<2> bit1;
+    bit1[0] = ubits[1];
+    bit1[1] = vbits[1];
 
     // stores 3 bits per variable, and their products
     // hardcode products
-    assignment[0] = ubits[0];
-    assignment[1] = ubits[1];
-    assignment[2] = ubits[0] * ubits[1];
-    assignment[3] = vbits[0];
-    assignment[4] = vbits[1];
-    assignment[5] = vbits[0] * vbits[0];
-    assignment[6] = ubits[0] * vbits[1];
-    assignment[7] = ubits[0] * vbits[2];
-    assignment[8] = ubits[1] * vbits[0];
-    assignment[9] = ubits[1] * vbits[1];
-    assignment[10] = ubits[1] * vbits[2];
-    assignment[11] = ubits[2] * vbits[0];
-    assignment[12] = ubits[2] * vbits[1];
-    assignment[13] = ubits[2] * vbits[2];
-    assignment[14] = 1;
+    assignment[0] = bit0[0];
+    assignment[1] = bit0[1];
+    assignment[2] = bit1[0];
+    assignment[3] = bit1[1];
+    assignment[4] = bit0[0] * bit1[0];
+    assignment[5] = bit0[0] * bit1[1];
+    assignment[6] = bit0[1] * bit1[0];
+    assignment[7] = bit0[1] * bit1[1];
+    assignment[8] = 1;
 
     hadamard = Hadamard(assignment);
 
     constraint_matrix = std::vector<std::vector<pcp::BitDomain>>(1, std::vector<pcp::BitDomain>(THREE_COLOR_ASSIGNMENT, 1));
 }
 
-pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coeff) {
+pcp::BitPCP Tester::buildBitPCP() {
     std::vector<pcp::BitDomain> variables = assignment;
 
     variables.reserve(variables.size() + hadamard.getCode().size() + 1);
@@ -87,11 +87,8 @@ pcp::BitPCP Tester::buildBitPCP(int linearity_sampling_coeff) {
     }
 
     // Add constraints from the constraint matrix by sampling
-
-    std::uniform_int_distribution<size_t> dist(0, 1 << constraint_matrix.size());
-    for (size_t _ = 0; _ < linearity_sampling_coeff; ++_) {
+    for (size_t sample = 1; sample < (1 << constraint_matrix.size()); ++sample) {
         pcp::Variable position = 0;
-        size_t sample = dist(rng);
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {
             if ((sample >> j) & 1) {
                 // include this constraint in the linear combination

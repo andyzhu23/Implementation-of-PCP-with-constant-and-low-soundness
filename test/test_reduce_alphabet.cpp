@@ -53,7 +53,7 @@ std::vector<std::function<void()>> test_cases = {
         powering_pcp.set_variables(0, u);
         powering_pcp.set_variables(1, v);
 
-        pcp::BitPCP result = core::reduce_alphabet(powering_pcp, 5);
+        pcp::BitPCP result = core::reduce_alphabet(powering_pcp);
         assert(result.get_size() == 0 && "Expected empty BitPCP when PoweringPCP has no constraints");
     }
 };

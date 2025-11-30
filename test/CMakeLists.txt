@@ -121,3 +121,18 @@ add_executable(
 )
 add_test(NAME Test_Three_Color_Generators COMMAND test_three_color_generators)
 target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+add_executable(
+    test_three_color_to_bitpcp
+    test_three_color_to_bitpcp.cpp
+    ../../src/pcpp/Tester.cpp
+    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/util.cpp
+    ../../src/three_color/three_color.cpp
+    ../../src/constraint/PoweringConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
+)
+add_test(NAME Test_Three_Color_To_BitPCP COMMAND test_three_color_to_bitpcp)
+target_include_directories(test_three_color_to_bitpcp PRIVATE ${CMAKE_SOURCE_DIR}/include)
