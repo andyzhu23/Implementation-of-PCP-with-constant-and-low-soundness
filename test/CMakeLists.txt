@@ -1,7 +1,7 @@
 
 add_executable(
     test_get_neighbors 
-    test_get_neighbors.cpp 
+    ./unit/test_get_neighbors.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/util.cpp 
@@ -14,7 +14,7 @@ target_include_directories(test_get_neighbors PRIVATE ${CMAKE_SOURCE_DIR}/includ
 
 add_executable(
     test_PCPAnalyzer 
-    test_PCPAnalyzer.cpp 
+    ./unit/test_PCPAnalyzer.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/constraint/BinaryConstraint.cpp
@@ -27,7 +27,7 @@ target_include_directories(test_PCPAnalyzer PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_powering_operation 
-    test_powering_operation.cpp 
+    ./unit/test_powering_operation.cpp 
     ../../src/core/powering_operation.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
@@ -42,7 +42,7 @@ target_include_directories(test_powering_operation PRIVATE ${CMAKE_SOURCE_DIR}/i
 
 add_executable(
     test_to_expander 
-    test_to_expander.cpp 
+    ./unit/test_to_expander.cpp 
     ../../src/core/to_expander.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
@@ -56,7 +56,7 @@ target_include_directories(test_to_expander PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_reduce_degree 
-    test_reduce_degree.cpp 
+    ./unit/test_reduce_degree.cpp 
     ../../src/core/reduce_degree.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
@@ -70,7 +70,7 @@ target_include_directories(test_reduce_degree PRIVATE ${CMAKE_SOURCE_DIR}/includ
 
 add_executable(
     test_Hadamard
-    test_Hadamard.cpp
+    ./unit/test_Hadamard.cpp
     ../../src/pcpp/Hadamard.cpp
 )
 add_test(NAME Test_Hadamard COMMAND test_Hadamard)
@@ -78,7 +78,7 @@ target_include_directories(test_Hadamard PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_Tester
-    test_Tester.cpp
+    ./unit/test_Tester.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/three_color/three_color.cpp
@@ -92,7 +92,7 @@ target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_reduce_alphabet
-    test_reduce_alphabet.cpp
+    ./unit/test_reduce_alphabet.cpp
     ../../src/core/reduce_alphabet.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
@@ -109,7 +109,7 @@ target_include_directories(test_reduce_alphabet PRIVATE ${CMAKE_SOURCE_DIR}/incl
 
 add_executable(
     test_three_color_generators
-    test_three_color_generators.cpp
+    ./unit/test_three_color_generators.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/PoweringPCP.cpp
     ../../src/pcpp/Tester.cpp
@@ -125,7 +125,7 @@ target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DI
 
 add_executable(
     test_three_color_to_bitpcp
-    test_three_color_to_bitpcp.cpp
+    ./unit/test_three_color_to_bitpcp.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/pcp/BitPCP.cpp
@@ -136,3 +136,28 @@ add_executable(
 )
 add_test(NAME Test_Three_Color_To_BitPCP COMMAND test_three_color_to_bitpcp)
 target_include_directories(test_three_color_to_bitpcp PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+add_executable(
+    test_gap_amplification
+    ./e2e/test_gap_amplification.cpp
+    ../../src/core/gap_amplification.cpp
+    ../../src/core/powering_operation.cpp
+    ../../src/core/reduce_alphabet.cpp
+    ../../src/core/reduce_degree.cpp
+    ../../src/core/to_expander.cpp
+    ../../src/three_color/three_color.cpp
+    ../../src/three_color/generators.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/SimplePCP.cpp
+    ../../src/pcp/PoweringPCP.cpp
+    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcpp/Tester.cpp
+    ../../src/util.cpp
+    ../../src/analyzer/PCPAnalyzer.cpp
+    ../../src/constraint/BinaryConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/PoweringConstraint.cpp
+)
+add_test(NAME Test_Gap_Amplification COMMAND test_gap_amplification)
+target_include_directories(test_gap_amplification PRIVATE ${CMAKE_SOURCE_DIR}/include)

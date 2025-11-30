@@ -5,19 +5,23 @@
 #include "pcpp/Tester.hpp"
 #include "pcpp/Hadamard.hpp"
 
+#include <iostream>
 
 namespace core {
 
 pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp) {
     pcp::BitPCP result(0);
+    std::cout << pcp.get_size() << std::endl;
     for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(pcp.get_size()); ++u) {
         auto constraints = pcp.get_constraints(u);
         for (const auto &[v, constraint] : constraints) {
+
             pcpp::Tester tester(
                 pcp.get_variables(u), 
                 pcp.get_variables(v), 
                 constraint
             );
+            std::cout << "Building BitPCP for constraint between " << u << " and " << v << std::endl;
             pcp::BitPCP tmp = tester.buildBitPCP();
             // reduce unnecessary variables
             tmp.clean();

@@ -1,4 +1,7 @@
+#include <chrono>
+#include <random>
 
+#include "constants.hpp"
 #include "pcpp/Tester.hpp"
 #include "pcp/Aliases.hpp"
 #include "three_color/three_color.hpp"
@@ -80,14 +83,17 @@ pcp::BitPCP Tester::buildBitPCP() {
 
     size_t offset = assignment.size();
 
-    // Add constraints between original variables and their Hadamard code position
-    for (size_t i = 0; i < offset; ++i) {
-        size_t i_vec = 1 << i;
-        result.add_constraint(i, offset + i_vec, constraint::BitConstraint::EQUAL);
-    }
+    // // Add constraints between original variables and their Hadamard code position
+    // for (size_t i = 0; i < offset; ++i) {
+    //     size_t i_vec = 1 << i;
+    //     result.add_constraint(i, offset + i_vec, constraint::BitConstraint::EQUAL);
+    // }
 
+    std::mt19937 rng(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<size_t> dist(0, (1 << constraint_matrix.size()));
     // Add constraints from the constraint matrix by sampling
-    for (size_t sample = 1; sample < (1 << constraint_matrix.size()); ++sample) {
+    for (size_t _ = 1; _ < constants::LINEARITY_COEFFICIENT; ++_) {
+        size_t sample = dist(rng);
         pcp::Variable position = 0;
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {
             if ((sample >> j) & 1) {
