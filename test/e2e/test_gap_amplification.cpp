@@ -29,7 +29,7 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(10, 15, 4, 3, 3);
         pcp::BitPCP bitpcp = input.to_BitPCP();
-        pcp::BitPCP amplified_pcp = core::soundness_amplification(bitpcp);
+        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, true}}, 100);
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, true}}, 100);
     
