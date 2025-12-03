@@ -1,5 +1,3 @@
-#include <chrono>
-#include <random>
 #include <stdexcept>
 
 #include "core/core.hpp"
@@ -9,8 +7,6 @@
 namespace core {
 
 pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
-    // generate random seed
-    static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     if (degree < 3) {
         throw std::invalid_argument("degree must be at least 3");
     }
@@ -39,7 +35,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             pcp::Variable adj = constraints[j].first; // original neighbor index
-            if (adj < i) continue; // to avoid double adding
+            if (adj <= i) continue; // to avoid double adding
             constraint::BitConstraint con = constraints[j].second;
             int constraint_pos = pcp.get_constraints_indices(i)[j].second;
             size_t adj_new_index = offsets[adj] + constraint_pos;
@@ -56,7 +52,6 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
             reduced_pcp.add_constraint(u, v, constraint::BitConstraint::ANY);
         }
     }
-
     return reduced_pcp;
 }
 
