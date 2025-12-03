@@ -83,7 +83,7 @@ std::vector<std::function<void()>> test_cases = {
         std::cout << "Amplified PCP soundness: " << analyzer_amplified.getSoundness() << std::endl;
         std::cout << "Amplified PCP gap: " << analyzer_amplified.getGap() << std::endl;
     }, 
-    Test 5: large random valid three-coloring graphs
+    // Test 5: large random valid three-coloring graphs
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(100, 400, 40, 30, 30);
         pcp::BitPCP bitpcp = input.to_BitPCP();
