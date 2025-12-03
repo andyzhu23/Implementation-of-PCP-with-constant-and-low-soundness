@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "pcpp/Hadamard.hpp"
 
 namespace pcpp {
