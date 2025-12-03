@@ -25,7 +25,7 @@ pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp) {
             pcp::BitPCP tmp = tester.buildBitPCP();
             // reduce unnecessary variables
             tmp.clean();
-            result = pcp::merge_BitPCP(std::move(result), std::move(tmp));
+            result = pcp::merge_BitPCPs(std::vector<pcp::BitPCP>{ std::move(result), std::move(tmp) });
         }
     }
     return result;

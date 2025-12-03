@@ -44,17 +44,17 @@ void ThreeColor::add_edge(Node u, Node v) {
 }
 
 pcp::BitPCP ThreeColor::to_BitPCP() const {
-    pcp::BitPCP result(0);
+    std::vector<pcp::BitPCP> edge_pcps;
     for (Node u = 0; u < colors.size(); ++u) {
         for (Node v : adj_list[u]) if (v > u) {
             pcpp::Tester tester(colors[u], colors[v]);
             pcp::BitPCP tmp = tester.buildBitPCP();
             // reduce unnecessary variables
             tmp.clean();
-            result = pcp::merge_BitPCP(std::move(result), std::move(tmp));
+            edge_pcps.push_back(std::move(tmp));
         }
     }
-    return result;
+    return pcp::merge_BitPCPs(edge_pcps);
 }
 
 }

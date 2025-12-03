@@ -7,24 +7,25 @@
 #include "analyzer/PCPAnalyzer.hpp"
 
 std::vector<std::function<void()>> test_cases = {
-    []()-> void {
-        std::vector<three_color::Color> colors = { three_color::Color::RED, three_color::Color::GREEN, three_color::Color::GREEN };
-        std::vector<three_color::Edge> edges = { {0,1}, {1,2}, {2,0} };
-        three_color::ThreeColor tc(colors, edges);
-        auto bitpcp = tc.to_BitPCP();
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
-        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100);
-        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100);
+    // []()-> void {
+    //     std::vector<three_color::Color> colors = { three_color::Color::RED, three_color::Color::GREEN, three_color::Color::GREEN };
+    //     std::vector<three_color::Edge> edges = { {0,1}, {1,2}, {2,0} };
+    //     three_color::ThreeColor tc(colors, edges);
+    //     auto bitpcp = tc.to_BitPCP();
+    //     std::cout << "Initial PCP size: " << bitpcp.get_size() << std::endl;
+    //     pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
+    //     analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 10000);
+    //     analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 10000);
         
-        std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
-        std::cout << "Amplified PCP size: " << amplified_pcp.get_size() << std::endl;
-        std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
-        std::cout << "Amplified PCP completeness: " << analyzer_amplified.getCompleteness() << std::endl;
-        std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
-        std::cout << "Amplified PCP soundness: " << analyzer_amplified.getSoundness() << std::endl;
-        std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
-        std::cout << "Amplified PCP gap: " << analyzer_amplified.getGap() << std::endl;
-    },
+    //     std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
+    //     std::cout << "Amplified PCP size: " << amplified_pcp.get_size() << std::endl;
+    //     std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
+    //     std::cout << "Amplified PCP completeness: " << analyzer_amplified.getCompleteness() << std::endl;
+    //     std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
+    //     std::cout << "Amplified PCP soundness: " << analyzer_amplified.getSoundness() << std::endl;
+    //     std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
+    //     std::cout << "Amplified PCP gap: " << analyzer_amplified.getGap() << std::endl;
+    // },
     // []() -> void {
     //     three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(10, 15, 4, 3, 3);
     //     pcp::BitPCP bitpcp = input.to_BitPCP();
@@ -41,20 +42,40 @@ std::vector<std::function<void()>> test_cases = {
     //     std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
     //     std::cout << "Amplified PCP gap: " << analyzer_amplified.getGap() << std::endl;
     // }, 
+    []() -> void {
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(10, 50, 1, 3, 3, 4);
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
+        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 10000);
+        std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
+        std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
+        std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
+        std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
+
+
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 10000);
+    
+        std::cout << "Amplified PCP size: " << amplified_pcp.get_size() << std::endl;
+        std::cout << "Amplified PCP completeness: " << analyzer_amplified.getCompleteness() << std::endl;
+        std::cout << "Amplified PCP soundness: " << analyzer_amplified.getSoundness() << std::endl;
+        std::cout << "Amplified PCP gap: " << analyzer_amplified.getGap() << std::endl;
+    }, 
     // []() -> void {
-    //     three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(10, 15, 4, 3, 3, 1);
+    //     three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(50, 400, 1, 17, 16, 17);
     //     pcp::BitPCP bitpcp = input.to_BitPCP();
     //     pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
-    //     analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100);
-    //     analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100);
-    
+    //     analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 10000);
     //     std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
-    //     std::cout << "Amplified PCP size: " << amplified_pcp.get_size() << std::endl;
     //     std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
-    //     std::cout << "Amplified PCP completeness: " << analyzer_amplified.getCompleteness() << std::endl;
     //     std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
-    //     std::cout << "Amplified PCP soundness: " << analyzer_amplified.getSoundness() << std::endl;
     //     std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
+
+
+    //     analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 10000);
+    
+    //     std::cout << "Amplified PCP size: " << amplified_pcp.get_size() << std::endl;
+    //     std::cout << "Amplified PCP completeness: " << analyzer_amplified.getCompleteness() << std::endl;
+    //     std::cout << "Amplified PCP soundness: " << analyzer_amplified.getSoundness() << std::endl;
     //     std::cout << "Amplified PCP gap: " << analyzer_amplified.getGap() << std::endl;
     // }
 };

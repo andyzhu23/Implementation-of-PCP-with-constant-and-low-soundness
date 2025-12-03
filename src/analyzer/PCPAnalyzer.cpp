@@ -51,7 +51,7 @@ double PCPAnalyzer::getCompleteness() { return completeness; };
 // perform a single uniformly random query on sample
 bool query(const pcp::BitPCP &sample) {
     static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
-    auto constraints_list = sample.get_constraints_list();
+    const auto &constraints_list = sample.get_constraints_list();
     if (constraints_list.size() == 0) {
         return true; // no constraints, always satisfied
     }

@@ -36,6 +36,9 @@ public:
     // BFS to get all neighbors within a certain radius
     std::vector<Variable> get_neighbors(Variable var, int radius) const;
 
+    // Get a BitPCP consisting of the neighboring variables and constraints within a certain radius
+    BitPCP get_neighboring_pcp(Variable var, int radius) const;
+
     // getting rid of variables with no constraints running through it
     void clean();
 
@@ -51,7 +54,8 @@ private:
     mutable std::vector<BitDomain> visited; // For BFS
 };
 
-BitPCP merge_BitPCP(BitPCP &&pcp1, BitPCP &&pcp2);
+BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps);
+BitPCP merge_BitPCPs(std::vector<BitPCP> &&pcps);
 
 }
 

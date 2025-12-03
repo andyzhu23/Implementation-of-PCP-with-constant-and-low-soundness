@@ -84,6 +84,37 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     return neighbors;
 }
 
+BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
+    std::vector<Variable> neighbors = get_neighbors(var, radius);
+    std::unordered_map<Variable, Variable> index_map; // original index to new index
+    for (size_t i = 0; i < neighbors.size(); ++i) {
+        index_map[neighbors[i]] = static_cast<Variable>(i);
+    }
+
+    BitPCP neighboring_pcp(neighbors.size());
+    // Copy variables
+    for (size_t i = 0; i < neighbors.size(); ++i) {
+        neighboring_pcp.set_variable(static_cast<Variable>(i), get_variable(neighbors[i]));
+    }
+    // Copy constraints
+    for (size_t i = 0; i < neighbors.size(); ++i) {
+        Variable u = neighbors[i];
+        for (const auto& [v, constraint] : constraints[u]) {
+            if (index_map.find(v) != index_map.end()) {
+                if (constraint != constraint::BitConstraint::ANY) {
+                    neighboring_pcp.add_constraint(
+                        static_cast<Variable>(i), 
+                        index_map[v], 
+                        constraint
+                    );
+                }
+            }
+        }
+    }
+
+    return neighboring_pcp;
+}
+
 void BitPCP::clean() {
     // do coordinate compression on variables
     std::vector<Variable> map(size, -1);
@@ -106,23 +137,53 @@ void BitPCP::clean() {
     *this = std::move(new_bitpcp);
 }
 
-BitPCP merge_BitPCP(BitPCP &&pcp1, BitPCP &&pcp2) {
-    BitPCP result(pcp1.get_size() + pcp2.get_size());
-    // Copy variables
-    for (size_t i = 0; i < pcp1.get_size(); ++i) {
-        result.set_variable(i, pcp1.get_variable(i));
+BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps) {
+    std::vector<BitDomain> merged_variables;
+    size_t total_size = 0;
+    for (const auto& pcp : pcps) {
+        total_size += pcp.get_size();
     }
-    for (size_t i = 0; i < pcp2.get_size(); ++i) {
-        result.set_variable(i + pcp1.get_size(), pcp2.get_variable(i));
+    merged_variables.reserve(total_size);
+    for (const auto& pcp : pcps) {
+        for (pcp::Variable i = 0; i < pcp.get_size(); ++i) {
+            merged_variables.push_back(pcp.get_variable(i));
+        }
     }
-    // Copy constraints from pcp1
-    for (const auto &[u, v, constraint] : pcp1.get_constraints_list()) {
-        result.add_constraint(u, v, constraint);
+    BitPCP result = std::move(merged_variables);
+    size_t offset = 0;
+    for (const auto& pcp : pcps) {
+        for (const auto& [u, v, c] : pcp.get_constraints_list()) {
+            result.add_constraint(u + offset, v + offset, c);
+        }
+        offset += pcp.get_size();
     }
-    // Copy constraints from pcp2 with offset
-    for (const auto &[u, v, constraint] : pcp2.get_constraints_list()) {
-        result.add_constraint(u + pcp1.get_size(), v + pcp1.get_size(), constraint);
+
+    return result;
+}
+
+BitPCP merge_BitPCPs(std::vector<BitPCP> &&pcps) {
+    std::vector<BitDomain> merged_variables;
+    size_t total_size = 0;
+    for (const auto& pcp : pcps) {
+        total_size += pcp.get_size();
     }
+    merged_variables.reserve(total_size);
+    for (const auto& pcp : pcps) {
+        for (pcp::Variable i = 0; i < pcp.get_size(); ++i) {
+            merged_variables.push_back(pcp.get_variable(i));
+        }
+    }
+    BitPCP result = std::move(merged_variables);
+    size_t offset = 0;
+    for (const auto& pcp : pcps) {
+        for (const auto& [u, v, c] : pcp.get_constraints_list()) {
+            if (c != constraint::BitConstraint::ANY) {
+                result.add_constraint(u + offset, v + offset, c);
+            }
+        }
+        offset += pcp.get_size();
+    }
+
     return result;
 }
 

@@ -25,6 +25,8 @@ public:
 
     Tester(three_color::Color u, three_color::Color v);
 
+    Tester(pcp::BitPCP powering_pcp);
+
     // Build a BitPCP from the constraint matrix and hadamard code
     pcp::BitPCP buildBitPCP();
 

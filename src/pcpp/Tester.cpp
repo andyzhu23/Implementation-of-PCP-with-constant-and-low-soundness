@@ -70,6 +70,27 @@ Tester::Tester(three_color::Color u, three_color::Color v) : assignment(THREE_CO
     constraint_matrix = std::vector<std::vector<pcp::BitDomain>>(1, std::vector<pcp::BitDomain>(THREE_COLOR_ASSIGNMENT, 1));
 }
 
+// Construct Tester from a BitPCP
+Tester::Tester(pcp::BitPCP pcp) : assignment(pcp.get_size()) {
+    for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
+        assignment[i] = pcp.get_variable(i);
+    }
+
+    assignment.push_back(1); // extra variable for negation
+
+    hadamard = Hadamard(assignment);
+    // Build constraint matrix from BitPCP constraints
+    for (const auto& [var1, var2, bit_constraint] : pcp.get_constraints_list()) {
+        if (bit_constraint != constraint::BitConstraint::ANY) {
+            std::vector<pcp::BitDomain> row(assignment.size());
+            row[var1] = 1;
+            row[var2] = 1;
+            row.back() = (bit_constraint == constraint::BitConstraint::EQUAL) ? 0 : 1;
+            constraint_matrix.push_back(row);
+        }
+    }
+}
+
 pcp::BitPCP Tester::buildBitPCP() {
     std::vector<pcp::BitDomain> variables = assignment;
 
@@ -92,8 +113,9 @@ pcp::BitPCP Tester::buildBitPCP() {
     std::mt19937 rng(std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<size_t> dist(0, (1 << constraint_matrix.size()));
     // Add constraints from the constraint matrix by sampling
-    for (size_t _ = 1; _ < constants::LINEARITY_COEFFICIENT; ++_) {
-        size_t sample = dist(rng);
+    // for (size_t _ = 0; _ < constants::LINEARITY_COEFFICIENT; ++_) {
+    //     size_t sample = dist(rng);
+    for (size_t sample = 0; sample < (1 << constraint_matrix.size()); ++sample) {
         pcp::Variable position = 0;
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {
             if ((sample >> j) & 1) {

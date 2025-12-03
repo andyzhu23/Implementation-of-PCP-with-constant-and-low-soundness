@@ -4,6 +4,7 @@
 
 #include "core/core.hpp"
 #include "pcp/BitPCP.hpp"
+#include "util.hpp"
 
 namespace core {
 
@@ -28,32 +29,31 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
-            reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::EQUAL);
+            reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::ANY);
             // Set bits to match original variable
             reduced_pcp.set_variable(curr, pcp.get_variable(i));
+            reduced_pcp.set_variable(next, pcp.get_variable(i));
         }
         const auto &constraints = pcp.get_constraints(i);
         // Map original constraints
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
-            int adj = constraints[j].first; // original neighbor index
+            pcp::Variable adj = constraints[j].first; // original neighbor index
+            if (adj < i) continue; // to avoid double adding
             constraint::BitConstraint con = constraints[j].second;
             int constraint_pos = pcp.get_constraints_indices(i)[j].second;
             size_t adj_new_index = offsets[adj] + constraint_pos;
             reduced_pcp.add_constraint(curr, adj_new_index, con);
-            // Fill additional edges to make local expander graph
-            if (sizes[i] - 1 > 1) {
-                std::uniform_int_distribution<int> dist(1, sizes[i] - 1);
-                auto &reduced_constraints = reduced_pcp.get_constraints(curr);
-                while (reduced_constraints.size() < degree) {
-                    int rand_neighbor = offsets[i] + dist(rng);
-                    // avoid self loop, since dist can only be 1, use self-index to set rand_neighbor to offsets[i] + 0
-                    if (rand_neighbor == curr) {
-                        rand_neighbor = offsets[i];
-                    } 
-                    reduced_pcp.add_constraint(curr, rand_neighbor, constraint::BitConstraint::EQUAL);
-                }
-            }
+        }
+        // random edge picker for picking random edges to connect local expander
+        util::random_picker<pcp::Variable> rp;
+        for (size_t j = 0; j < sizes[i]; ++j) {
+            size_t curr = offsets[i] + j;
+            rp.add(curr, degree - reduced_pcp.get_constraints(curr).size());
+        }
+        while (rp.size() > 1) {
+            auto [u, v] = rp.pick_two();
+            reduced_pcp.add_constraint(u, v, constraint::BitConstraint::ANY);
         }
     }
 
