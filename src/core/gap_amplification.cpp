@@ -10,7 +10,7 @@ namespace core {
 
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
     to_expander(pcp, constants::EXPANDING_COEFFICIENT);
-    pcp = std::move(reduce_degree(pcp, constants::DEGREE));
+    pcp = reduce_degree(pcp, constants::DEGREE);
 
     std::vector<pcp::BitPCP> reduced_pcps;
 
@@ -20,7 +20,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         pcpp::Tester tester(powering_u);
         pcp::BitPCP reduced_pcp = tester.buildBitPCP();
         reduced_pcp.clean();
-        reduced_pcps.push_back(std::move(reduced_pcp));
+        reduced_pcps.push_back(reduced_pcp);
     }
     pcp = pcp::merge_BitPCPs(reduced_pcps);
 
