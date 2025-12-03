@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "pcpp/Hadamard.hpp"
 
 namespace pcpp {
@@ -5,6 +7,9 @@ namespace pcpp {
 Hadamard::Hadamard() {}
 
 Hadamard::Hadamard(const std::vector<bool> value) : code(1 << value.size()) {
+    if (value.size() > 25) {
+        throw std::invalid_argument("Hadamard::Hadamard: input size too large, may cause memory issues");
+    }
     for (size_t i = 0; i < code.size(); ++i) {
         for (size_t j = 0; j < value.size(); ++j) {
             code[i] = (((i >> j) & 1) & value[j]) ? (!code[i]) : code[i];

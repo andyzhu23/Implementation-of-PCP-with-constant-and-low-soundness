@@ -1,8 +1,3 @@
-/*
- * Author: Andy Zhu
- * @date    2025-11-25 16:19:09
- * @version 1.0.0
- */
 
 #include "constraint/BitConstraint.hpp"
 

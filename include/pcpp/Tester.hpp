@@ -15,6 +15,7 @@
 #include "pcp/PoweringPCP.hpp"
 #include "constraint/PoweringConstraint.hpp"
 #include "pcpp/Hadamard.hpp"
+#include "three_color/three_color.hpp"
 
 namespace pcpp {
 
@@ -22,12 +23,14 @@ class Tester {
 public:
     Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::PoweringConstraint constraint);
 
+    Tester(three_color::Color u, three_color::Color v);
+
+    Tester(pcp::BitPCP powering_pcp);
+
     // Build a BitPCP from the constraint matrix and hadamard code
-    pcp::BitPCP buildBitPCP(int linearity_sampling_coeff);
+    pcp::BitPCP buildBitPCP();
 
 private:
-    
-    std::mt19937 rng; 
     std::vector<pcp::BitDomain> assignment;
     Hadamard hadamard;
     std::vector<std::vector<pcp::BitDomain>> constraint_matrix;

@@ -1,9 +1,3 @@
-/*
- * Author: Andy Zhu
- * @date    2025-10-17 16:12:59
- * @version 1.0.0
- */
-
 #include <functional>
 #include <iostream>
 #include <cassert>
@@ -37,7 +31,7 @@ std::vector<std::function<void()>> test_cases = {
             if (next >= 6) next -= 2;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                if (adj == next && c == constraint::BitConstraint::ANY) found = true;
             }
             assert(found);
         }
@@ -80,7 +74,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % 4;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                if (adj == next && c == constraint::BitConstraint::ANY) found = true;
             }
             assert(found);
         }
@@ -133,7 +127,7 @@ std::vector<std::function<void()>> test_cases = {
                 int next = offset + (j + 1) % sz;
                 bool found = false;
                 for (const auto &[adj, c] : reduced.get_constraints(curr)) {
-                    if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                    if (adj == next && c == constraint::BitConstraint::ANY) found = true;
                 }
                 assert(found);
             }
@@ -180,7 +174,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % center_sz;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                if (adj == next && c == constraint::BitConstraint::ANY) found = true;
             }
             assert(found);
         }

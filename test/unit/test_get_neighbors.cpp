@@ -1,9 +1,3 @@
-/*
- * Author: Andy Zhu
- * @date    2025-10-16 14:12:59
- * @version 1.0.0
- */
-
 #include <cassert>
 #include <functional>
 #include <iostream>

@@ -1,9 +1,3 @@
-/*
- * Author: Andy Zhu
- * @date    2025-10-17 16:04:24
- * @version 1.0.0
- */
-
 
 #include <vector>
 
