@@ -7,6 +7,9 @@
 namespace three_color {
 
 ThreeColor generate_valid_three_coloring_graph(size_t num_nodes, size_t num_edges, size_t num_red, size_t num_green, size_t num_blue) {
+    if (num_red + num_green + num_blue != num_nodes) {
+        throw std::invalid_argument("Sum of color counts must equal number of nodes");
+    }
     static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     std::vector<Color> colors(num_nodes);
     for (size_t i = 0; i < num_red; ++i) {
