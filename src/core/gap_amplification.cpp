@@ -4,8 +4,6 @@
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
 
-#include <iostream>
-
 namespace core {
 
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
@@ -15,7 +13,6 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
     std::vector<pcp::BitPCP> reduced_pcps;
 
     for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(pcp.get_size()); ++u) {
-        std::cout << "Reducing alphabet for variable " << u << " / " << pcp.get_size() << std::endl;
         pcp::BitPCP powering_u = pcp.get_neighboring_pcp(u, constants::POWERING_RADIUS);
         pcpp::Tester tester(powering_u);
         pcp::BitPCP reduced_pcp = tester.buildBitPCP();
