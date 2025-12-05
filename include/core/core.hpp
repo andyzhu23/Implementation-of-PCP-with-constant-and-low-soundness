@@ -4,6 +4,7 @@
 
 #include "pcp/BitPCP.hpp"
 #include "pcp/PoweringPCP.hpp"
+#include "three_color/three_color.hpp"
 
 namespace core {
 
@@ -22,6 +23,8 @@ pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp);
 // gap_amplification amplifies the gap of a BitPCP to constant
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp);
 
+// Converts a ThreeColor instance to a BitPCP instance
+pcp::BitPCP three_coloring_to_BitPCP(const three_color::ThreeColor &tc);
 }
 
 #endif

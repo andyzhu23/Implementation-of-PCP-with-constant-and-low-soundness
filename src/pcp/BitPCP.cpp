@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <queue>
 #include <stdexcept>
+#include <unordered_set>
 
 #include "pcp/BitPCP.hpp"
 #include "util.hpp"
@@ -9,26 +10,25 @@ namespace pcp {
 
 // BitPCP class implementation
 // Constructors
+BitPCP::BitPCP() : BitPCP(0) {}
+
 BitPCP::BitPCP(size_t size)
  : size(size), 
    variables(size, false), 
    constraints(size), 
-   constraint_indices(size), 
-   visited(size, false) {}
+   constraint_indices(size) {}
 
 BitPCP::BitPCP(const std::vector<BitDomain> &variables)
  : size(variables.size()), 
    variables(variables), 
    constraints(variables.size()), 
-   constraint_indices(variables.size()), 
-   visited(size, false) {}
+   constraint_indices(variables.size()) {}
 
 BitPCP::BitPCP(std::vector<BitDomain> &&variables)
  : size(variables.size()), 
    variables(std::move(variables)), 
    constraints(size), 
-   constraint_indices(size), 
-   visited(size, false) {}
+   constraint_indices(size) {}
 
 // Member functions
 size_t BitPCP::get_size() const { return size; }
@@ -62,10 +62,10 @@ void BitPCP::add_constraint(Variable var, Variable other_var, constraint::BitCon
 }
 std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     std::vector<Variable> neighbors;
-    util::visit_guard visit_guard(visited, neighbors); // RAII to manage visited state
+    std::unordered_set<Variable> visited;
     std::queue<std::pair<int, int>> q; // pair of (node, current_depth)
     q.emplace(var, 0);
-    visited[var] = true;
+    visited.insert(var);
 
     while (!q.empty()) {
         auto [current, depth] = q.front();
@@ -73,8 +73,8 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
         neighbors.push_back(current);
         if (depth < radius) {
             for (const auto& [neighbor, _] : constraints[current]) {
-                if (!visited[neighbor]) {
-                    visited[neighbor] = true;
+                if (visited.find(neighbor) == visited.end()) {
+                    visited.insert(neighbor);
                     q.emplace(neighbor, depth + 1);
                 }
             }

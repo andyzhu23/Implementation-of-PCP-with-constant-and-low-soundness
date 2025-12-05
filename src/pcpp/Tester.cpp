@@ -110,9 +110,9 @@ pcp::BitPCP Tester::buildBitPCP() {
     //     result.add_constraint(i, offset + i_vec, constraint::BitConstraint::EQUAL);
     // }
 
-    std::mt19937 rng(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<size_t> dist(0, (1 << constraint_matrix.size()));
-    // Add constraints from the constraint matrix by sampling
+    // // Add constraints from the constraint matrix by sampling
+    // std::mt19937 rng(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    // std::uniform_int_distribution<size_t> dist(0, (1 << constraint_matrix.size()));
     // for (size_t _ = 0; _ < constants::LINEARITY_COEFFICIENT; ++_) {
     //     size_t sample = dist(rng);
     for (size_t sample = 0; sample < (1 << constraint_matrix.size()); ++sample) {

@@ -61,7 +61,7 @@ public:
     }
 
     std::pair<T, T> pick_two() {
-        if (items.empty()) {
+        if (items.size() < 2) {
             throw std::out_of_range("random_picker: no items to pick from");
         }
         std::uniform_int_distribution<size_t> dist(0, items.size() - 1);
@@ -73,9 +73,12 @@ public:
             items.pop_back();
             counts.erase(item1);
         }
-        idx = dist2(rng);
-        T item2 = items[idx];
-        std::swap(items[idx], items.back());
+        size_t idx2 = dist2(rng);
+        while (idx2 == idx) {
+            idx2 = dist2(rng);
+        }
+        T item2 = items[idx2];
+        std::swap(items[idx2], items.back());
         if (--counts[item2] == 0) {
             items.pop_back();
             counts.erase(item2);
