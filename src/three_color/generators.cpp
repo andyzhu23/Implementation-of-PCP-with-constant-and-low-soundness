@@ -108,14 +108,17 @@ ThreeColor generate_invalid_three_coloring_graph(size_t num_nodes, size_t num_ed
             case 0: // RED-RED
                 u = red_nodes[red_dist(rng)];
                 v = red_nodes[red_dist(rng)];
+                while(u == v) v = red_nodes[red_dist(rng)];
                 break;
             case 1: // GREEN-GREEN
                 u = green_nodes[green_dist(rng)];
                 v = green_nodes[green_dist(rng)];
+                while(u == v) v = green_nodes[green_dist(rng)];
                 break;
             case 2: // BLUE-BLUE
                 u = blue_nodes[blue_dist(rng)];
                 v = blue_nodes[blue_dist(rng)];
+                while(u == v) v = blue_nodes[blue_dist(rng)];
                 break;
         }
         graph.add_edge(u, v);
