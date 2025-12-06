@@ -63,7 +63,7 @@ void BitPCP::add_constraint(Variable var, Variable other_var, constraint::BitCon
 std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     std::vector<Variable> neighbors;
     std::unordered_set<Variable> visited;
-    std::queue<std::pair<int, int>> q; // pair of (node, current_depth)
+    std::queue<std::pair<Variable, int>> q; // pair of (node, current_depth)
     q.emplace(var, 0);
     visited.insert(var);
 
@@ -72,7 +72,7 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
         q.pop();
         neighbors.push_back(current);
         if (depth < radius) {
-            for (const auto& [neighbor, _] : constraints[current]) {
+            for (const auto &[neighbor, _] : constraints[current]) {
                 if (visited.find(neighbor) == visited.end()) {
                     visited.insert(neighbor);
                     q.emplace(neighbor, depth + 1);
@@ -99,7 +99,7 @@ BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
     // Copy constraints
     for (size_t i = 0; i < neighbors.size(); ++i) {
         Variable u = neighbors[i];
-        for (const auto& [v, constraint] : constraints[u]) {
+        for (const auto &[v, constraint] : constraints[u]) {
             if (index_map.find(v) != index_map.end()) {
                 if (constraint != constraint::BitConstraint::ANY) {
                     neighboring_pcp.add_constraint(

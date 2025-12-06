@@ -74,9 +74,6 @@ public:
             counts.erase(item1);
         }
         size_t idx2 = dist2(rng);
-        while (idx2 == idx) {
-            idx2 = dist2(rng);
-        }
         T item2 = items[idx2];
         std::swap(items[idx2], items.back());
         if (--counts[item2] == 0) {
