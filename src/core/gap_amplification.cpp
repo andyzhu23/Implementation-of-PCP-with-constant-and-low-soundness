@@ -21,14 +21,6 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 
     std::vector<pcp::BitPCP> reduced_pcps(total_size);
 
-    // PRECOMPUTE: build each powering PCP sequentially to avoid concurrent
-    // access to the shared `pcp` object. Some BitPCP methods are not thread-safe
-    // and concurrent reads may have caused non-deterministic/worse outputs.
-    std::vector<pcp::BitPCP> powering_pcps(total_size);
-    for (size_t u = 0; u < total_size; ++u) {
-        powering_pcps[u] = pcp.get_neighboring_pcp(u, constants::POWERING_RADIUS);
-    }
-
     std::vector<std::future<void>> futures;
     size_t chunk_size = (total_size + num_threads - 1) / num_threads;
 
@@ -39,10 +31,10 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         if (start >= total_size) break;
 
         futures.push_back(std::async(std::launch::async,
-            [&reduced_pcps, &powering_pcps, start, end]() {
+            [&reduced_pcps, start, end, &pcp]() {
                 for (size_t u = start; u < end; ++u) {
                     // move the precomputed powering PCP into the tester to avoid copies
-                    pcp::BitPCP powering_u = std::move(powering_pcps[u]);
+                    pcp::BitPCP powering_u = pcp.get_neighboring_pcp(u, constants::POWERING_RADIUS);
                     pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();
                     reduced_pcp.clean();
                     reduced_pcps[u] = std::move(reduced_pcp);
