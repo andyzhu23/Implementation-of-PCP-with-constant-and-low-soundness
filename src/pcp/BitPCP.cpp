@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <queue>
 #include <stdexcept>
+#include <unordered_set>
 
 #include "pcp/BitPCP.hpp"
 #include "util.hpp"
@@ -9,26 +10,25 @@ namespace pcp {
 
 // BitPCP class implementation
 // Constructors
+BitPCP::BitPCP() : BitPCP(0) {}
+
 BitPCP::BitPCP(size_t size)
  : size(size), 
    variables(size, false), 
    constraints(size), 
-   constraint_indices(size), 
-   visited(size, false) {}
+   constraint_indices(size) {}
 
 BitPCP::BitPCP(const std::vector<BitDomain> &variables)
  : size(variables.size()), 
    variables(variables), 
    constraints(variables.size()), 
-   constraint_indices(variables.size()), 
-   visited(size, false) {}
+   constraint_indices(variables.size()) {}
 
 BitPCP::BitPCP(std::vector<BitDomain> &&variables)
  : size(variables.size()), 
    variables(std::move(variables)), 
    constraints(size), 
-   constraint_indices(size), 
-   visited(size, false) {}
+   constraint_indices(size) {}
 
 // Member functions
 size_t BitPCP::get_size() const { return size; }
@@ -36,6 +36,13 @@ size_t BitPCP::get_size() const { return size; }
 BitDomain BitPCP::get_variable(Variable var) const { return variables[var]; }
 
 void BitPCP::set_variable(Variable var, BitDomain value) { variables[var] = value; }
+
+void BitPCP::add_variable(BitDomain value) {
+    variables.push_back(value);
+    constraints.emplace_back();
+    constraint_indices.emplace_back();
+    ++size;
+}
 
 const std::vector<std::pair<Variable, constraint::BitConstraint>>& BitPCP::get_constraints(Variable var) const { 
     return constraints[var]; 
@@ -62,19 +69,19 @@ void BitPCP::add_constraint(Variable var, Variable other_var, constraint::BitCon
 }
 std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     std::vector<Variable> neighbors;
-    util::visit_guard visit_guard(visited, neighbors); // RAII to manage visited state
-    std::queue<std::pair<int, int>> q; // pair of (node, current_depth)
+    std::unordered_set<Variable> visited;
+    std::queue<std::pair<Variable, int>> q; // pair of (node, current_depth)
     q.emplace(var, 0);
-    visited[var] = true;
+    visited.insert(var);
 
     while (!q.empty()) {
         auto [current, depth] = q.front();
         q.pop();
         neighbors.push_back(current);
         if (depth < radius) {
-            for (const auto& [neighbor, _] : constraints[current]) {
-                if (!visited[neighbor]) {
-                    visited[neighbor] = true;
+            for (const auto &[neighbor, _] : constraints[current]) {
+                if (visited.find(neighbor) == visited.end()) {
+                    visited.insert(neighbor);
                     q.emplace(neighbor, depth + 1);
                 }
             }
@@ -99,7 +106,7 @@ BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
     // Copy constraints
     for (size_t i = 0; i < neighbors.size(); ++i) {
         Variable u = neighbors[i];
-        for (const auto& [v, constraint] : constraints[u]) {
+        for (const auto &[v, constraint] : constraints[u]) {
             if (index_map.find(v) != index_map.end()) {
                 if (constraint != constraint::BitConstraint::ANY) {
                     neighboring_pcp.add_constraint(

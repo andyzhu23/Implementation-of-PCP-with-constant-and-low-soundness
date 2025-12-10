@@ -1,5 +1,6 @@
 #include <chrono>
 #include <random>
+#include <unordered_map>
 
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
@@ -71,64 +72,74 @@ Tester::Tester(three_color::Color u, three_color::Color v) : assignment(THREE_CO
 }
 
 // Construct Tester from a BitPCP
-Tester::Tester(pcp::BitPCP pcp) : assignment(pcp.get_size()) {
+Tester::Tester(pcp::BitPCP pcp) : assignment(pcp.get_size() + 1) {
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
         assignment[i] = pcp.get_variable(i);
     }
 
-    assignment.push_back(1); // extra variable for negation
+    assignment.back() = constants::PCPVARIABLE_ONE; // extra variable for negation
 
     hadamard = Hadamard(assignment);
     // Build constraint matrix from BitPCP constraints
-    for (const auto& [var1, var2, bit_constraint] : pcp.get_constraints_list()) {
+    for (const auto &[var1, var2, bit_constraint] : pcp.get_constraints_list()) {
         if (bit_constraint != constraint::BitConstraint::ANY) {
             std::vector<pcp::BitDomain> row(assignment.size());
-            row[var1] = 1;
-            row[var2] = 1;
+            row[var1] = constants::PCPVARIABLE_ONE;
+            row[var2] = constants::PCPVARIABLE_ONE;
             row.back() = (bit_constraint == constraint::BitConstraint::EQUAL) ? 0 : 1;
-            constraint_matrix.push_back(row);
+            constraint_matrix.push_back(std::move(row));
         }
     }
 }
 
 pcp::BitPCP Tester::buildBitPCP() {
     std::vector<pcp::BitDomain> variables = assignment;
+    variables.push_back(0); // used for linearity test variable
 
-    variables.reserve(variables.size() + hadamard.getCode().size() + 1);
+    pcp::Variable offset = variables.size();
+    std::unordered_map<pcp::Variable, size_t> used_positions;
 
-    variables.insert(variables.end(), hadamard.getCode().begin(), hadamard.getCode().end());
-
-    variables.push_back(0); // add extra variable for linearity test to verify 0
-
-    pcp::BitPCP result = std::move(variables);
-
-    size_t offset = assignment.size();
-
-    // // Add constraints between original variables and their Hadamard code position
-    // for (size_t i = 0; i < offset; ++i) {
-    //     size_t i_vec = 1 << i;
-    //     result.add_constraint(i, offset + i_vec, constraint::BitConstraint::EQUAL);
-    // }
-
-    std::mt19937 rng(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<size_t> dist(0, (1 << constraint_matrix.size()));
-    // Add constraints from the constraint matrix by sampling
-    // for (size_t _ = 0; _ < constants::LINEARITY_COEFFICIENT; ++_) {
-    //     size_t sample = dist(rng);
-    for (size_t sample = 0; sample < (1 << constraint_matrix.size()); ++sample) {
+    for (size_t sample = 0; sample < (constants::PCPVARIABLE_ONE << constraint_matrix.size()); ++sample) {
         pcp::Variable position = 0;
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {
             if ((sample >> j) & 1) {
                 // include this constraint in the linear combination
                 for (size_t k = 0; k < constraint_matrix[j].size(); ++k) {
                     if (constraint_matrix[j][k]) {
-                        position ^= (1 << k);
+                        position ^= (constants::PCPVARIABLE_ONE << k);
                     }
                 }
             }
         }
-        result.add_constraint(offset + position, result.get_size() - 1, constraint::BitConstraint::EQUAL);
+        if (used_positions.find(position) == used_positions.end()) {
+            used_positions[position] = variables.size();
+            variables.push_back(hadamard.query(position));
+        }
     }
+
+    pcp::BitPCP result = std::move(variables);
+
+    for (const auto &[pos, idx] : used_positions) {
+        result.add_constraint(offset - 1, idx, constraint::BitConstraint::EQUAL);
+    }
+
+    // for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(assignment.size()); ++u) {
+    //     pcp::Variable position = constants::PCPVARIABLE_ONE << u;
+    //     if (used_positions.find(position) != used_positions.end()) {
+    //         result.add_constraint(
+    //             u,
+    //             offset + used_positions[position],
+    //             constraint::BitConstraint::EQUAL
+    //         );
+    //     } else {
+    //         result.add_variable(hadamard.query(position));
+    //         result.add_constraint(
+    //             u,
+    //             static_cast<pcp::Variable>(result.get_size() - 1),
+    //             constraint::BitConstraint::EQUAL
+    //         );
+    //     }
+    // }
 
     return result;
 }

@@ -145,9 +145,6 @@ add_executable(
 add_test(NAME Test_Random_Picker COMMAND test_random_picker)
 target_include_directories(test_random_picker PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-
-
-
 add_executable(
     test_gap_amplification
     ./e2e/test_gap_amplification.cpp
@@ -171,3 +168,4 @@ add_executable(
 )
 add_test(NAME Test_Gap_Amplification COMMAND test_gap_amplification)
 target_include_directories(test_gap_amplification PRIVATE ${CMAKE_SOURCE_DIR}/include)
+

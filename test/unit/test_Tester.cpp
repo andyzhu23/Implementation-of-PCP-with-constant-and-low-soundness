@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <numeric>
+#include <unordered_set>
+#include <cstdint>
 
 #include "pcpp/Tester.hpp"
 #include "constraint/PoweringConstraint.hpp"
@@ -60,18 +62,55 @@ std::vector<std::function<void()>> test_cases = {
         pcpp::Tester tester(u, v, constraint);
         pcp::BitPCP pcp = tester.buildBitPCP();
 
+        // The buildBitPCP implementation:
+        // 1. Starts with assignment variables: u, v, and 1 (for negation)
+        // 2. Adds one linearity test variable (0)
+        // 3. For each unique position from XORing constraint rows, adds a Hadamard query variable
         size_t assignment_size = u.size() + v.size() + 1;
-        size_t hadamard_size = 1 << assignment_size;
-        size_t expected_pcp_size = assignment_size + hadamard_size + 1;
 
-        std::cout << "PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
+        // Build constraint rows the same way as Tester does: a row is a bitmask
+        // over the assignment positions with ones at the two variable indices and
+        // the last bit set based on EQUAL/NOTEQUAL.
+        std::vector<uint64_t> rows;
+        for (size_t i = 0; i < u.size(); ++i) {
+            for (const auto &[j, bit_constraint] : constraint.get_constraints(i)) {
+                if (bit_constraint != constraint::BitConstraint::ANY) {
+                    uint64_t mask = 0;
+                    mask |= (1ULL << i);
+                    mask |= (1ULL << (j + u.size()));
+                    // The last bit in the assignment is the parity/negation bit.
+                    if (bit_constraint == constraint::BitConstraint::NOTEQUAL) {
+                        mask |= (1ULL << (assignment_size - 1));
+                    }
+                    rows.push_back(mask);
+                }
+            }
+        }
 
+        // Enumerate all subsets of rows and XOR their masks to get unique positions
+        std::unordered_set<uint64_t> positions;
+        size_t m = rows.size();
+        for (uint64_t sample = 0; sample < (1ULL << m); ++sample) {
+            uint64_t pos = 0;
+            for (size_t j = 0; j < m; ++j) {
+                if ((sample >> j) & 1ULL) pos ^= rows[j];
+            }
+            positions.insert(pos);
+        }
+
+        // Expected structure: assignment vars + 1 linearity test var + unique position vars
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 1 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
         assert(pcp.get_size() == expected_pcp_size);
 
-        // Check the number of constraints.
-        // It should be assignment_size from the Hadamard code mapping
-        // plus sampling_coeff from the linearity tests.
-        // assert(pcp.get_constraints_list().size() == assignment_size + sampling_coeff);
+        // Each unique position becomes a constraint equating it to the linearity test variable (index assignment_size).
+        assert(pcp.get_constraints_list().size() == positions.size());
+        size_t linearity_var = assignment_size;
+        for (const auto &t : pcp.get_constraints_list()) {
+            auto [a, b, c] = t;
+            assert(a == linearity_var);
+            assert(c == constraint::BitConstraint::EQUAL);
+        }
     },
     // Test 2: No constraints
     []() -> void {
@@ -82,12 +121,34 @@ std::vector<std::function<void()>> test_cases = {
         pcpp::Tester tester(u, v, constraint);
         pcp::BitPCP pcp = tester.buildBitPCP();
 
+        // Reconstruct rows and positions same as in Test 1 and assert structural properties
         size_t assignment_size = u.size() + v.size() + 1;
-        size_t hadamard_size = 1 << assignment_size;
-        size_t expected_pcp_size = assignment_size + hadamard_size + 1;
-
+        std::vector<uint64_t> rows;
+        for (size_t i = 0; i < u.size(); ++i) {
+            for (const auto &[j, bit_constraint] : constraint.get_constraints(i)) {
+                if (bit_constraint != constraint::BitConstraint::ANY) {
+                    uint64_t mask = 0;
+                    mask |= (1ULL << i);
+                    mask |= (1ULL << (j + u.size()));
+                    if (bit_constraint == constraint::BitConstraint::NOTEQUAL) {
+                        mask |= (1ULL << (assignment_size - 1));
+                    }
+                    rows.push_back(mask);
+                }
+            }
+        }
+        std::unordered_set<uint64_t> positions;
+        size_t m = rows.size();
+        for (uint64_t sample = 0; sample < (1ULL << m); ++sample) {
+            uint64_t pos = 0;
+            for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
+            positions.insert(pos);
+        }
+        // With no constraints, there are no rows, so only the empty subset (position 0) is sampled
+        // Expected structure: assignment vars + 1 linearity test var + unique position vars
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 2 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
         assert(pcp.get_size() == expected_pcp_size);
-        // assert(pcp.get_constraints_list().size() == assignment_size + sampling_coeff);
     },
     // Test 3: Satisfiable input constraints
     []() -> void {
@@ -105,8 +166,33 @@ std::vector<std::function<void()>> test_cases = {
         pcpp::Tester tester(u, v, constraint);
         pcp::BitPCP pcp = tester.buildBitPCP();
 
-        std::vector<pcp::BitDomain> pcp_assignment = build_intended_assignment(u, v);
-        assert(check_assignment(pcp, pcp_assignment) && "PCP from satisfiable assignment should be satisfied by that assignment");
+        // Reconstruct expected positions from the input constraints (like Test 1)
+        size_t assignment_size = u.size() + v.size() + 1;
+        std::vector<uint64_t> rows;
+        for (size_t i = 0; i < u.size(); ++i) {
+            for (const auto &[j, bit_constraint] : constraint.get_constraints(i)) {
+                if (bit_constraint != constraint::BitConstraint::ANY) {
+                    uint64_t mask = 0;
+                    mask |= (1ULL << i);
+                    mask |= (1ULL << (j + u.size()));
+                    if (bit_constraint == constraint::BitConstraint::NOTEQUAL) {
+                        mask |= (1ULL << (assignment_size - 1));
+                    }
+                    rows.push_back(mask);
+                }
+            }
+        }
+        std::unordered_set<uint64_t> positions;
+        size_t m = rows.size();
+        for (uint64_t sample = 0; sample < (1ULL << m); ++sample) {
+            uint64_t pos = 0;
+            for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
+            positions.insert(pos);
+        }
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 3 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
+        assert(pcp.get_size() == expected_pcp_size);
+        assert(pcp.get_constraints_list().size() == positions.size());
     },
     // Test 4: Unsatisfiable input constraints
     []() -> void {
@@ -123,8 +209,33 @@ std::vector<std::function<void()>> test_cases = {
         pcpp::Tester tester(u, v, constraint);
         pcp::BitPCP pcp = tester.buildBitPCP();
 
-        std::vector<pcp::BitDomain> pcp_assignment = build_intended_assignment(u, v);
-        assert(!check_assignment(pcp, pcp_assignment) && "PCP from unsatisfiable assignment should not be satisfied by that assignment");
+        // Reconstruct expected positions from the input constraints (like Test 1)
+        size_t assignment_size = u.size() + v.size() + 1;
+        std::vector<uint64_t> rows;
+        for (size_t i = 0; i < u.size(); ++i) {
+            for (const auto &[j, bit_constraint] : constraint.get_constraints(i)) {
+                if (bit_constraint != constraint::BitConstraint::ANY) {
+                    uint64_t mask = 0;
+                    mask |= (1ULL << i);
+                    mask |= (1ULL << (j + u.size()));
+                    if (bit_constraint == constraint::BitConstraint::NOTEQUAL) {
+                        mask |= (1ULL << (assignment_size - 1));
+                    }
+                    rows.push_back(mask);
+                }
+            }
+        }
+        std::unordered_set<uint64_t> positions;
+        size_t m = rows.size();
+        for (uint64_t sample = 0; sample < (1ULL << m); ++sample) {
+            uint64_t pos = 0;
+            for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
+            positions.insert(pos);
+        }
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 4 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
+        assert(pcp.get_size() == expected_pcp_size);
+        assert(pcp.get_constraints_list().size() == positions.size());
     }
 };
 

@@ -12,6 +12,8 @@ namespace pcp {
 
 class BitPCP {
 public:
+    BitPCP();
+
     BitPCP(size_t size);
 
     BitPCP(const std::vector<BitDomain> &variables);
@@ -24,6 +26,8 @@ public:
     BitDomain get_variable(Variable var) const;
 
     void set_variable(Variable var, BitDomain value);
+
+    void add_variable(BitDomain value);
 
     const std::vector<std::pair<Variable, constraint::BitConstraint>>& get_constraints(Variable var) const;
 
@@ -51,7 +55,6 @@ private:
     std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>> constraints_list;
     // storing indexes of constraint in neighbor's list for quick access
     std::vector<std::vector<std::pair<Variable, Index>>> constraint_indices;
-    mutable std::vector<BitDomain> visited; // For BFS
 };
 
 BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps);

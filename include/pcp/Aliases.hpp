@@ -11,7 +11,7 @@ namespace pcp {
 const size_t SimpleDomainSize = 3; 
 
 // type used to represent variable index
-using Variable = size_t;
+using Variable = __uint128_t;
 // type used to represent constraint index
 using Index = size_t;
 // type used to represent domain of values in SimplePCP
