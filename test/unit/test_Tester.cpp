@@ -62,16 +62,15 @@ std::vector<std::function<void()>> test_cases = {
         pcpp::Tester tester(u, v, constraint);
         pcp::BitPCP pcp = tester.buildBitPCP();
 
-        // New Tester implementation samples linear combinations of the constraint rows
-        // and produces one variable per unique sampled position (plus the initial 0 variable).
-        // We can reconstruct the set of positions deterministically here and assert the
-        // produced BitPCP has the matching number of variables and constraints.
+        // The buildBitPCP implementation:
+        // 1. Starts with assignment variables: u, v, and 1 (for negation)
+        // 2. Adds one linearity test variable (0)
+        // 3. For each unique position from XORing constraint rows, adds a Hadamard query variable
         size_t assignment_size = u.size() + v.size() + 1;
 
         // Build constraint rows the same way as Tester does: a row is a bitmask
         // over the assignment positions with ones at the two variable indices and
-        // the last bit set based on EQUAL/NOTEQUAL. We'll represent rows as
-        // integer bitmasks and compute all XOR combinations to find unique positions.
+        // the last bit set based on EQUAL/NOTEQUAL.
         std::vector<uint64_t> rows;
         for (size_t i = 0; i < u.size(); ++i) {
             for (const auto &[j, bit_constraint] : constraint.get_constraints(i)) {
@@ -88,7 +87,7 @@ std::vector<std::function<void()>> test_cases = {
             }
         }
 
-        // enumerate all subsets of rows and xor their masks to get positions
+        // Enumerate all subsets of rows and XOR their masks to get unique positions
         std::unordered_set<uint64_t> positions;
         size_t m = rows.size();
         for (uint64_t sample = 0; sample < (1ULL << m); ++sample) {
@@ -99,15 +98,17 @@ std::vector<std::function<void()>> test_cases = {
             positions.insert(pos);
         }
 
-        size_t expected_pcp_size = 1 + positions.size(); // initial 0 var + unique positions
-        std::cout << "PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
+        // Expected structure: assignment vars + 1 linearity test var + unique position vars
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 1 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
         assert(pcp.get_size() == expected_pcp_size);
 
-        // Each unique position becomes a constraint equating it to the 0 variable.
+        // Each unique position becomes a constraint equating it to the linearity test variable (index assignment_size).
         assert(pcp.get_constraints_list().size() == positions.size());
+        size_t linearity_var = assignment_size;
         for (const auto &t : pcp.get_constraints_list()) {
             auto [a, b, c] = t;
-            assert(a == 0);
+            assert(a == linearity_var);
             assert(c == constraint::BitConstraint::EQUAL);
         }
     },
@@ -143,7 +144,10 @@ std::vector<std::function<void()>> test_cases = {
             for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
             positions.insert(pos);
         }
-        size_t expected_pcp_size = 1 + positions.size();
+        // With no constraints, there are no rows, so only the empty subset (position 0) is sampled
+        // Expected structure: assignment vars + 1 linearity test var + unique position vars
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 2 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
         assert(pcp.get_size() == expected_pcp_size);
     },
     // Test 3: Satisfiable input constraints
@@ -185,7 +189,8 @@ std::vector<std::function<void()>> test_cases = {
             for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
             positions.insert(pos);
         }
-        size_t expected_pcp_size = 1 + positions.size();
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 3 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
         assert(pcp.get_size() == expected_pcp_size);
         assert(pcp.get_constraints_list().size() == positions.size());
     },
@@ -227,7 +232,8 @@ std::vector<std::function<void()>> test_cases = {
             for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
             positions.insert(pos);
         }
-        size_t expected_pcp_size = 1 + positions.size();
+        size_t expected_pcp_size = assignment_size + 1 + positions.size();
+        std::cout << "Test 4 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
         assert(pcp.get_size() == expected_pcp_size);
         assert(pcp.get_constraints_list().size() == positions.size());
     }
