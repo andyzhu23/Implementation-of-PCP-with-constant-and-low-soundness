@@ -31,9 +31,8 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         if (start >= total_size) break;
 
         futures.push_back(std::async(std::launch::async,
-            [&reduced_pcps, start, end, &pcp]() {
+            [&reduced_pcps, start, end, &pcp, &total_size]() {
                 for (size_t u = start; u < end; ++u) {
-                    // move the precomputed powering PCP into the tester to avoid copies
                     pcp::BitPCP powering_u = pcp.get_neighboring_pcp(u, constants::POWERING_RADIUS);
                     pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();
                     reduced_pcp.clean();
@@ -42,7 +41,6 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
             }
         ));
     }
-
     for (auto &f : futures) {
         f.get();
     }

@@ -27,6 +27,8 @@ public:
 
     void set_variable(Variable var, BitDomain value);
 
+    void add_variable(BitDomain value);
+
     const std::vector<std::pair<Variable, constraint::BitConstraint>>& get_constraints(Variable var) const;
 
     const std::vector<std::pair<Variable, Index>>& get_constraints_indices(Variable var) const;

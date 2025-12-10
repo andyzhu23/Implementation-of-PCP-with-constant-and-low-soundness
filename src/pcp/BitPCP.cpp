@@ -37,6 +37,13 @@ BitDomain BitPCP::get_variable(Variable var) const { return variables[var]; }
 
 void BitPCP::set_variable(Variable var, BitDomain value) { variables[var] = value; }
 
+void BitPCP::add_variable(BitDomain value) {
+    variables.push_back(value);
+    constraints.emplace_back();
+    constraint_indices.emplace_back();
+    ++size;
+}
+
 const std::vector<std::pair<Variable, constraint::BitConstraint>>& BitPCP::get_constraints(Variable var) const { 
     return constraints[var]; 
 }

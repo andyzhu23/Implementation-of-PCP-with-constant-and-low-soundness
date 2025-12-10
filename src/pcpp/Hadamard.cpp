@@ -1,27 +1,27 @@
 #include <stdexcept>
 
+#include "constants.hpp"
 #include "pcpp/Hadamard.hpp"
 
 namespace pcpp {
 
 Hadamard::Hadamard() {}
 
-Hadamard::Hadamard(const std::vector<bool> value) : code(1 << value.size()) {
-    if (value.size() > 25) {
-        throw std::invalid_argument("Hadamard::Hadamard: input size too large, may cause memory issues");
-    }
+Hadamard::Hadamard(const std::vector<bool> value) : value(value) {}
+
+bool Hadamard::query(size_t idx) const {
+    bool code = false;
+    for (size_t i = 0; i < value.size(); ++i) {
+        code = (((idx >> i) & 1) & value[i]) ? (!code) : code;
+    }   
+    return code;
+}
+
+std::vector<bool> Hadamard::getCode() const {
+    std::vector<bool> code(constants::PCPVARIABLE_ONE << value.size());
     for (size_t i = 0; i < code.size(); ++i) {
-        for (size_t j = 0; j < value.size(); ++j) {
-            code[i] = (((i >> j) & 1) & value[j]) ? (!code[i]) : code[i];
-        }
+        code[i] = query(i);
     }
-}
-
-bool Hadamard::query(int idx) const {
-    return code[idx];
-}
-
-const std::vector<bool>& Hadamard::getCode() const {
     return code;
 }
 

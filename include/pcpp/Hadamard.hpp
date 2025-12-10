@@ -12,12 +12,12 @@ public:
 
     Hadamard(const std::vector<bool> value);
 
-    bool query(int idx) const;
+    bool query(size_t idx) const;
 
-    const std::vector<bool>& getCode() const;
+    std::vector<bool> getCode() const;
 
 private:
-    std::vector<bool> code;
+    std::vector<bool> value;
 };
 
 }
