@@ -99,7 +99,13 @@ pcp::BitPCP Tester::buildBitPCP() {
     pcp::Variable offset = variables.size();
     std::unordered_map<pcp::Variable, size_t> used_positions;
 
-    for (size_t sample = 0; sample < (constants::PCPVARIABLE_ONE << constraint_matrix.size()); ++sample) {
+    static thread_local std::mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<size_t> dist(0, (constants::PCPVARIABLE_ONE << constraint_matrix.size()) - 1);
+
+    // for (size_t sample = 0; sample < (constants::PCPVARIABLE_ONE << constraint_matrix.size()); ++sample) {
+    for (size_t _ = 0; _ < constants::LINEARITY_COEFFICIENT; ++_) {
+        // random sample
+        size_t sample = dist(rng);
         pcp::Variable position = 0;
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {
             if ((sample >> j) & 1) {

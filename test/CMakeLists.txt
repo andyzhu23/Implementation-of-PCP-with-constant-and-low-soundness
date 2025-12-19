@@ -153,6 +153,7 @@ add_executable(
     ../../src/core/reduce_alphabet.cpp
     ../../src/core/reduce_degree.cpp
     ../../src/core/to_expander.cpp
+    ../../src/core/three_color_gap_amplification.cpp
     ../../src/three_color/three_color.cpp
     ../../src/three_color/generators.cpp
     ../../src/pcp/BitPCP.cpp
@@ -169,3 +170,27 @@ add_executable(
 add_test(NAME Test_Gap_Amplification COMMAND test_gap_amplification)
 target_include_directories(test_gap_amplification PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
+add_executable(
+    test_three_color_gap_amplification
+    ./e2e/test_three_color_gap_amplification.cpp
+    ../../src/core/three_color_gap_amplification.cpp
+    ../../src/core/gap_amplification.cpp
+    ../../src/core/powering_operation.cpp
+    ../../src/core/reduce_alphabet.cpp
+    ../../src/core/reduce_degree.cpp
+    ../../src/core/to_expander.cpp
+    ../../src/three_color/three_color.cpp
+    ../../src/three_color/generators.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/SimplePCP.cpp
+    ../../src/pcp/PoweringPCP.cpp
+    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcpp/Tester.cpp
+    ../../src/util.cpp
+    ../../src/analyzer/PCPAnalyzer.cpp
+    ../../src/constraint/BinaryConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/PoweringConstraint.cpp
+)
+add_test(NAME Test_Three_Color_Gap_Amplification COMMAND test_three_color_gap_amplification)
+target_include_directories(test_three_color_gap_amplification PRIVATE ${CMAKE_SOURCE_DIR}/include)

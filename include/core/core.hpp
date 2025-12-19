@@ -24,7 +24,7 @@ pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp);
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp);
 
 // Converts a ThreeColor instance to a BitPCP instance
-pcp::BitPCP three_coloring_to_BitPCP(const three_color::ThreeColor &tc);
+pcp::BitPCP three_color_gap_amplification(const three_color::ThreeColor &tc);
 }
 
 #endif
