@@ -9,6 +9,7 @@
 #include "pcpp/Tester.hpp"
 #include "constraint/PoweringConstraint.hpp"
 #include "pcp/Aliases.hpp"
+#include "constants.hpp"
 
 // Helper function to check if a given assignment satisfies a BitPCP
 bool check_assignment(const pcp::BitPCP& pcp, const std::vector<pcp::BitDomain>& assignment) {
@@ -98,13 +99,14 @@ std::vector<std::function<void()>> test_cases = {
             positions.insert(pos);
         }
 
-        // Expected structure: assignment vars + 1 linearity test var + unique position vars
-        size_t expected_pcp_size = assignment_size + 1 + positions.size();
-        std::cout << "Test 1 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
-        assert(pcp.get_size() == expected_pcp_size);
+        // The new Tester samples random linear combinations up to LINEARITY_COEFFICIENT
+        // so the resulting PCP size is at most assignment + 1 + LINEARITY_COEFFICIENT
+        size_t expected_max_pcp_size = assignment_size + 1 + constants::LINEARITY_COEFFICIENT;
+        std::cout << "Test 1 - PCP size: " << pcp.get_size() << ", Max expected size: " << expected_max_pcp_size << std::endl;
+        assert(pcp.get_size() <= expected_max_pcp_size);
 
-        // Each unique position becomes a constraint equating it to the linearity test variable (index assignment_size).
-        assert(pcp.get_constraints_list().size() == positions.size());
+        // Constraint count is at most LINEARITY_COEFFICIENT (sampling may produce duplicates)
+        assert(pcp.get_constraints_list().size() <= constants::LINEARITY_COEFFICIENT);
         size_t linearity_var = assignment_size;
         for (const auto &t : pcp.get_constraints_list()) {
             auto [a, b, c] = t;
@@ -145,10 +147,11 @@ std::vector<std::function<void()>> test_cases = {
             positions.insert(pos);
         }
         // With no constraints, there are no rows, so only the empty subset (position 0) is sampled
-        // Expected structure: assignment vars + 1 linearity test var + unique position vars
-        size_t expected_pcp_size = assignment_size + 1 + positions.size();
-        std::cout << "Test 2 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
-        assert(pcp.get_size() == expected_pcp_size);
+    // The new Tester samples random linear combinations up to LINEARITY_COEFFICIENT
+    // so the resulting PCP size is at most assignment + 1 + LINEARITY_COEFFICIENT
+    size_t expected_max_pcp_size = assignment_size + 1 + constants::LINEARITY_COEFFICIENT;
+    std::cout << "Test 2 - PCP size: " << pcp.get_size() << ", Max expected size: " << expected_max_pcp_size << std::endl;
+    assert(pcp.get_size() <= expected_max_pcp_size);
     },
     // Test 3: Satisfiable input constraints
     []() -> void {
@@ -189,10 +192,10 @@ std::vector<std::function<void()>> test_cases = {
             for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
             positions.insert(pos);
         }
-        size_t expected_pcp_size = assignment_size + 1 + positions.size();
-        std::cout << "Test 3 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
-        assert(pcp.get_size() == expected_pcp_size);
-        assert(pcp.get_constraints_list().size() == positions.size());
+        size_t expected_max_pcp_size = assignment_size + 1 + constants::LINEARITY_COEFFICIENT;
+        std::cout << "Test 3 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_max_pcp_size << std::endl;
+        assert(pcp.get_size() <= expected_max_pcp_size);
+        assert(pcp.get_constraints_list().size() <= constants::LINEARITY_COEFFICIENT);
     },
     // Test 4: Unsatisfiable input constraints
     []() -> void {
@@ -232,10 +235,10 @@ std::vector<std::function<void()>> test_cases = {
             for (size_t j = 0; j < m; ++j) if ((sample >> j) & 1ULL) pos ^= rows[j];
             positions.insert(pos);
         }
-        size_t expected_pcp_size = assignment_size + 1 + positions.size();
-        std::cout << "Test 4 - PCP size: " << pcp.get_size() << ", Expected size: " << expected_pcp_size << std::endl;
-        assert(pcp.get_size() == expected_pcp_size);
-        assert(pcp.get_constraints_list().size() == positions.size());
+    size_t expected_max_pcp_size = assignment_size + 1 + constants::LINEARITY_COEFFICIENT;
+    std::cout << "Test 4 - PCP size: " << pcp.get_size() << ", Max expected size: " << expected_max_pcp_size << std::endl;
+    assert(pcp.get_size() <= expected_max_pcp_size);
+    assert(pcp.get_constraints_list().size() <= constants::LINEARITY_COEFFICIENT);
     }
 };
 
