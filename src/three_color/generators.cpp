@@ -2,6 +2,7 @@
 #include <random>
 #include <stdexcept>
 
+#include "constants.hpp"
 #include "three_color/three_color.hpp"
 
 namespace three_color {
@@ -10,7 +11,6 @@ ThreeColor generate_valid_three_coloring_graph(size_t num_nodes, size_t num_edge
     if (num_red + num_green + num_blue != num_nodes) {
         throw std::invalid_argument("Sum of color counts must equal number of nodes");
     }
-    static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     std::vector<Color> colors(num_nodes);
     for (size_t i = 0; i < num_red; ++i) {
         colors[i] = Color::RED;
@@ -23,7 +23,7 @@ ThreeColor generate_valid_three_coloring_graph(size_t num_nodes, size_t num_edge
     }
 
     // shuffle colors to randomize node colors
-    std::shuffle(colors.begin(), colors.end(), rng);
+    std::shuffle(colors.begin(), colors.end(), constants::RANDOM_SEED);
     std::vector<Node> red_nodes;
     std::vector<Node> green_nodes;
     std::vector<Node> blue_nodes;
@@ -49,20 +49,20 @@ ThreeColor generate_valid_three_coloring_graph(size_t num_nodes, size_t num_edge
     std::vector<Edge> edges;
 
     for (size_t i = 0; i < num_edges; ++i) {
-        int choice = rng() % 3;
+        int choice = constants::RANDOM_SEED() % 3;
         Node u, v;
         switch (choice) {
             case 0: // RED-GREEN
-                u = red_nodes[red_dist(rng)];
-                v = green_nodes[green_dist(rng)];
+                u = red_nodes[red_dist(constants::RANDOM_SEED)];
+                v = green_nodes[green_dist(constants::RANDOM_SEED)];
                 break;
             case 1: // GREEN-BLUE
-                u = green_nodes[green_dist(rng)];
-                v = blue_nodes[blue_dist(rng)];
+                u = green_nodes[green_dist(constants::RANDOM_SEED)];
+                v = blue_nodes[blue_dist(constants::RANDOM_SEED)];
                 break;
             case 2: // BLUE-RED
-                u = blue_nodes[blue_dist(rng)];
-                v = red_nodes[red_dist(rng)];
+                u = blue_nodes[blue_dist(constants::RANDOM_SEED)];
+                v = red_nodes[red_dist(constants::RANDOM_SEED)];
                 break;
         }
         edges.emplace_back(u, v);
@@ -94,7 +94,6 @@ ThreeColor generate_invalid_three_coloring_graph(size_t num_nodes, size_t num_ed
     }
 
     // Add violated edges between same color nodes
-    static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 
     std::uniform_int_distribution<size_t> red_dist(0, red_nodes.size() - 1);
     std::uniform_int_distribution<size_t> green_dist(0, green_nodes.size() - 1);
@@ -102,23 +101,23 @@ ThreeColor generate_invalid_three_coloring_graph(size_t num_nodes, size_t num_ed
 
 
     for (size_t i = 0; i < num_violated_edges; ++i) {
-        int choice = rng() % 3;
+        int choice = constants::RANDOM_SEED() % 3;
         Node u, v;
         switch (choice) {
             case 0: // RED-RED
-                u = red_nodes[red_dist(rng)];
-                v = red_nodes[red_dist(rng)];
-                while(u == v) v = red_nodes[red_dist(rng)];
+                u = red_nodes[red_dist(constants::RANDOM_SEED)];
+                v = red_nodes[red_dist(constants::RANDOM_SEED)];
+                while(u == v) v = red_nodes[red_dist(constants::RANDOM_SEED)];
                 break;
             case 1: // GREEN-GREEN
-                u = green_nodes[green_dist(rng)];
-                v = green_nodes[green_dist(rng)];
-                while(u == v) v = green_nodes[green_dist(rng)];
+                u = green_nodes[green_dist(constants::RANDOM_SEED)];
+                v = green_nodes[green_dist(constants::RANDOM_SEED)];
+                while(u == v) v = green_nodes[green_dist(constants::RANDOM_SEED)];
                 break;
             case 2: // BLUE-BLUE
-                u = blue_nodes[blue_dist(rng)];
-                v = blue_nodes[blue_dist(rng)];
-                while(u == v) v = blue_nodes[blue_dist(rng)];
+                u = blue_nodes[blue_dist(constants::RANDOM_SEED)];
+                v = blue_nodes[blue_dist(constants::RANDOM_SEED)];
+                while(u == v) v = blue_nodes[blue_dist(constants::RANDOM_SEED)];
                 break;
         }
         graph.add_edge(u, v);

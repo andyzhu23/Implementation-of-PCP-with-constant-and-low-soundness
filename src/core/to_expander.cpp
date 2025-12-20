@@ -5,12 +5,12 @@
 #include "pcp/BitPCP.hpp"
 #include "core/core.hpp"
 #include "pcp/PoweringPCP.hpp"
+#include "constants.hpp"
 
 namespace core {
 
 pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient) {
     // generate random seed
-    static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     if (pcp.get_size() <= 1) {
         return pcp; // cannot expand
     }
@@ -22,7 +22,7 @@ pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient) {
     std::iota(options.begin(), options.end(), 0);
     for (size_t i = 0; i < pcp.get_size(); ++i) {
         for (int j = 0; j < expanding_coefficient; ++j) {
-            int target = dist(rng);
+            int target = dist(constants::RANDOM_SEED);
             pcp.add_constraint(i, target, constraint::BitConstraint::ANY);
         }
         // swap current node to front to avoid self-loop

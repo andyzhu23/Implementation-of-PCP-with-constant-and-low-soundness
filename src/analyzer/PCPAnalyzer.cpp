@@ -1,7 +1,9 @@
 #include <chrono>
 #include <random>
 #include <iostream>
+
 #include "analyzer/PCPAnalyzer.hpp"
+#include "constants.hpp"
 
 namespace analyzer {
 
@@ -50,13 +52,12 @@ double PCPAnalyzer::getCompleteness() { return completeness; };
 
 // perform a single uniformly random query on sample
 bool query(const pcp::BitPCP &sample) {
-    static std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
     const auto &constraints_list = sample.get_constraints_list();
     if (constraints_list.size() == 0) {
         return true; // no constraints, always satisfied
     }
     std::uniform_int_distribution<int> dist(0, constraints_list.size() - 1);
-    int r = dist(rng);
+    int r = dist(constants::RANDOM_SEED);
     const auto &[v1, v2, constraint] = constraints_list[r];
     return constraint::evaluateBitConstraint(constraint, sample.get_variable(v1), sample.get_variable(v2));
 }

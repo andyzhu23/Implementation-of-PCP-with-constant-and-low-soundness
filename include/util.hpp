@@ -7,7 +7,9 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+
 #include "pcp/SimplePCP.hpp"
+#include "constants.hpp"
 
 namespace util {
 
@@ -49,7 +51,7 @@ private:
 template <typename T>
 class random_picker {
 public:
-    random_picker() : rng(std::chrono::steady_clock::now().time_since_epoch().count()) {}
+    random_picker() : rng(constants::RANDOM_SEED) {}
 
     void add(const T &item, int count) {
         if (count <= 0) return;
