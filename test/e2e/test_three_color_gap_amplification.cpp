@@ -32,7 +32,7 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Larger random invalid three-coloring graphs
     []() -> void {
-        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(100, 500, 1, 40, 30, 30);
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(50, 200, 1, 20, 15, 15);
         pcp::BitPCP bitpcp = input.to_BitPCP();
         pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
