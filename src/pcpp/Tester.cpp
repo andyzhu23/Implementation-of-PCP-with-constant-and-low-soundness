@@ -68,7 +68,10 @@ Tester::Tester(three_color::Color u, three_color::Color v) : assignment(THREE_CO
 
     hadamard = Hadamard(assignment);
 
-    constraint_matrix = std::vector<std::vector<pcp::BitDomain>>(1, std::vector<pcp::BitDomain>(THREE_COLOR_ASSIGNMENT, 1));
+    constraint_matrix = std::vector<std::vector<pcp::BitDomain>>{
+        // the local assignment u and v have different colors
+        {1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
 }
 
 // Construct Tester from a BitPCP
@@ -93,10 +96,8 @@ Tester::Tester(pcp::BitPCP pcp) : assignment(pcp.get_size() + 1) {
 }
 
 pcp::BitPCP Tester::buildBitPCP() {
-    std::vector<pcp::BitDomain> variables = assignment;
-    variables.push_back(0); // used for linearity test variable
+    std::vector<pcp::BitDomain> variables(1);
 
-    pcp::Variable offset = variables.size();
     std::unordered_map<pcp::Variable, size_t> used_positions;
 
     std::uniform_int_distribution<size_t> dist(0, (constants::PCPVARIABLE_ONE << constraint_matrix.size()) - 1);
@@ -125,26 +126,8 @@ pcp::BitPCP Tester::buildBitPCP() {
     pcp::BitPCP result = std::move(variables);
 
     for (const auto &[pos, idx] : used_positions) {
-        result.add_constraint(offset - 1, idx, constraint::BitConstraint::EQUAL);
+        result.add_constraint(0, idx, constraint::BitConstraint::EQUAL);
     }
-
-    // for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(assignment.size()); ++u) {
-    //     pcp::Variable position = constants::PCPVARIABLE_ONE << u;
-    //     if (used_positions.find(position) != used_positions.end()) {
-    //         result.add_constraint(
-    //             u,
-    //             offset + used_positions[position],
-    //             constraint::BitConstraint::EQUAL
-    //         );
-    //     } else {
-    //         result.add_variable(hadamard.query(position));
-    //         result.add_constraint(
-    //             u,
-    //             static_cast<pcp::Variable>(result.get_size() - 1),
-    //             constraint::BitConstraint::EQUAL
-    //         );
-    //     }
-    // }
 
     return result;
 }
