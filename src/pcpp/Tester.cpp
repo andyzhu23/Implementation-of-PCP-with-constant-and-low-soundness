@@ -102,7 +102,6 @@ pcp::BitPCP Tester::buildBitPCP() {
 
     std::uniform_int_distribution<size_t> dist(0, (constants::PCPVARIABLE_ONE << constraint_matrix.size()) - 1);
 
-    // for (size_t sample = 0; sample < (constants::PCPVARIABLE_ONE << constraint_matrix.size()); ++sample) {
     for (size_t _ = 0; _ < constants::LINEARITY_COEFFICIENT; ++_) {
         // random sample
         size_t sample = dist(constants::RANDOM_SEED);
