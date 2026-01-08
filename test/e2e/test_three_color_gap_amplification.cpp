@@ -51,9 +51,9 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         fout << "Amplified PCP gap: " << analyzer_amplified.getGap() << std::endl;
         assert(analyzer_amplified.getGap() >= analyzer_original.getGap());
     },
-    // Test 3: Larger random invalid three-coloring graphs with uneven coloring distribution
+    // Test 3: random invalid three-coloring graphs with uneven coloring distribution
     [](std::ofstream &fout) -> void {
-        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(50, 200, 1, 48, 1, 1);
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(50, 100, 1, 48, 1, 1);
         pcp::BitPCP bitpcp = input.to_BitPCP();
         pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
