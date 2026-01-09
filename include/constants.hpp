@@ -7,7 +7,7 @@
 
 namespace constants {
 
-const int LINEARITY_COEFFICIENT = 100;
+const int LINEARITY_COEFFICIENT = 10;
 const int POWERING_RADIUS = 4;
 const int EXPANDING_COEFFICIENT = 1;
 const int DEGREE = 4;

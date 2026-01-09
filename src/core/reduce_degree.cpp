@@ -22,9 +22,9 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
     pcp::BitPCP reduced_pcp(new_size);
     for (size_t i = 0; i < original_size; ++i) {
         // Connect in a cycle
-        for (size_t j = 1; j < sizes[i]; ++j) {
-            size_t curr = offsets[i] + j - 1;
-            size_t next = offsets[i] + j;
+        for (size_t j = 0; j < sizes[i]; ++j) {
+            size_t curr = offsets[i] + j;
+            size_t next = offsets[i] + (j + 1) % sizes[i];
             reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::EQUAL);
             // Set bits to match original variable
             reduced_pcp.set_variable(curr, pcp.get_variable(i));
