@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#include "pcp/Aliases.hpp"
+
 namespace pcpp {
 
 class Hadamard {
@@ -12,7 +14,7 @@ public:
 
     Hadamard(const std::vector<bool> value);
 
-    bool query(size_t idx) const;
+    bool query(pcp::Variable idx) const;
 
     std::vector<bool> getCode() const;
 

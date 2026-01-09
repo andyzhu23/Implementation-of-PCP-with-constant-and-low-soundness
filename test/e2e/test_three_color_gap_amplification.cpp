@@ -122,6 +122,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 40000);
         fout << "Valid-graph - original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
         assert(analyzer_amplified.getGap() >= analyzer_original.getGap());
+        assert(analyzer_amplified.getGap() == 0);
     }
 };
 

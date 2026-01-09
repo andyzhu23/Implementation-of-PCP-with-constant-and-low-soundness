@@ -94,14 +94,12 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
 BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
     std::vector<Variable> neighbors = get_neighbors(var, radius);
     std::unordered_map<Variable, Variable> index_map; // original index to new index
-    for (size_t i = 0; i < neighbors.size(); ++i) {
-        index_map[neighbors[i]] = static_cast<Variable>(i);
-    }
 
     BitPCP neighboring_pcp(neighbors.size());
     // Copy variables
     for (size_t i = 0; i < neighbors.size(); ++i) {
         neighboring_pcp.set_variable(static_cast<Variable>(i), get_variable(neighbors[i]));
+        index_map[neighbors[i]] = static_cast<Variable>(i);
     }
     // Copy constraints
     for (size_t i = 0; i < neighbors.size(); ++i) {

@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "pcp/Aliases.hpp"
 #include "constants.hpp"
 #include "pcpp/Hadamard.hpp"
 
@@ -9,7 +10,7 @@ Hadamard::Hadamard() {}
 
 Hadamard::Hadamard(const std::vector<bool> value) : value(value) {}
 
-bool Hadamard::query(size_t idx) const {
+bool Hadamard::query(pcp::Variable idx) const {
     bool code = false;
     for (size_t i = 0; i < value.size(); ++i) {
         code = (((idx >> i) & 1) & value[i]) ? (!code) : code;

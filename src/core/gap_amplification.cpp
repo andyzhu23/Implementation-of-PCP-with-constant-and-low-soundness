@@ -6,8 +6,6 @@
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
 
-#include <iostream>
-
 namespace core {
 
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
