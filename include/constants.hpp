@@ -14,6 +14,10 @@ const int DEGREE = 4;
 const unsigned int SAFE_THREAD_NUMBER = 4;
 const pcp::Variable PCPVARIABLE_ONE = 1;
 
+const std::function<int(size_t)> DEFAULT_ITERATION_FUNC = [](size_t edge_size) {
+    return static_cast<int>(std::ceil(std::log10(edge_size)));
+};
+
 // Fixed random seed for reproducibility
 inline thread_local std::mt19937 RANDOM_SEED{453};
 
