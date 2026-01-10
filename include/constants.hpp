@@ -2,6 +2,8 @@
 #define CONSTANTS_HPP
 
 #include <random>
+#include <functional>
+#include <cmath>
 
 #include "pcp/Aliases.hpp"
 
