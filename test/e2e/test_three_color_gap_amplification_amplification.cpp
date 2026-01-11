@@ -37,7 +37,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100000);
-        fout << "Invalid-graph - original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
+        fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
     },
 };
 
@@ -47,7 +47,7 @@ int main() {
     fout << "Running test_three_color_gap_amplification_amplification.cpp" << std::endl;
     for (size_t i = 0; i < test_cases.size(); ++i) {
         fout << "Running test case: " << (i + 1) << std::endl;
-        for (size_t trial = 0; trial < 3; ++trial) {
+        for (size_t trial = 0; trial < 10; ++trial) {
             fout << " Trial " << (trial + 1) << " ..." << std::endl;
             test_cases[i](fout);
         }
