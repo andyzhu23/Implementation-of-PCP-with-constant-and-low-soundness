@@ -127,7 +127,7 @@ std::vector<std::function<void()>> test_cases = {
                 int next = offset + (j + 1) % sz;
                 bool found = false;
                 for (const auto &[adj, c] : reduced.get_constraints(curr)) {
-                    if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                    if (adj == next && c == constraint::BitConstraint::ANY) found = true;
                 }
                 assert(found);
             }
