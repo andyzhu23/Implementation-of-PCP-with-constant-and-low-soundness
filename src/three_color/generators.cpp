@@ -107,17 +107,23 @@ ThreeColor generate_invalid_three_coloring_graph(size_t num_nodes, size_t num_ed
             case 0: // RED-RED
                 u = red_nodes[red_dist(constants::RANDOM_SEED)];
                 v = red_nodes[red_dist(constants::RANDOM_SEED)];
-                while(u == v) v = red_nodes[red_dist(constants::RANDOM_SEED)];
+                while (u == v) {
+                    v = red_nodes[red_dist(constants::RANDOM_SEED)];
+                }
                 break;
             case 1: // GREEN-GREEN
                 u = green_nodes[green_dist(constants::RANDOM_SEED)];
                 v = green_nodes[green_dist(constants::RANDOM_SEED)];
-                while(u == v) v = green_nodes[green_dist(constants::RANDOM_SEED)];
+                while (u == v) {
+                    v = green_nodes[green_dist(constants::RANDOM_SEED)];
+                }
                 break;
             case 2: // BLUE-BLUE
                 u = blue_nodes[blue_dist(constants::RANDOM_SEED)];
                 v = blue_nodes[blue_dist(constants::RANDOM_SEED)];
-                while(u == v) v = blue_nodes[blue_dist(constants::RANDOM_SEED)];
+                while (u == v) {
+                    v = blue_nodes[blue_dist(constants::RANDOM_SEED)];
+                }
                 break;
         }
         graph.add_edge(u, v);

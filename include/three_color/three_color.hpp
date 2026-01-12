@@ -25,15 +25,17 @@ public:
 
     ThreeColor(std::vector<Color> &&colors, std::vector<Edge> &&edges);
 
-
     const std::vector<Color>& get_colors() const { return colors; }
 
     const std::vector<std::vector<Node>>& get_adj_list() const { return adj_list; }
 
     void add_edge(Node u, Node v);
 
+    size_t get_edge_size() const;
+
     pcp::BitPCP to_BitPCP() const;
 private:
+    size_t num_edges;
     std::vector<Color> colors;
     std::vector<std::vector<Node>> adj_list;
 };

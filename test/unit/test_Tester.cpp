@@ -100,14 +100,14 @@ std::vector<std::function<void()>> test_cases = {
         }
 
         // The new Tester samples random linear combinations up to LINEARITY_COEFFICIENT
-        // so the resulting PCP size is at most assignment + 1 + LINEARITY_COEFFICIENT
-        size_t expected_max_pcp_size = assignment_size + 1 + constants::LINEARITY_COEFFICIENT;
+        // so the resulting PCP size is at most 1 + LINEARITY_COEFFICIENT
+        size_t expected_max_pcp_size = 1 + constants::LINEARITY_COEFFICIENT;
         std::cout << "Test 1 - PCP size: " << pcp.get_size() << ", Max expected size: " << expected_max_pcp_size << std::endl;
         assert(pcp.get_size() <= expected_max_pcp_size);
 
         // Constraint count is at most LINEARITY_COEFFICIENT (sampling may produce duplicates)
         assert(pcp.get_constraints_list().size() <= constants::LINEARITY_COEFFICIENT);
-        size_t linearity_var = assignment_size;
+        size_t linearity_var = 0;
         for (const auto &t : pcp.get_constraints_list()) {
             auto [a, b, c] = t;
             assert(a == linearity_var);

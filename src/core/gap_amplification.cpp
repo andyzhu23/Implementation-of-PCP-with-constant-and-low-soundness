@@ -6,8 +6,6 @@
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
 
-#include <iostream>
-
 namespace core {
 
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
@@ -31,7 +29,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         if (start >= total_size) break;
 
         futures.push_back(std::async(std::launch::async,
-            [&reduced_pcps, start, end, &pcp, &total_size]() {
+            [&reduced_pcps, start, end, &pcp]() {
                 for (size_t u = start; u < end; ++u) {
                     pcp::BitPCP powering_u = pcp.get_neighboring_pcp(u, constants::POWERING_RADIUS);
                     pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();

@@ -3,6 +3,7 @@
 #define CORE_HPP
 
 #include "pcp/BitPCP.hpp"
+#include "constants.hpp"
 #include "pcp/PoweringPCP.hpp"
 #include "three_color/three_color.hpp"
 
@@ -24,7 +25,7 @@ pcp::BitPCP reduce_alphabet(const pcp::PoweringPCP &pcp);
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp);
 
 // Converts a ThreeColor instance to a BitPCP instance
-pcp::BitPCP three_color_gap_amplification(const three_color::ThreeColor &tc);
+pcp::BitPCP three_color_gap_amplification(const three_color::ThreeColor &tc, const std::function<int(size_t)>& iterations_func = constants::DEFAULT_ITERATION_FUNC);
 }
 
 #endif
