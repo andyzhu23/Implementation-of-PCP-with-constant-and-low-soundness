@@ -93,6 +93,18 @@ add_test(NAME Test_Tester COMMAND test_Tester)
 target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
+    test_ThreeCSP
+    ./unit/test_ThreeCSP.cpp
+    ../../src/ThreeCSP/ThreeCSP.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/PoweringConstraint.cpp
+    ../../src/util.cpp
+)
+add_test(NAME Test_ThreeCSP COMMAND test_ThreeCSP)
+target_include_directories(test_ThreeCSP PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
     test_three_color_generators
     ./unit/test_three_color_generators.cpp
     ../../src/pcp/BitPCP.cpp
