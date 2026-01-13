@@ -30,7 +30,7 @@ std::vector<std::function<void()>> test_cases = {
 
         assert(analyzer_amplified.getGap() >= analyzer_original.getGap());
     },
-    // Test 2: Random valid and valid three-coloring graphs
+    // Test 2: Random valid three-coloring graphs
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(10, 15, 4, 3, 3);
         pcp::BitPCP bitpcp = input.to_BitPCP();

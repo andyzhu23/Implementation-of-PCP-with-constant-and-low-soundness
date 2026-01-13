@@ -11,7 +11,10 @@ namespace constraint {
 enum class BitConstraint {
     ANY,
     EQUAL,
-    NOTEQUAL
+    NOTEQUAL, 
+    FIRST_BIT_EQUAL,
+    SECOND_BIT_EQUAL,
+    THIRD_BIT_EQUAL
 };
 
 // Evaluate the BitConstraint on two BitDomain values

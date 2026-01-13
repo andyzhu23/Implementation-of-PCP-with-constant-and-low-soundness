@@ -9,10 +9,11 @@
 
 namespace constants {
 
-const int LINEARITY_COEFFICIENT = 10;
-const int POWERING_RADIUS = 4;
+const int CONSTRAINT_COMBINATION_REPETITION = 12;
+const int LINEARITY_TEST_REPETITION = 2;
+const int POWERING_RADIUS = 5;
 const int EXPANDING_COEFFICIENT = 1;
-const int DEGREE = 4;
+const int DEGREE = 5;
 const unsigned int SAFE_THREAD_NUMBER = 4;
 const pcp::Variable PCPVARIABLE_ONE = 1;
 

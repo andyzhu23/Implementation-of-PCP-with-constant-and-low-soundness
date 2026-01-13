@@ -17,7 +17,7 @@ using Index = size_t;
 // type used to represent domain of values in SimplePCP
 using SimpleDomain = std::bitset<SimpleDomainSize>;
 // type used to represent domain of values in BitPCP
-using BitDomain = bool;
+using BitDomain = std::bitset<3>;
 // type used to represent domain of values in PoweringPCP
 using PoweringDomain = std::vector<BitDomain>;
 

@@ -1,6 +1,5 @@
 #include <chrono>
 #include <random>
-#include <iostream>
 
 #include "analyzer/PCPAnalyzer.hpp"
 #include "constants.hpp"

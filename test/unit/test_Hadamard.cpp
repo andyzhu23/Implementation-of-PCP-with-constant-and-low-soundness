@@ -12,15 +12,15 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<bool> value = {};
         pcpp::Hadamard h(value);
         assert(h.getCode().size() == 1);
-        assert(h.query(0) == false);
+        assert(h.query(std::vector<bool>{}) == false);
     },
     // Test 2: Single true value
     []() -> void {
         std::vector<bool> value = {true};
         pcpp::Hadamard h(value);
         assert(h.getCode().size() == 2);
-        assert(h.query(0) == false);
-        assert(h.query(1) == true);
+        assert(h.query(std::vector<bool>{0}) == false);
+        assert(h.query(std::vector<bool>{1}) == true);
     },
     // Test 3: value = {false, true}
     []() -> void {

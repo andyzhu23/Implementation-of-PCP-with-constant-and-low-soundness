@@ -33,6 +33,7 @@ add_executable(
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/pcp/PoweringPCP.cpp 
+     ../../src/ThreeCSP/ThreeCSP.cpp
     ../../src/util.cpp
     ../../src/constraint/BinaryConstraint.cpp
     ../../src/constraint/BitConstraint.cpp
@@ -83,30 +84,13 @@ add_executable(
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/three_color/three_color.cpp
+    ../../src/ThreeCSP/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/PoweringConstraint.cpp
     ../../src/util.cpp
 )
 add_test(NAME Test_Tester COMMAND test_Tester)
 target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
-
-add_executable(
-    test_reduce_alphabet
-    ./unit/test_reduce_alphabet.cpp
-    ../../src/core/reduce_alphabet.cpp
-    ../../src/pcpp/Tester.cpp
-    ../../src/pcpp/Hadamard.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/PoweringPCP.cpp
-    ../../src/three_color/three_color.cpp
-    ../../src/util.cpp
-    ../../src/constraint/PoweringConstraint.cpp
-    ../../src/constraint/BitConstraint.cpp
-)
-add_test(NAME Test_Reduce_Alphabet COMMAND test_reduce_alphabet)
-target_include_directories(test_reduce_alphabet PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
 
 add_executable(
     test_three_color_generators
@@ -115,6 +99,7 @@ add_executable(
     ../../src/pcp/PoweringPCP.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
+    ../../src/ThreeCSP/ThreeCSP.cpp
     ../../src/util.cpp
     ../../src/three_color/generators.cpp
     ../../src/constraint/PoweringConstraint.cpp
@@ -129,6 +114,7 @@ add_executable(
     ./unit/test_three_color_to_bitpcp.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
+    ../../src/ThreeCSP/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/util.cpp
     ../../src/three_color/three_color.cpp
@@ -149,9 +135,9 @@ target_include_directories(test_random_picker PRIVATE ${CMAKE_SOURCE_DIR}/includ
 add_executable(
     test_gap_amplification
     ./e2e/test_gap_amplification.cpp
+     ../../src/ThreeCSP/ThreeCSP.cpp
     ../../src/core/gap_amplification.cpp
     ../../src/core/powering_operation.cpp
-    ../../src/core/reduce_alphabet.cpp
     ../../src/core/reduce_degree.cpp
     ../../src/core/to_expander.cpp
     ../../src/core/three_color_gap_amplification.cpp
@@ -178,10 +164,10 @@ if(BUILD_E2E_TESTS)
         ../../src/core/three_color_gap_amplification.cpp
         ../../src/core/gap_amplification.cpp
         ../../src/core/powering_operation.cpp
-        ../../src/core/reduce_alphabet.cpp
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
         ../../src/three_color/three_color.cpp
+        ../../src/ThreeCSP/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/SimplePCP.cpp
@@ -205,7 +191,6 @@ if(BUILD_E2E_TESTS)
         ../../src/core/three_color_gap_amplification.cpp
         ../../src/core/gap_amplification.cpp
         ../../src/core/powering_operation.cpp
-        ../../src/core/reduce_alphabet.cpp
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
         ../../src/three_color/three_color.cpp
@@ -215,6 +200,7 @@ if(BUILD_E2E_TESTS)
         ../../src/pcp/PoweringPCP.cpp
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
+        ../../src/ThreeCSP/ThreeCSP.cpp
         ../../src/util.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
         ../../src/constraint/BinaryConstraint.cpp
