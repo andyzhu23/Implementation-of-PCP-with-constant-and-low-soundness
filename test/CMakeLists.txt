@@ -84,7 +84,7 @@ add_executable(
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/three_color/three_color.cpp
-    ../../src/ThreeCSP/ThreeCSP.cpp
+    ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/PoweringConstraint.cpp
     ../../src/util.cpp
@@ -95,7 +95,7 @@ target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
 add_executable(
     test_ThreeCSP
     ./unit/test_ThreeCSP.cpp
-    ../../src/ThreeCSP/ThreeCSP.cpp
+    ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/BitConstraint.cpp
     ../../src/constraint/PoweringConstraint.cpp
@@ -111,7 +111,7 @@ add_executable(
     ../../src/pcp/PoweringPCP.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
-    ../../src/ThreeCSP/ThreeCSP.cpp
+    ../../src/three_csp/ThreeCSP.cpp
     ../../src/util.cpp
     ../../src/three_color/generators.cpp
     ../../src/constraint/PoweringConstraint.cpp
@@ -126,7 +126,7 @@ add_executable(
     ./unit/test_three_color_to_bitpcp.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
-    ../../src/ThreeCSP/ThreeCSP.cpp
+    ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/util.cpp
     ../../src/three_color/three_color.cpp
