@@ -16,8 +16,8 @@
 #include "constraint/BitConstraint.hpp"
 #include "constraint/PoweringConstraint.hpp"
 #include "pcpp/Hadamard.hpp"
-#include "three_color/three_color.hpp"
-#include "ThreeCSP/ThreeCSP.hpp"
+#include "three_color/ThreeColor.hpp"
+#include "three_csp/ThreeCSP.hpp"
 
 namespace pcpp {
 

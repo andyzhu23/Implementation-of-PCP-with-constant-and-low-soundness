@@ -2,7 +2,7 @@
 #include <vector>
 #include <functional>
 
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 
 #include <cassert>
 #include <stdexcept>

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "core/core.hpp"
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 #include "analyzer/PCPAnalyzer.hpp"
 
 std::function<int(size_t)> test_iteration_func = [](size_t edge_size) {

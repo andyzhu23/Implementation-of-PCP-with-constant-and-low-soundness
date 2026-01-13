@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "pcpp/Tester.hpp"
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 #include "pcp/BitPCP.hpp"
 #include "constraint/BitConstraint.hpp"
 

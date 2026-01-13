@@ -4,7 +4,7 @@
 #include <bitset>
 #include <cassert>
 
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 #include "pcp/BitPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {

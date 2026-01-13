@@ -1,4 +1,4 @@
-#include "ThreeCSP/ThreeCSP.hpp"
+#include "three_csp/ThreeCSP.hpp"
 
 namespace three_csp {
 

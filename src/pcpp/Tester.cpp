@@ -5,7 +5,7 @@
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
 #include "pcp/Aliases.hpp"
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 
 namespace pcpp {
 
@@ -125,7 +125,7 @@ pcp::BitPCP Tester::buildBitPCP() {
         for (size_t i = 0; i < constraint_matrix.size(); ++i) {
             sample[i] = bernoulli(constants::RANDOM_SEED);
         }
-        
+
         std::vector<bool> position(original_size);
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {
             if (sample[j]) {

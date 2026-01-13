@@ -1,4 +1,4 @@
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 #include "pcpp/Tester.hpp"
 
 namespace three_color {

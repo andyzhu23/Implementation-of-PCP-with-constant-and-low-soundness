@@ -5,7 +5,7 @@
 #include "pcp/BitPCP.hpp"
 #include "constants.hpp"
 #include "pcp/PoweringPCP.hpp"
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 
 namespace core {
 
