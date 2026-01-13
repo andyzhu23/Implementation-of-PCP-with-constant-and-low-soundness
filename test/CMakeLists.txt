@@ -83,7 +83,7 @@ add_executable(
     ./unit/test_Tester.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
-    ../../src/three_color/three_color.cpp
+    ../../src/three_color/ThreeColor.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/PoweringConstraint.cpp
@@ -115,7 +115,7 @@ add_executable(
     ../../src/util.cpp
     ../../src/three_color/generators.cpp
     ../../src/constraint/PoweringConstraint.cpp
-    ../../src/three_color/three_color.cpp
+    ../../src/three_color/ThreeColor.cpp
 )
 add_test(NAME Test_Three_Color_Generators COMMAND test_three_color_generators)
 target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -129,7 +129,7 @@ add_executable(
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/util.cpp
-    ../../src/three_color/three_color.cpp
+    ../../src/three_color/ThreeColor.cpp
     ../../src/constraint/PoweringConstraint.cpp
     ../../src/constraint/BitConstraint.cpp
 )
@@ -153,7 +153,7 @@ add_executable(
     ../../src/core/reduce_degree.cpp
     ../../src/core/to_expander.cpp
     ../../src/core/three_color_gap_amplification.cpp
-    ../../src/three_color/three_color.cpp
+    ../../src/three_color/ThreeColor.cpp
     ../../src/three_color/generators.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/SimplePCP.cpp
