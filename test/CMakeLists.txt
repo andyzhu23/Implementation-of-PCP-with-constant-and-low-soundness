@@ -178,7 +178,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/powering_operation.cpp
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
-        ../../src/three_color/three_color.cpp
+        ../../src/three_color/ThreeColor.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitPCP.cpp
@@ -205,7 +205,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/powering_operation.cpp
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
-        ../../src/three_color/three_color.cpp
+        ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/SimplePCP.cpp
