@@ -33,7 +33,7 @@ add_executable(
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/SimplePCP.cpp 
     ../../src/pcp/PoweringPCP.cpp 
-     ../../src/ThreeCSP/ThreeCSP.cpp
+     ../../src/three_csp/ThreeCSP.cpp
     ../../src/util.cpp
     ../../src/constraint/BinaryConstraint.cpp
     ../../src/constraint/BitConstraint.cpp
@@ -147,7 +147,7 @@ target_include_directories(test_random_picker PRIVATE ${CMAKE_SOURCE_DIR}/includ
 add_executable(
     test_gap_amplification
     ./e2e/test_gap_amplification.cpp
-     ../../src/ThreeCSP/ThreeCSP.cpp
+     ../../src/three_csp/ThreeCSP.cpp
     ../../src/core/gap_amplification.cpp
     ../../src/core/powering_operation.cpp
     ../../src/core/reduce_degree.cpp
@@ -179,7 +179,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
         ../../src/three_color/three_color.cpp
-        ../../src/ThreeCSP/ThreeCSP.cpp
+        ../../src/three_csp/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/SimplePCP.cpp
@@ -212,7 +212,7 @@ if(BUILD_E2E_TESTS)
         ../../src/pcp/PoweringPCP.cpp
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
-        ../../src/ThreeCSP/ThreeCSP.cpp
+        ../../src/three_csp/ThreeCSP.cpp
         ../../src/util.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
         ../../src/constraint/BinaryConstraint.cpp
