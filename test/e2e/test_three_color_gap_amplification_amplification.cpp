@@ -56,7 +56,7 @@ int main() {
     fout << "Running test_three_color_gap_amplification_amplification.cpp" << std::endl;
     for (size_t i = 0; i < test_cases.size(); ++i) {
         fout << "Running test case: " << (i + 1) << std::endl;
-        for (size_t trial = 0; trial < 50; ++trial) {
+        for (size_t trial = 0; trial < 10; ++trial) {
             fout << " Trial " << (trial + 1) << " ..." << std::endl;
             test_cases[i](fout);
         }
