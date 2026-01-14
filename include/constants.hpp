@@ -9,7 +9,7 @@
 
 namespace constants {
 
-const bool ENFORCING_CONSISTENCY = false;
+const bool ENFORCING_CONSISTENCY = true;
 const int CONSTRAINT_COMBINATION_REPETITION = 12;
 const int LINEARITY_TEST_REPETITION = 2;
 const int CONSISTENCY_ENFORCEMENT_REPETITION = 5;
