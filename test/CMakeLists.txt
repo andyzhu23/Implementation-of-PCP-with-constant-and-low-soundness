@@ -18,7 +18,7 @@ add_executable(
     ../../src/pcp/BitPCP.cpp 
     ../../src/constraint/BitConstraint.cpp
     ../../src/util.cpp
-    ../../src/analyzer/PCPAnalyzer.cpp
+    ../../src/PCPAnalyzer.cpp
 )
 add_test(NAME Test_PCPAnalyzer COMMAND test_PCPAnalyzer)
 target_include_directories(test_PCPAnalyzer PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -135,7 +135,7 @@ add_executable(
     ../../src/pcpp/Hadamard.cpp
     ../../src/pcpp/Tester.cpp
     ../../src/util.cpp
-    ../../src/analyzer/PCPAnalyzer.cpp
+    ../../src/PCPAnalyzer.cpp
     ../../src/constraint/BitConstraint.cpp
 )
 add_test(NAME Test_Gap_Amplification COMMAND test_gap_amplification)
@@ -157,7 +157,7 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
         ../../src/util.cpp
-        ../../src/analyzer/PCPAnalyzer.cpp
+        ../../src/PCPAnalyzer.cpp
         ../../src/constraint/BitConstraint.cpp
     )
     add_test(NAME Test_Three_Color_Gap_Amplification_Amplification COMMAND test_three_color_gap_amplification_amplification)
@@ -180,7 +180,7 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/Tester.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/util.cpp
-        ../../src/analyzer/PCPAnalyzer.cpp
+        ../../src/PCPAnalyzer.cpp
         ../../src/constraint/BitConstraint.cpp
     )
     add_test(NAME Test_Three_Color_Gap_Amplification_Completeness COMMAND test_three_color_gap_amplification_completeness)
