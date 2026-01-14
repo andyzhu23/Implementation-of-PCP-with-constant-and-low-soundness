@@ -52,7 +52,6 @@ pcp::BitPCP ThreeCSP::toBitPCP() {
         } else {
             // need to create a new variable to represent the ternary constraint
             pcp::BitDomain value(assignment[var1], assignment[var2], assignment[var3], constraint);
-
             bitpcp.add_variable(value);
 
             switch (var1 % 3) {

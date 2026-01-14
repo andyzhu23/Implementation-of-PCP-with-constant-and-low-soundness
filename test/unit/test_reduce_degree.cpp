@@ -3,6 +3,7 @@
 #include <cassert>
 #include <vector>
 
+#include "constants.hpp"
 #include "core/core.hpp"
 #include "pcp/BitPCP.hpp"
 
@@ -12,7 +13,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<pcp::BitDomain> bits = {1, 0, 1};
         pcp::BitPCP orig_pcp(bits);
         for (int i = 0; i < 3; ++i) {
-            orig_pcp.add_constraint(i, (i + 1) % 3, constraint::BitConstraint::EQUAL);
+            orig_pcp.add_constraint(i, (i + 1) % 3, constants::ENFORCING_CONSISTENCY ? constraint::BitConstraint::EQUAL : constraint::BitConstraint::ANY);
         }
         int degree = 3;
         auto reduced = core::reduce_degree(orig_pcp, degree);
@@ -31,7 +32,7 @@ std::vector<std::function<void()>> test_cases = {
             if (next >= 6) next -= 2;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                if (adj == next && c == (constants::ENFORCING_CONSISTENCY ? constraint::BitConstraint::EQUAL : constraint::BitConstraint::ANY)) found = true;
             }
             assert(found);
         }
@@ -74,7 +75,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % 4;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                if (adj == next && c == (constants::ENFORCING_CONSISTENCY ? constraint::BitConstraint::EQUAL : constraint::BitConstraint::ANY)) found = true;
             }
             assert(found);
         }
@@ -127,7 +128,7 @@ std::vector<std::function<void()>> test_cases = {
                 int next = offset + (j + 1) % sz;
                 bool found = false;
                 for (const auto &[adj, c] : reduced.get_constraints(curr)) {
-                    if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                    if (adj == next && c == (constants::ENFORCING_CONSISTENCY ? constraint::BitConstraint::EQUAL : constraint::BitConstraint::ANY)) found = true;
                 }
                 assert(found);
             }
@@ -174,7 +175,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % center_sz;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::EQUAL) found = true;
+                if (adj == next && c == (constants::ENFORCING_CONSISTENCY ? constraint::BitConstraint::EQUAL : constraint::BitConstraint::ANY)) found = true;
             }
             assert(found);
         }

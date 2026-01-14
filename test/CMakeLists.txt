@@ -62,6 +62,7 @@ add_executable(
     ../../src/pcpp/Hadamard.cpp
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/util.cpp
@@ -73,6 +74,7 @@ add_executable(
     test_ThreeCSP
     ./unit/test_ThreeCSP.cpp
     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/BitConstraint.cpp
@@ -89,6 +91,7 @@ add_executable(
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/util.cpp
     ../../src/three_color/generators.cpp
     ../../src/three_color/ThreeColor.cpp
@@ -103,6 +106,7 @@ add_executable(
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/util.cpp
@@ -123,7 +127,9 @@ target_include_directories(test_random_picker PRIVATE ${CMAKE_SOURCE_DIR}/includ
 add_executable(
     test_gap_amplification
     ./e2e/test_gap_amplification.cpp
-     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/three_csp/ThreeCSP.cpp
+    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BitConstraint.cpp
     ../../src/core/gap_amplification.cpp
     ../../src/core/reduce_degree.cpp
     ../../src/core/to_expander.cpp
@@ -151,6 +157,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/to_expander.cpp
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_csp/ThreeCSP.cpp
+        ../../src/constraint/BitConstraint.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/pcp/BitPCP.cpp
@@ -179,6 +186,7 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
         ../../src/three_csp/ThreeCSP.cpp
+        ../../src/constraint/BitConstraint.cpp
         ../../src/util.cpp
         ../../src/PCPAnalyzer.cpp
         ../../src/constraint/BitConstraint.cpp

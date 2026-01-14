@@ -45,7 +45,6 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
                     }
                     pcp::BitPCP powering_u = pcp.build_sub_pcp(neighbors);
                     pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();
-                    // reduced_pcp.clean();
                     reduced_pcps[u] = std::move(reduced_pcp);
                 }
             }
@@ -57,31 +56,34 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 
     pcp = pcp::merge_BitPCPs(reduced_pcps);
 
-    std::vector<pcp::Variable> offset(total_size, 0);
-    
-    for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(total_size); ++u) {
-        if (u < total_size) {
-            offset[u + 1] = offset[u] + reduced_pcps[u].get_size();
-        }
-    }
+    if (constants::ENFORCING_CONSISTENCY) {
 
-    std::uniform_int_distribution<size_t> dist(0, total_size - 1);
-    // add consistency enforcement constraints
-    for (size_t _ = 0; _ < constants::CONSISTENCY_ENFORCEMENT_REPETITION; ++_) {
-        size_t u = dist(constants::RANDOM_SEED);
-        const auto &locations = occuring_locations[u];
-        if (locations.size() < 2) continue;
-        std::uniform_int_distribution<size_t> loc_dist(0, locations.size() - 1);
-        size_t loc1 = loc_dist(constants::RANDOM_SEED);
-        size_t loc2 = loc_dist(constants::RANDOM_SEED);
-        while (loc2 == loc1) {
-            loc2 = loc_dist(constants::RANDOM_SEED);
+        std::vector<pcp::Variable> offset(total_size, 0);
+
+        for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(total_size); ++u) {
+            if (u < total_size) {
+                offset[u + 1] = offset[u] + reduced_pcps[u].get_size();
+            }
         }
-        pcp.add_constraint(
-            offset[locations[loc1].first] + locations[loc1].second,
-            offset[locations[loc2].first] + locations[loc2].second,
-            constraint::BitConstraint::EQUAL
-        );
+
+        std::uniform_int_distribution<size_t> dist(0, total_size - 1);
+        // add consistency enforcement constraints
+        for (size_t _ = 0; _ < constants::CONSISTENCY_ENFORCEMENT_REPETITION; ++_) {
+            size_t u = dist(constants::RANDOM_SEED);
+            const auto &locations = occuring_locations[u];
+            if (locations.size() < 2) continue;
+            std::uniform_int_distribution<size_t> loc_dist(0, locations.size() - 1);
+            size_t loc1 = loc_dist(constants::RANDOM_SEED);
+            size_t loc2 = loc_dist(constants::RANDOM_SEED);
+            while (loc2 == loc1) {
+                loc2 = loc_dist(constants::RANDOM_SEED);
+            }
+            pcp.add_constraint(
+                offset[locations[loc1].first] + locations[loc1].second,
+                offset[locations[loc2].first] + locations[loc2].second,
+                constraint::BitConstraint::EQUAL
+            );
+        }
     }
 
     pcp.clean();

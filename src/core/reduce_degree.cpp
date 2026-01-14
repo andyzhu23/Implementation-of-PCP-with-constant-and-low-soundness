@@ -34,7 +34,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
-            reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::EQUAL);
+            reduced_pcp.add_constraint(curr, next, constants::ENFORCING_CONSISTENCY ? constraint::BitConstraint::EQUAL : constraint::BitConstraint::ANY);
         }
     }
     
