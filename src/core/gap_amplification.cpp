@@ -64,7 +64,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         std::vector<pcp::Variable> offset(total_size, 0);
 
         for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(total_size); ++u) {
-            if (u < total_size) {
+            if (u < total_size - 1) {
                 offset[u + 1] = offset[u] + reduced_pcps[u].get_size();
             }
         }
