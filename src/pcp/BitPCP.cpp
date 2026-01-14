@@ -159,6 +159,10 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
 
 BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
     std::vector<Variable> neighbors = get_neighbors(var, radius);
+    return build_sub_pcp(neighbors);
+}
+
+BitPCP BitPCP::build_sub_pcp(std::vector<Variable> &neighbors) const {
     std::unordered_map<Variable, Variable> index_map; // original index to new index
     std::unordered_set<Variable> neighbor_set(neighbors.begin(), neighbors.end());
 

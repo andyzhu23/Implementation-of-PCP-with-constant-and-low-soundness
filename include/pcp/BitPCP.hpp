@@ -44,6 +44,9 @@ public:
     // Get a BitPCP consisting of the neighboring variables and constraints within a certain radius
     BitPCP get_neighboring_pcp(Variable var, int radius) const;
 
+    // build sub-pcp from a list of variables
+    BitPCP build_sub_pcp(std::vector<Variable> &neighbors) const;
+
     // getting rid of variables with no constraints running through it
     void clean();
 
