@@ -1,7 +1,7 @@
 #include <chrono>
 #include <random>
 
-#include "analyzer/PCPAnalyzer.hpp"
+#include "PCPAnalyzer.hpp"
 #include "constants.hpp"
 
 namespace analyzer {

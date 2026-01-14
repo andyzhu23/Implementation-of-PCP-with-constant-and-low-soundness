@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "analyzer/PCPAnalyzer.hpp"
+#include "PCPAnalyzer.hpp"
 #include "pcp/BitPCP.hpp"
 
 std::vector<std::function<void()>> test_cases = {

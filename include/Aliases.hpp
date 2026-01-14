@@ -30,7 +30,7 @@ enum class Constraint {
 
 namespace constraint {
 
-enum class BitConstraint : uint8_t{
+enum class BitConstraint {
     ANY = 0,
     EQUAL = 1,
     NOTEQUAL = 2, 

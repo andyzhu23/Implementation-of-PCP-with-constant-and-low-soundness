@@ -6,7 +6,7 @@
 
 #include "core/core.hpp"
 #include "three_color/ThreeColor.hpp"
-#include "analyzer/PCPAnalyzer.hpp"
+#include "PCPAnalyzer.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: Random invalid three-coloring graphs

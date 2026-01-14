@@ -5,7 +5,7 @@
 
 #include "core/core.hpp"
 #include "three_color/ThreeColor.hpp"
-#include "analyzer/PCPAnalyzer.hpp"
+#include "PCPAnalyzer.hpp"
 
 std::function<int(size_t)> test_iteration_func = [](size_t edge_size) {
     return std::max(static_cast<int>(std::ceil(std::log2(edge_size)) - 5), 0);
