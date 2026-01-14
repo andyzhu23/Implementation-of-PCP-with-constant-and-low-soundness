@@ -7,6 +7,7 @@
 
 #include "constraint/BitConstraint.hpp"
 #include "Aliases.hpp"
+#include "pcp/BitDomain.hpp"
 
 namespace pcp {
 

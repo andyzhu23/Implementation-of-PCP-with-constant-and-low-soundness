@@ -4,7 +4,7 @@
 
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
-#include "pcp/Aliases.hpp"
+#include "Aliases.hpp"
 #include "three_color/ThreeColor.hpp"
 
 namespace pcpp {
@@ -53,6 +53,12 @@ Tester::Tester(pcp::BitPCP pcp) {
         three_csp.add_variable(pcp.get_variable(i)[0]);
         three_csp.add_variable(pcp.get_variable(i)[1]);
         three_csp.add_variable(pcp.get_variable(i)[2]);
+        three_csp.add_ternary_constraint(
+            i * 3,
+            i * 3 + 1,
+            i * 3 + 2,
+            pcp.get_variable(i).get_domain_type()
+        );
     }
 
     three_csp.add_variable(!three_csp.get_variable(0)); // negation bit for first variable
@@ -95,6 +101,84 @@ Tester::Tester(pcp::BitPCP pcp) {
                     row[var2 * 3 + 2] = 1;
                     row[0] = !row[0]; 
                     row.back() = 1; // negation bit
+                    break;
+                case constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT:
+                    row[var1 * 3] = 1;
+                    row[var2 * 3 + 1] = 1;
+                    break;
+                case constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT:
+                    row[var1 * 3 + 1] = 1;
+                    row[var2 * 3] = 1;
+                    break;
+                case constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT:
+                    row[var1 * 3] = 1;
+                    row[var2 * 3 + 2] = 1;
+                    break;
+                case constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT:
+                    row[var1 * 3 + 2] = 1;
+                    row[var2 * 3] = 1;
+                    break;
+                case constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT:
+                    row[var1 * 3 + 1] = 1;
+                    row[var2 * 3 + 2] = 1;
+                    break;
+                case constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT:
+                    row[var1 * 3 + 2] = 1;
+                    row[var2 * 3 + 1] = 1;
+                    break;
+                case constraint::BitConstraint::FIRST_BIT_NOTEQUAL:
+                    row[var1 * 3] = 1;
+                    row[var2 * 3] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::SECOND_BIT_NOTEQUAL:
+                    row[var1 * 3 + 1] = 1;
+                    row[var2 * 3 + 1] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::THIRD_BIT_NOTEQUAL:
+                    row[var1 * 3 + 2] = 1;
+                    row[var2 * 3 + 2] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_SECOND_BIT:
+                    row[var1 * 3] = 1;
+                    row[var2 * 3 + 1] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_FIRST_BIT:
+                    row[var1 * 3 + 1] = 1;
+                    row[var2 * 3] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_THIRD_BIT:
+                    row[var1 * 3] = 1;
+                    row[var2 * 3 + 2] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_FIRST_BIT:
+                    row[var1 * 3 + 2] = 1;
+                    row[var2 * 3] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_THIRD_BIT:
+                    row[var1 * 3 + 1] = 1;
+                    row[var2 * 3 + 2] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
+                    break;
+                case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_SECOND_BIT:
+                    row[var1 * 3 + 2] = 1;
+                    row[var2 * 3 + 1] = 1;
+                    row[0] = !row[0]; // negation bit
+                    row.back() = 1;
                     break;
                 case constraint::BitConstraint::ANY:
                     // impossible case

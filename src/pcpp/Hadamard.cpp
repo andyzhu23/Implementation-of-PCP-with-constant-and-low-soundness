@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "pcp/Aliases.hpp"
+#include "Aliases.hpp"
 #include "constants.hpp"
 #include "pcpp/Hadamard.hpp"
 

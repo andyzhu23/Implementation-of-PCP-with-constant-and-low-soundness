@@ -4,6 +4,7 @@
 #include <unordered_set>
 
 #include "pcp/BitPCP.hpp"
+#include "pcp/BitDomain.hpp"
 #include "util.hpp"
 
 namespace pcp {
@@ -14,7 +15,7 @@ BitPCP::BitPCP() : BitPCP(0) {}
 
 BitPCP::BitPCP(size_t size)
  : size(size), 
-   variables(size, false), 
+   variables(size), 
    constraints(size), 
    constraint_indices(size) {}
 
@@ -62,7 +63,72 @@ void BitPCP::add_constraint(Variable var, Variable other_var, constraint::BitCon
         throw std::out_of_range("BitPCP::add_constraint: index out of range");
     }
     constraints[var].emplace_back(other_var, constraint);
-    constraints[other_var].emplace_back(var, constraint);
+    switch (constraint) {
+        case constraint::BitConstraint::ANY:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::EQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::NOTEQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::FIRST_BIT_EQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::SECOND_BIT_EQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::THIRD_BIT_EQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT);
+            break;
+        case constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT);
+            break;
+        case constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT);
+            break;
+        case constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT);
+            break;
+        case constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT);
+            break;
+        case constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT);
+            break;
+        case constraint::BitConstraint::FIRST_BIT_NOTEQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::SECOND_BIT_NOTEQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::THIRD_BIT_NOTEQUAL:
+            constraints[other_var].emplace_back(var, constraint);
+            break;
+        case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_SECOND_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::SECOND_BIT_NOTEQUAL_FIRST_BIT);
+            break;
+        case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_FIRST_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::FIRST_BIT_NOTEQUAL_SECOND_BIT);
+            break;
+        case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_THIRD_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::THIRD_BIT_NOTEQUAL_FIRST_BIT);
+            break;
+        case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_FIRST_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::FIRST_BIT_NOTEQUAL_THIRD_BIT);
+            break;
+        case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_THIRD_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::THIRD_BIT_NOTEQUAL_SECOND_BIT);
+            break;
+        case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_SECOND_BIT:
+            constraints[other_var].emplace_back(var, constraint::BitConstraint::SECOND_BIT_NOTEQUAL_THIRD_BIT);
+            break;
+    }
+
     constraint_indices[var].emplace_back(other_var, constraints[other_var].size() - 1);
     constraint_indices[other_var].emplace_back(var, constraints[var].size() - 1);
     constraints_list.emplace_back(var, other_var, constraint);
@@ -94,6 +160,7 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
 BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
     std::vector<Variable> neighbors = get_neighbors(var, radius);
     std::unordered_map<Variable, Variable> index_map; // original index to new index
+    std::unordered_set<Variable> neighbor_set(neighbors.begin(), neighbors.end());
 
     BitPCP neighboring_pcp(neighbors.size());
     // Copy variables
@@ -101,19 +168,12 @@ BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
         neighboring_pcp.set_variable(static_cast<Variable>(i), get_variable(neighbors[i]));
         index_map[neighbors[i]] = static_cast<Variable>(i);
     }
-    // Copy constraints
-    for (size_t i = 0; i < neighbors.size(); ++i) {
-        Variable u = neighbors[i];
-        for (const auto &[v, constraint] : constraints[u]) {
-            if (index_map.find(v) != index_map.end()) {
-                if (constraint != constraint::BitConstraint::ANY) {
-                    neighboring_pcp.add_constraint(
-                        static_cast<Variable>(i), 
-                        index_map[v], 
-                        constraint
-                    );
-                }
-            }
+    // Copy constraints using constraints_list to ensure we get the original constraint types
+    for (const auto &[u, v, constraint] : constraints_list) {
+        if (neighbor_set.find(u) != neighbor_set.end() && 
+            neighbor_set.find(v) != neighbor_set.end() && 
+            constraint != constraint::BitConstraint::ANY) {
+            neighboring_pcp.add_constraint(index_map[u], index_map[v], constraint);
         }
     }
 

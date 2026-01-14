@@ -8,14 +8,6 @@
 
 namespace three_csp {
 
-using Domain = bool;
-using Variable = size_t;
-
-enum class Constraint {
-    PRODUCT,
-    SUM,
-};
-
 class ThreeCSP {
 public:
     void add_ternary_constraint(size_t var1, size_t var2, size_t var3, Constraint constraint);
@@ -30,7 +22,7 @@ public:
 
     size_t size() const;
 
-    pcp::BitPCP toBitPCP() const;
+    pcp::BitPCP toBitPCP() ;
 
 private:
     std::vector<Domain> assignment;

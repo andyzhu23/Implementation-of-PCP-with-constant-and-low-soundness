@@ -20,28 +20,54 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         offsets.push_back(new_size - sizes.back());
     }
     pcp::BitPCP reduced_pcp(new_size);
+    
+    // Set all variable values first
     for (size_t i = 0; i < original_size; ++i) {
-        // Connect in a cycle
+        for (size_t j = 0; j < sizes[i]; ++j) {
+            size_t curr = offsets[i] + j;
+            reduced_pcp.set_variable(curr, pcp.get_variable(i));
+        }
+    }
+    
+    // Connect each variable's copies in a cycle
+    for (size_t i = 0; i < original_size; ++i) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
             reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::EQUAL);
-            // Set bits to match original variable
-            reduced_pcp.set_variable(curr, pcp.get_variable(i));
-            reduced_pcp.set_variable(next, pcp.get_variable(i));
         }
-        const auto &constraints = pcp.get_constraints(i);
-        // Map original constraints
-        for (size_t j = 0; j < sizes[i]; ++j) {
-            size_t curr = offsets[i] + j;
-            pcp::Variable adj = constraints[j].first; // original neighbor index
-            if (adj <= i) continue; // to avoid double adding
-            constraint::BitConstraint con = constraints[j].second;
-            int constraint_pos = pcp.get_constraints_indices(i)[j].second;
-            size_t adj_new_index = offsets[adj] + constraint_pos;
-            reduced_pcp.add_constraint(curr, adj_new_index, con);
+    }
+    
+    // Map original constraints using constraints_list to get correct constraint types
+    const auto &constraints_list = pcp.get_constraints_list();
+    for (const auto &[u, v, con] : constraints_list) {
+        if (con == constraint::BitConstraint::ANY) continue;
+        
+        // Find positions of this edge in both adjacency lists
+        const auto &u_constraints = pcp.get_constraints(u);
+        const auto &v_constraints = pcp.get_constraints(v);
+        
+        size_t u_pos = 0, v_pos = 0;
+        for (size_t i = 0; i < u_constraints.size(); ++i) {
+            if (u_constraints[i].first == v) {
+                u_pos = i;
+                break;
+            }
         }
-        // random edge picker for picking random edges to connect local expander
+        for (size_t i = 0; i < v_constraints.size(); ++i) {
+            if (v_constraints[i].first == u) {
+                v_pos = i;
+                break;
+            }
+        }
+        
+        size_t u_new_index = offsets[u] + u_pos;
+        size_t v_new_index = offsets[v] + v_pos;
+        reduced_pcp.add_constraint(u_new_index, v_new_index, con);
+    }
+    
+    // Add random edges to reach target degree
+    for (size_t i = 0; i < original_size; ++i) {
         util::random_picker<pcp::Variable> rp;
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
@@ -52,6 +78,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
             reduced_pcp.add_constraint(u, v, constraint::BitConstraint::ANY);
         }
     }
+    
     return reduced_pcp;
 }
 

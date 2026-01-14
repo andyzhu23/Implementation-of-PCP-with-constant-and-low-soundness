@@ -30,6 +30,51 @@ bool checkBitPCPCompleteness(const pcp::BitPCP &bitpcp) {
             case constraint::BitConstraint::THIRD_BIT_EQUAL:
                 if (bitpcp.get_variable(u)[2] != bitpcp.get_variable(v)[2]) return false;
                 break;
+            case constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT:
+                if (bitpcp.get_variable(u)[0] != bitpcp.get_variable(v)[1]) return false;
+                break;
+            case constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT:
+                if (bitpcp.get_variable(u)[1] != bitpcp.get_variable(v)[0]) return false;
+                break;
+            case constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT:
+                if (bitpcp.get_variable(u)[0] != bitpcp.get_variable(v)[2]) return false;
+                break;
+            case constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT:
+                if (bitpcp.get_variable(u)[2] != bitpcp.get_variable(v)[0]) return false;
+                break;
+            case constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT:
+                if (bitpcp.get_variable(u)[1] != bitpcp.get_variable(v)[2]) return false;
+                break;
+            case constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT:
+                if (bitpcp.get_variable(u)[2] != bitpcp.get_variable(v)[1]) return false;
+                break;
+            case constraint::BitConstraint::FIRST_BIT_NOTEQUAL:
+                if (bitpcp.get_variable(u)[0] == bitpcp.get_variable(v)[0]) return false;
+                break;
+            case constraint::BitConstraint::SECOND_BIT_NOTEQUAL:
+                if (bitpcp.get_variable(u)[1] == bitpcp.get_variable(v)[1]) return false;
+                break;
+            case constraint::BitConstraint::THIRD_BIT_NOTEQUAL:
+                if (bitpcp.get_variable(u)[2] == bitpcp.get_variable(v)[2]) return false;
+                break;
+            case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_SECOND_BIT:
+                if (bitpcp.get_variable(u)[0] == bitpcp.get_variable(v)[1]) return false;
+                break;
+            case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_FIRST_BIT:
+                if (bitpcp.get_variable(u)[1] == bitpcp.get_variable(v)[0]) return false;
+                break;
+            case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_THIRD_BIT:
+                if (bitpcp.get_variable(u)[0] == bitpcp.get_variable(v)[2]) return false;
+                break;
+            case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_FIRST_BIT:
+                if (bitpcp.get_variable(u)[2] == bitpcp.get_variable(v)[0]) return false;
+                break;
+            case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_THIRD_BIT:
+                if (bitpcp.get_variable(u)[1] == bitpcp.get_variable(v)[2]) return false;
+                break;
+            case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_SECOND_BIT:
+                if (bitpcp.get_variable(u)[2] == bitpcp.get_variable(v)[1]) return false;
+                break;
             default:
                 break;
         }
@@ -84,11 +129,12 @@ std::vector<std::function<void()>> test_cases = {
     []() -> void {
         // Create a simple satisfiable BitPCP: two variables with NOTEQUAL constraint
         pcp::BitPCP bitpcp(2);
-        bitpcp.set_variable(0, pcp::BitDomain(0b001)); // variable 0 = 001
-        bitpcp.set_variable(1, pcp::BitDomain(0b010)); // variable 1 = 010
+        bitpcp.set_variable(0, pcp::BitDomain(0b111)); // variable 0 = 111
+        bitpcp.set_variable(1, pcp::BitDomain(0b000)); // variable 1 = 000
         bitpcp.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
+        pcpp::Tester tester(bitpcp);
         // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
+        bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());
         assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
     },
     // Test 8: Test BitPCP completeness with a satisfiable BitPCP
@@ -98,8 +144,9 @@ std::vector<std::function<void()>> test_cases = {
         bitpcp.set_variable(0, pcp::BitDomain(0b101)); // variable 0 = 101
         bitpcp.set_variable(1, pcp::BitDomain(0b101)); // variable 1 = 101
         bitpcp.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcpp::Tester tester(bitpcp);
         // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
+        bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());
         assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
     },
     // Test 9: Test BitPCP completeness with a satisfiable BitPCP with bit-specific constraints
@@ -112,18 +159,20 @@ std::vector<std::function<void()>> test_cases = {
         bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL); // both have bit 0 = 1
         bitpcp.add_constraint(0, 2, constraint::BitConstraint::FIRST_BIT_EQUAL); // both have bit 0 = 1
         // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
+        pcpp::Tester tester(bitpcp);
+        bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());
         assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
     },
     // Test 10: Test BitPCP completeness with an unsatisfiable BitPCP
     []() -> void {
         // Create an unsatisfiable BitPCP: two equal variables with NOTEQUAL constraint
         pcp::BitPCP bitpcp(2);
-        bitpcp.set_variable(0, pcp::BitDomain(0b110)); // variable 0 = 110
-        bitpcp.set_variable(1, pcp::BitDomain(0b110)); // variable 1 = 110
+        bitpcp.set_variable(0, pcp::BitDomain(0b110)); // variable 0 = 000
+        bitpcp.set_variable(1, pcp::BitDomain(0b110)); // variable 1 = 111
         bitpcp.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
         // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
+        pcpp::Tester tester(bitpcp);
+        bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());
         assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
     },
     // Test 11: Test BitPCP completeness with an unsatisfiable BitPCP
@@ -134,7 +183,8 @@ std::vector<std::function<void()>> test_cases = {
         bitpcp.set_variable(1, pcp::BitDomain(0b000)); // variable 1 = 000
         bitpcp.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
         // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
+        pcpp::Tester tester(bitpcp);
+        bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());
         assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
     },
     // Test 12: Test BitPCP completeness with an unsatisfiable BitPCP with bit-specific constraints
@@ -145,7 +195,22 @@ std::vector<std::function<void()>> test_cases = {
         bitpcp.set_variable(1, pcp::BitDomain(0b010)); // variable 1 = 010 (first bit = 0)
         bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
         // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
+        pcpp::Tester tester(bitpcp);
+        bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());
+        assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
+    },
+    // Test 13: Test BitPCP completeness with an unsatisfiable BitPCP with bit-specific constraints
+    []() -> void {
+        // Create an unsatisfiable BitPCP: FIRST_BIT_EQUAL constraint violated
+        pcp::BitPCP bitpcp(3);
+        bitpcp.set_variable(0, pcp::BitDomain(0b001)); // variable 0 = 001 (first bit = 1)
+        bitpcp.set_variable(1, pcp::BitDomain(0b010)); // variable 1 = 010 (first bit = 0)
+        bitpcp.set_variable(2, pcp::BitDomain(0b111)); // variable 2 = 111 
+        bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT);
+        bitpcp.add_constraint(0, 2, constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT);
+        // Check completeness of the BitPCP
+        pcpp::Tester tester(bitpcp);
+        bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());
         assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
     },
 
