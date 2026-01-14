@@ -39,9 +39,12 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
             [&reduced_pcps, start, end, &pcp, &mtx, &occuring_locations]() {
                 for (size_t u = start; u < end; ++u) {
                     std::vector<pcp::Variable> neighbors = pcp.get_neighbors(u, constants::POWERING_RADIUS);
-                    for (size_t i = 0; i < neighbors.size(); ++i) if (neighbors[i] < u) {
+                    
+                    {
                         std::lock_guard<std::mutex> lock(mtx);
-                        occuring_locations[neighbors[i]].emplace_back(u, i);
+                        for (size_t i = 0; i < neighbors.size(); ++i) if (neighbors[i] < u) {
+                            occuring_locations[neighbors[i]].emplace_back(u, i);
+                        }
                     }
                     pcp::BitPCP powering_u = pcp.build_sub_pcp(neighbors);
                     pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();
