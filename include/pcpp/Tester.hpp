@@ -11,6 +11,7 @@
 #include <vector>
 #include <random>
 
+#include "constants.hpp"
 #include "pcp/BitPCP.hpp"
 #include "constraint/BitConstraint.hpp"
 #include "pcpp/Hadamard.hpp"
@@ -27,7 +28,7 @@ public:
     Tester(pcp::BitPCP powering_pcp);
 
     // Build a BitPCP from the constraint matrix and hadamard code
-    pcp::BitPCP buildBitPCP();
+    pcp::BitPCP buildBitPCP(bool enforce_consistency = constants::ENFORCING_CONSISTENCY);
 
 private:
     three_csp::ThreeCSP three_csp;

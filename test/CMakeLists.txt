@@ -31,6 +31,7 @@ add_executable(
     ../../src/pcp/BitPCP.cpp 
     ../../src/util.cpp
     ../../src/constraint/BitConstraint.cpp
+    ../../src/PCPAnalyzer.cpp
 )
 add_test(NAME Test_To_Expander COMMAND test_to_expander)
 target_include_directories(test_to_expander PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -43,6 +44,7 @@ add_executable(
     ../../src/pcp/BitPCP.cpp 
     ../../src/util.cpp
     ../../src/constraint/BitConstraint.cpp
+    ../../src/PCPAnalyzer.cpp
 )
 add_test(NAME Test_Reduce_Degree COMMAND test_reduce_degree)
 target_include_directories(test_reduce_degree PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -66,6 +68,7 @@ add_executable(
     ../../src/pcp/BitDomain.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/util.cpp
+    ../../src/PCPAnalyzer.cpp
 )
 add_test(NAME Test_Tester COMMAND test_Tester)
 target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -79,6 +82,7 @@ add_executable(
     ../../src/pcp/BitPCP.cpp
     ../../src/constraint/BitConstraint.cpp
     ../../src/util.cpp
+    ../../src/PCPAnalyzer.cpp
 )
 add_test(NAME Test_ThreeCSP COMMAND test_ThreeCSP)
 target_include_directories(test_ThreeCSP PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -93,6 +97,7 @@ add_executable(
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/constraint/BitConstraint.cpp
     ../../src/util.cpp
+    ../../src/PCPAnalyzer.cpp
     ../../src/three_color/generators.cpp
     ../../src/three_color/ThreeColor.cpp
 )
@@ -110,6 +115,7 @@ add_executable(
     ../../src/pcp/BitDomain.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/util.cpp
+    ../../src/PCPAnalyzer.cpp
     ../../src/three_color/ThreeColor.cpp
     ../../src/constraint/BitConstraint.cpp
 )

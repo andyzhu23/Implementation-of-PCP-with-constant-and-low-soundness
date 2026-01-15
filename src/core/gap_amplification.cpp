@@ -40,7 +40,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
                 for (size_t u = start; u < end; ++u) {
                     std::vector<pcp::Variable> neighbors = pcp.get_neighbors(u, constants::POWERING_RADIUS);
                     
-                    {
+                    if (constants::ENFORCING_CONSISTENCY) {
                         std::lock_guard<std::mutex> lock(mtx);
                         for (size_t i = 0; i < neighbors.size(); ++i) if (neighbors[i] < u) {
                             occuring_locations[neighbors[i]].emplace_back(u, i);
@@ -57,7 +57,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         f.get();
     }
 
-    pcp = pcp::merge_BitPCPs(reduced_pcps);
+    auto result_pcp = std::move(pcp::merge_BitPCPs(reduced_pcps));
 
     if (constants::ENFORCING_CONSISTENCY) {
 
@@ -81,7 +81,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
             while (loc2 == loc1) {
                 loc2 = loc_dist(constants::RANDOM_SEED);
             }
-            pcp.add_constraint(
+            result_pcp.add_constraint(
                 offset[locations[loc1].first] + locations[loc1].second,
                 offset[locations[loc2].first] + locations[loc2].second,
                 constraint::BitConstraint::EQUAL
@@ -89,8 +89,8 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         }
     }
 
-    pcp.clean();
-    return pcp;
+    result_pcp.clean();
+    return result_pcp;
 }
 
 }
@@ -110,9 +110,8 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 //         reduced_pcp.clean();
 //         reduced_pcps.push_back(reduced_pcp);
 //     }
-//     pcp = pcp::merge_BitPCPs(reduced_pcps);
 
-//     return pcp;
+//     return pcp::merge_BitPCPs(reduced_pcps);;
 // }
 
 // }

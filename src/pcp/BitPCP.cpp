@@ -173,11 +173,16 @@ BitPCP BitPCP::build_sub_pcp(std::vector<Variable> &neighbors) const {
         index_map[neighbors[i]] = static_cast<Variable>(i);
     }
     // Copy constraints using constraints_list to ensure we get the original constraint types
-    for (const auto &[u, v, constraint] : constraints_list) {
-        if (neighbor_set.find(u) != neighbor_set.end() && 
-            neighbor_set.find(v) != neighbor_set.end() && 
-            constraint != constraint::BitConstraint::ANY) {
-            neighboring_pcp.add_constraint(index_map[u], index_map[v], constraint);
+
+    for (Variable u : neighbors) {
+        for (const auto &[other_var, constraint] : get_constraints(u)) {
+            if (neighbor_set.find(other_var) != neighbor_set.end() && u <= other_var) {
+                neighboring_pcp.add_constraint(
+                    index_map[u],
+                    index_map[other_var],
+                    constraint
+                );
+            }
         }
     }
 
@@ -222,7 +227,9 @@ BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps) {
     size_t offset = 0;
     for (const auto& pcp : pcps) {
         for (const auto& [u, v, c] : pcp.get_constraints_list()) {
-            result.add_constraint(u + offset, v + offset, c);
+            if (c != constraint::BitConstraint::ANY) {
+                result.add_constraint(u + offset, v + offset, c);
+            }
         }
         offset += pcp.get_size();
     }

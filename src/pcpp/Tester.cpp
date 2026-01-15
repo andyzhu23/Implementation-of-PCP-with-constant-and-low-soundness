@@ -2,6 +2,8 @@
 #include <random>
 #include <unordered_map>
 
+#include <iostream>
+
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
 #include "Aliases.hpp"
@@ -34,11 +36,13 @@ Tester::Tester(three_color::Color u, three_color::Color v) {
     three_csp.add_variable(!bit0[0]); // var 8, negation of u's first bit
 
     // constraints to ensure proper coloring
-    three_csp.add_ternary_constraint(0, 2, 4, three_csp::Constraint::PRODUCT);
-    three_csp.add_ternary_constraint(0, 3, 5, three_csp::Constraint::PRODUCT);
-    three_csp.add_ternary_constraint(1, 2, 6, three_csp::Constraint::PRODUCT);
-    three_csp.add_ternary_constraint(1, 3, 7, three_csp::Constraint::PRODUCT);
-    three_csp.add_binary_constraint(0, 8, constraint::BitConstraint::NOTEQUAL);
+    if (constants::ENFORCING_CONSISTENCY) {
+        three_csp.add_ternary_constraint(0, 2, 4, three_csp::Constraint::PRODUCT);
+        three_csp.add_ternary_constraint(0, 3, 5, three_csp::Constraint::PRODUCT);
+        three_csp.add_ternary_constraint(1, 2, 6, three_csp::Constraint::PRODUCT);
+        three_csp.add_ternary_constraint(1, 3, 7, three_csp::Constraint::PRODUCT);
+        three_csp.add_binary_constraint(0, 8, constraint::BitConstraint::NOTEQUAL);
+    }
     hadamard = Hadamard(three_csp.get_assignment());
 
     constraint_matrix = std::vector<std::vector<bool>>{
@@ -189,15 +193,16 @@ Tester::Tester(pcp::BitPCP pcp) {
     }
 }
 
-pcp::BitPCP Tester::buildBitPCP() {
+pcp::BitPCP Tester::buildBitPCP(bool enforce_consistency) {
 
     size_t original_size = three_csp.size();
 
     std::unordered_map<std::vector<bool>, size_t> used_positions;
 
-    used_positions[std::vector<bool>(original_size, 0)] = three_csp.size();
-    three_csp.add_variable(hadamard.query(std::vector<bool>(original_size, 0)));
-    
+    used_positions[std::vector<bool>(original_size, 0)] = original_size;
+    three_csp.add_variable(0);
+    three_csp.add_variable(0);
+    three_csp.add_variable(0);
 
     std::uniform_int_distribution<pcp::Variable> bernoulli(0, 1);
 
@@ -205,14 +210,10 @@ pcp::BitPCP Tester::buildBitPCP() {
 
     for (size_t _ = 0; _ < constants::CONSTRAINT_COMBINATION_REPETITION; ++_) {
         // random sample
-        std::vector<bool> sample(constraint_matrix.size());
-        for (size_t i = 0; i < constraint_matrix.size(); ++i) {
-            sample[i] = bernoulli(constants::RANDOM_SEED);
-        }
-
         std::vector<bool> position(original_size);
+
         for (size_t j = 0; j < constraint_matrix.size(); ++j) {
-            if (sample[j]) {
+            if (bernoulli(constants::RANDOM_SEED)) {
                 // include this constraint in the linear combination
                 for (size_t k = 0; k < constraint_matrix[j].size(); ++k) {
                     position[k] = position[k] ^ constraint_matrix[j][k];
@@ -228,40 +229,44 @@ pcp::BitPCP Tester::buildBitPCP() {
 
     size_t zero_pos = used_positions[std::vector<bool>(original_size, 0)];
     for (const auto &[pos, idx] : used_positions) {
-        three_csp.add_binary_constraint(zero_pos, idx, constraint::BitConstraint::EQUAL);
+        if (idx != zero_pos) {  // Skip self-edge
+            three_csp.add_binary_constraint(zero_pos, idx, constraint::BitConstraint::EQUAL);
+        }
     }
 
-    std::uniform_int_distribution<size_t> dist(0, original_size - 1);
-    // add linearity test to verify hadamard code encodes original variables correctly
+    if (enforce_consistency) {
+        std::uniform_int_distribution<size_t> dist(0, original_size - 1);
+        // add linearity test to verify hadamard code encodes original variables correctly
 
-    for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
-        size_t idx = dist(constants::RANDOM_SEED);
-        std::vector<bool> position1(original_size, 0);
-        for (size_t j = 0; j < original_size; ++j) {
-            position1[j] = bernoulli(constants::RANDOM_SEED);
+        for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
+            size_t idx = dist(constants::RANDOM_SEED);
+            std::vector<bool> position1(original_size, 0);
+            for (size_t j = 0; j < original_size; ++j) {
+                position1[j] = bernoulli(constants::RANDOM_SEED);
+            }
+
+            std::vector<bool> position2 = position1;
+            position2[idx] = !position2[idx];
+            if (used_positions.find(position1) == used_positions.end()) {
+                used_positions[position1] = three_csp.size();
+                three_csp.add_variable(hadamard.query(position1));
+                three_csp.add_variable(hadamard.query(position1));
+                three_csp.add_variable(hadamard.query(position1));
+            }
+
+            if (used_positions.find(position2) == used_positions.end()) {
+                used_positions[position2] = three_csp.size();
+                three_csp.add_variable(hadamard.query(position2));
+            }
+
+            three_csp.add_ternary_constraint(
+                idx,
+                used_positions[position1],
+                used_positions[position2],
+                three_csp::Constraint::SUM
+            );
         }
-
-        std::vector<bool> position2 = position1;
-        position2[idx] = !position2[idx];
-
-        if (used_positions.find(position1) == used_positions.end()) {
-            used_positions[position1] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position1));
-        }
-
-        if (used_positions.find(position2) == used_positions.end()) {
-            used_positions[position2] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position2));
-        }
-
-        three_csp.add_ternary_constraint(
-            idx,
-            used_positions[position1],
-            used_positions[position2],
-            three_csp::Constraint::SUM
-        );
     }
-
     return three_csp.toBitPCP();
 }
 

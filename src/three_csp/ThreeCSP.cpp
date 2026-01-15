@@ -50,45 +50,45 @@ pcp::BitPCP ThreeCSP::toBitPCP() {
                 constraint
             ));
         } else {
-            // need to create a new variable to represent the ternary constraint
-            pcp::BitDomain value(assignment[var1], assignment[var2], assignment[var3], constraint);
-            bitpcp.add_variable(value);
+        //     // need to create a new variable to represent the ternary constraint
+        //     pcp::BitDomain value(assignment[var1], assignment[var2], assignment[var3], constraint);
+        //     bitpcp.add_variable(value);
 
-            switch (var1 % 3) {
-                case 0:
-                    bitpcp.add_constraint(var1 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
-                    break;
-                case 1:
-                    bitpcp.add_constraint(var1 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT);
-                    break;
-                case 2:
-                    bitpcp.add_constraint(var1 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT);
-                    break;
-            }
+        //     switch (var1 % 3) {
+        //         case 0:
+        //             bitpcp.add_constraint(var1 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
+        //             break;
+        //         case 1:
+        //             bitpcp.add_constraint(var1 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT);
+        //             break;
+        //         case 2:
+        //             bitpcp.add_constraint(var1 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT);
+        //             break;
+        //     }
 
-            switch (var2 % 3) {
-                case 0:
-                    bitpcp.add_constraint(var2 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT);
-                    break;
-                case 1:
-                    bitpcp.add_constraint(var2 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL);
-                    break;
-                case 2:
-                    bitpcp.add_constraint(var2 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT);
-                    break;
-            }
+        //     switch (var2 % 3) {
+        //         case 0:
+        //             bitpcp.add_constraint(var2 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT);
+        //             break;
+        //         case 1:
+        //             bitpcp.add_constraint(var2 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL);
+        //             break;
+        //         case 2:
+        //             bitpcp.add_constraint(var2 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT);
+        //             break;
+        //     }
 
-            switch (var3 % 3) {
-                case 0:
-                    bitpcp.add_constraint(var3 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT);
-                    break;
-                case 1:
-                    bitpcp.add_constraint(var3 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT);
-                    break;
-                case 2:
-                    bitpcp.add_constraint(var3 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL);
-                    break;
-            }
+        //     switch (var3 % 3) {
+        //         case 0:
+        //             bitpcp.add_constraint(var3 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT);
+        //             break;
+        //         case 1:
+        //             bitpcp.add_constraint(var3 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT);
+        //             break;
+        //         case 2:
+        //             bitpcp.add_constraint(var3 / 3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL);
+        //             break;
+        //     }
         }
     }
 
