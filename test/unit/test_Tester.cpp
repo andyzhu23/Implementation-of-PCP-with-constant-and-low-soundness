@@ -30,24 +30,6 @@ bool checkBitPCPCompleteness(const pcp::BitPCP &bitpcp) {
             case constraint::BitConstraint::THIRD_BIT_EQUAL:
                 if (bitpcp.get_variable(u)[2] != bitpcp.get_variable(v)[2]) return false;
                 break;
-            case constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT:
-                if (bitpcp.get_variable(u)[0] != bitpcp.get_variable(v)[1]) return false;
-                break;
-            case constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT:
-                if (bitpcp.get_variable(u)[1] != bitpcp.get_variable(v)[0]) return false;
-                break;
-            case constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT:
-                if (bitpcp.get_variable(u)[0] != bitpcp.get_variable(v)[2]) return false;
-                break;
-            case constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT:
-                if (bitpcp.get_variable(u)[2] != bitpcp.get_variable(v)[0]) return false;
-                break;
-            case constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT:
-                if (bitpcp.get_variable(u)[1] != bitpcp.get_variable(v)[2]) return false;
-                break;
-            case constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT:
-                if (bitpcp.get_variable(u)[2] != bitpcp.get_variable(v)[1]) return false;
-                break;
             case constraint::BitConstraint::FIRST_BIT_NOTEQUAL:
                 if (bitpcp.get_variable(u)[0] == bitpcp.get_variable(v)[0]) return false;
                 break;
@@ -56,24 +38,6 @@ bool checkBitPCPCompleteness(const pcp::BitPCP &bitpcp) {
                 break;
             case constraint::BitConstraint::THIRD_BIT_NOTEQUAL:
                 if (bitpcp.get_variable(u)[2] == bitpcp.get_variable(v)[2]) return false;
-                break;
-            case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_SECOND_BIT:
-                if (bitpcp.get_variable(u)[0] == bitpcp.get_variable(v)[1]) return false;
-                break;
-            case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_FIRST_BIT:
-                if (bitpcp.get_variable(u)[1] == bitpcp.get_variable(v)[0]) return false;
-                break;
-            case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_THIRD_BIT:
-                if (bitpcp.get_variable(u)[0] == bitpcp.get_variable(v)[2]) return false;
-                break;
-            case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_FIRST_BIT:
-                if (bitpcp.get_variable(u)[2] == bitpcp.get_variable(v)[0]) return false;
-                break;
-            case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_THIRD_BIT:
-                if (bitpcp.get_variable(u)[1] == bitpcp.get_variable(v)[2]) return false;
-                break;
-            case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_SECOND_BIT:
-                if (bitpcp.get_variable(u)[2] == bitpcp.get_variable(v)[1]) return false;
                 break;
             default:
                 break;
@@ -206,8 +170,8 @@ std::vector<std::function<void()>> test_cases = {
         bitpcp.set_variable(0, pcp::BitDomain(0b001)); // variable 0 = 001 (first bit = 1)
         bitpcp.set_variable(1, pcp::BitDomain(0b010)); // variable 1 = 010 (first bit = 0)
         bitpcp.set_variable(2, pcp::BitDomain(0b111)); // variable 2 = 111 
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT);
-        bitpcp.add_constraint(0, 2, constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT);
+        bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
+        bitpcp.add_constraint(0, 2, constraint::BitConstraint::THIRD_BIT_NOTEQUAL);
         // Check completeness of the BitPCP
         pcpp::Tester tester(bitpcp);
         bool is_complete = checkBitPCPCompleteness(tester.buildBitPCP());

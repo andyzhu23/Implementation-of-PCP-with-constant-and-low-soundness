@@ -36,36 +36,6 @@ int get_invalid_count(const pcp::BitPCP &pcp, pcp::Variable var, pcp::Variable o
                 invalid_count++;
             }
             break;
-        case constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT:
-            if (pcp.get_variable(var)[0] != pcp.get_variable(other_var)[1]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT:
-            if (pcp.get_variable(var)[1] != pcp.get_variable(other_var)[0]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT:
-            if (pcp.get_variable(var)[0] != pcp.get_variable(other_var)[2]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT:
-            if (pcp.get_variable(var)[2] != pcp.get_variable(other_var)[0]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT:
-            if (pcp.get_variable(var)[1] != pcp.get_variable(other_var)[2]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT:
-            if (pcp.get_variable(var)[2] != pcp.get_variable(other_var)[1]) {
-                invalid_count++;
-            }
-            break;
         case constraint::BitConstraint::FIRST_BIT_NOTEQUAL:
             if (pcp.get_variable(var)[0] == pcp.get_variable(other_var)[0]) {
                 invalid_count++;
@@ -78,36 +48,6 @@ int get_invalid_count(const pcp::BitPCP &pcp, pcp::Variable var, pcp::Variable o
             break;
         case constraint::BitConstraint::THIRD_BIT_NOTEQUAL:
             if (pcp.get_variable(var)[2] == pcp.get_variable(other_var)[2]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_SECOND_BIT:
-            if (pcp.get_variable(var)[0] == pcp.get_variable(other_var)[1]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_FIRST_BIT:
-            if (pcp.get_variable(var)[1] == pcp.get_variable(other_var)[0]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_THIRD_BIT:
-            if (pcp.get_variable(var)[0] == pcp.get_variable(other_var)[2]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_FIRST_BIT:
-            if (pcp.get_variable(var)[2] == pcp.get_variable(other_var)[0]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_THIRD_BIT:
-            if (pcp.get_variable(var)[1] == pcp.get_variable(other_var)[2]) {
-                invalid_count++;
-            }
-            break;
-        case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_SECOND_BIT:
-            if (pcp.get_variable(var)[2] == pcp.get_variable(other_var)[1]) {
                 invalid_count++;
             }
             break;

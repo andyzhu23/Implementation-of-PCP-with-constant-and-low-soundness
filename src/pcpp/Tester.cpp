@@ -106,30 +106,6 @@ Tester::Tester(pcp::BitPCP pcp) {
                     row[0] = !row[0]; 
                     row.back() = 1; // negation bit
                     break;
-                case constraint::BitConstraint::FIRST_BIT_EQUAL_SECOND_BIT:
-                    row[var1 * 3] = 1;
-                    row[var2 * 3 + 1] = 1;
-                    break;
-                case constraint::BitConstraint::SECOND_BIT_EQUAL_FIRST_BIT:
-                    row[var1 * 3 + 1] = 1;
-                    row[var2 * 3] = 1;
-                    break;
-                case constraint::BitConstraint::FIRST_BIT_EQUAL_THIRD_BIT:
-                    row[var1 * 3] = 1;
-                    row[var2 * 3 + 2] = 1;
-                    break;
-                case constraint::BitConstraint::THIRD_BIT_EQUAL_FIRST_BIT:
-                    row[var1 * 3 + 2] = 1;
-                    row[var2 * 3] = 1;
-                    break;
-                case constraint::BitConstraint::SECOND_BIT_EQUAL_THIRD_BIT:
-                    row[var1 * 3 + 1] = 1;
-                    row[var2 * 3 + 2] = 1;
-                    break;
-                case constraint::BitConstraint::THIRD_BIT_EQUAL_SECOND_BIT:
-                    row[var1 * 3 + 2] = 1;
-                    row[var2 * 3 + 1] = 1;
-                    break;
                 case constraint::BitConstraint::FIRST_BIT_NOTEQUAL:
                     row[var1 * 3] = 1;
                     row[var2 * 3] = 1;
@@ -145,42 +121,6 @@ Tester::Tester(pcp::BitPCP pcp) {
                 case constraint::BitConstraint::THIRD_BIT_NOTEQUAL:
                     row[var1 * 3 + 2] = 1;
                     row[var2 * 3 + 2] = 1;
-                    row[0] = !row[0]; // negation bit
-                    row.back() = 1;
-                    break;
-                case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_SECOND_BIT:
-                    row[var1 * 3] = 1;
-                    row[var2 * 3 + 1] = 1;
-                    row[0] = !row[0]; // negation bit
-                    row.back() = 1;
-                    break;
-                case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_FIRST_BIT:
-                    row[var1 * 3 + 1] = 1;
-                    row[var2 * 3] = 1;
-                    row[0] = !row[0]; // negation bit
-                    row.back() = 1;
-                    break;
-                case constraint::BitConstraint::FIRST_BIT_NOTEQUAL_THIRD_BIT:
-                    row[var1 * 3] = 1;
-                    row[var2 * 3 + 2] = 1;
-                    row[0] = !row[0]; // negation bit
-                    row.back() = 1;
-                    break;
-                case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_FIRST_BIT:
-                    row[var1 * 3 + 2] = 1;
-                    row[var2 * 3] = 1;
-                    row[0] = !row[0]; // negation bit
-                    row.back() = 1;
-                    break;
-                case constraint::BitConstraint::SECOND_BIT_NOTEQUAL_THIRD_BIT:
-                    row[var1 * 3 + 1] = 1;
-                    row[var2 * 3 + 2] = 1;
-                    row[0] = !row[0]; // negation bit
-                    row.back() = 1;
-                    break;
-                case constraint::BitConstraint::THIRD_BIT_NOTEQUAL_SECOND_BIT:
-                    row[var1 * 3 + 2] = 1;
-                    row[var2 * 3 + 1] = 1;
                     row[0] = !row[0]; // negation bit
                     row.back() = 1;
                     break;
@@ -200,8 +140,6 @@ pcp::BitPCP Tester::buildBitPCP(bool enforce_consistency) {
     std::unordered_map<std::vector<bool>, size_t> used_positions;
 
     used_positions[std::vector<bool>(original_size, 0)] = original_size;
-    three_csp.add_variable(0);
-    three_csp.add_variable(0);
     three_csp.add_variable(0);
 
     std::uniform_int_distribution<pcp::Variable> bernoulli(0, 1);
@@ -249,8 +187,6 @@ pcp::BitPCP Tester::buildBitPCP(bool enforce_consistency) {
             position2[idx] = !position2[idx];
             if (used_positions.find(position1) == used_positions.end()) {
                 used_positions[position1] = three_csp.size();
-                three_csp.add_variable(hadamard.query(position1));
-                three_csp.add_variable(hadamard.query(position1));
                 three_csp.add_variable(hadamard.query(position1));
             }
 
