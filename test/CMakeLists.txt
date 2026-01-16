@@ -53,6 +53,7 @@ add_executable(
 )
 add_test(NAME Test_Reduce_Degree COMMAND test_reduce_degree)
 target_include_directories(test_reduce_degree PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_compile_definitions(test_reduce_degree PRIVATE ENFORCE_CONSISTENCY)
 
 add_executable(
     test_Hadamard

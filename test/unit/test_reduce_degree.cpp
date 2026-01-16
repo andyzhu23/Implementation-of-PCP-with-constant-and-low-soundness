@@ -7,8 +7,6 @@
 #include "pcp/BitPCP.hpp"
 #include "pcp/BitDomain.hpp"
 
-#define ENFORCE_CONSISTENCY
-
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 3-node cycle, degree 3
     []() -> void {
