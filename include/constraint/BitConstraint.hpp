@@ -4,15 +4,10 @@
 
 #include <functional>
 
-#include "pcp/Aliases.hpp"
+#include "Aliases.hpp"
+#include "pcp/BitDomain.hpp"
 
 namespace constraint {
-
-enum class BitConstraint {
-    ANY,
-    EQUAL,
-    NOTEQUAL
-};
 
 // Evaluate the BitConstraint on two BitDomain values
 bool evaluateBitConstraint(BitConstraint constraint, pcp::BitDomain x, pcp::BitDomain y);

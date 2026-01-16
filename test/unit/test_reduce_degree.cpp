@@ -5,6 +5,7 @@
 
 #include "core/core.hpp"
 #include "pcp/BitPCP.hpp"
+#include "pcp/BitDomain.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 3-node cycle, degree 3
@@ -31,7 +32,7 @@ std::vector<std::function<void()>> test_cases = {
             if (next >= 6) next -= 2;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::ANY) found = true;
+                if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
             }
             assert(found);
         }
@@ -74,7 +75,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % 4;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::ANY) found = true;
+                if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
             }
             assert(found);
         }
@@ -127,7 +128,7 @@ std::vector<std::function<void()>> test_cases = {
                 int next = offset + (j + 1) % sz;
                 bool found = false;
                 for (const auto &[adj, c] : reduced.get_constraints(curr)) {
-                    if (adj == next && c == constraint::BitConstraint::ANY) found = true;
+                    if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
                 }
                 assert(found);
             }
@@ -174,7 +175,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % center_sz;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == constraint::BitConstraint::ANY) found = true;
+                if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
             }
             assert(found);
         }

@@ -4,7 +4,7 @@
 
 #include "core/core.hpp"
 #include "constants.hpp"
-#include "three_color/three_color.hpp"
+#include "three_color/ThreeColor.hpp"
 
 
 namespace core {

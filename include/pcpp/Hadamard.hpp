@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "pcp/Aliases.hpp"
+#include "Aliases.hpp"
 
 namespace pcpp {
 
@@ -14,7 +14,9 @@ public:
 
     Hadamard(const std::vector<bool> value);
 
-    bool query(pcp::Variable idx) const;
+    bool query(const std::vector<bool>& idx) const;
+
+    bool query(std::vector<bool>&& idx) const;
 
     std::vector<bool> getCode() const;
 

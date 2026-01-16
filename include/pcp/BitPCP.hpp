@@ -7,6 +7,7 @@
 
 #include "constraint/BitConstraint.hpp"
 #include "Aliases.hpp"
+#include "pcp/BitDomain.hpp"
 
 namespace pcp {
 
@@ -42,6 +43,9 @@ public:
 
     // Get a BitPCP consisting of the neighboring variables and constraints within a certain radius
     BitPCP get_neighboring_pcp(Variable var, int radius) const;
+
+    // Build a sub-BitPCP from a list of variables
+    BitPCP build_sub_pcp(const std::vector<Variable> &neighbors) const;
 
     // getting rid of variables with no constraints running through it
     void clean();

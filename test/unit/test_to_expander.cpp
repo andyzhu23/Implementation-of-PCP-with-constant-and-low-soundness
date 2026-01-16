@@ -5,6 +5,7 @@
 
 #include "core/core.hpp"
 #include "pcp/BitPCP.hpp"
+#include "pcp/BitDomain.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, to_expander should add ANY constraints
