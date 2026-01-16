@@ -8,6 +8,7 @@
 #include "pcpp/Tester.hpp"
 #include "three_color/ThreeColor.hpp"
 #include "pcp/BitPCP.hpp"
+#include "pcp/BitDomain.hpp"
 #include "constraint/BitConstraint.hpp"
 
 // Helper function to check completeness of a BitPCP

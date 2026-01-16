@@ -4,7 +4,7 @@
 
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
-#include "pcp/Aliases.hpp"
+#include "Aliases.hpp"
 #include "three_color/ThreeColor.hpp"
 
 namespace pcpp {
@@ -53,6 +53,16 @@ Tester::Tester(pcp::BitPCP pcp) {
         three_csp.add_variable(pcp.get_variable(i)[0]);
         three_csp.add_variable(pcp.get_variable(i)[1]);
         three_csp.add_variable(pcp.get_variable(i)[2]);
+#ifdef ENFORCE_CONSISTENCY
+        if (pcp.get_variable(i).get_domain_type() != three_csp::Constraint::ANY) {
+            three_csp.add_ternary_constraint(
+                i * 3, 
+                i * 3 + 1, 
+                i * 3 + 2, 
+                pcp.get_variable(i).get_domain_type()
+            );
+        }
+#endif
     }
 
     three_csp.add_variable(!three_csp.get_variable(0)); // negation bit for first variable

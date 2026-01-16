@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "pcp/Aliases.hpp"
+#include "Aliases.hpp"
 
 namespace pcpp {
 

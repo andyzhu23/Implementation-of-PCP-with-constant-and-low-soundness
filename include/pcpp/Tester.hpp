@@ -12,9 +12,7 @@
 #include <random>
 
 #include "pcp/BitPCP.hpp"
-#include "pcp/PoweringPCP.hpp"
 #include "constraint/BitConstraint.hpp"
-#include "constraint/PoweringConstraint.hpp"
 #include "pcpp/Hadamard.hpp"
 #include "three_color/ThreeColor.hpp"
 #include "three_csp/ThreeCSP.hpp"
@@ -23,7 +21,6 @@ namespace pcpp {
 
 class Tester {
 public:
-    Tester(pcp::PoweringDomain u, pcp::PoweringDomain v, constraint::PoweringConstraint constraint);
 
     Tester(three_color::Color u, three_color::Color v);
 

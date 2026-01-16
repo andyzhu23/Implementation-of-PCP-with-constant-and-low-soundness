@@ -4,7 +4,6 @@
 
 #include "pcp/BitPCP.hpp"
 #include "core/core.hpp"
-#include "pcp/PoweringPCP.hpp"
 #include "constants.hpp"
 
 namespace core {

@@ -8,7 +8,6 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "pcp/SimplePCP.hpp"
 #include "constants.hpp"
 
 namespace util {

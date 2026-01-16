@@ -5,6 +5,7 @@
 
 #include "analyzer/PCPAnalyzer.hpp"
 #include "pcp/BitPCP.hpp"
+#include "pcp/BitDomain.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     []() -> void {

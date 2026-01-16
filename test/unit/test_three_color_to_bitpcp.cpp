@@ -6,6 +6,7 @@
 
 #include "three_color/ThreeColor.hpp"
 #include "pcp/BitPCP.hpp"
+#include "constraint/BitConstraint.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: verify color_to_bits mapping
@@ -37,16 +38,11 @@ std::vector<std::function<void()>> test_cases = {
         // The resulting BitPCP should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                switch (constraint) {
-                    case constraint::BitConstraint::NOTEQUAL:
-                        assert(pcp.get_variable(var) != pcp.get_variable(other_var));
-                        break;
-                    case constraint::BitConstraint::EQUAL:
-                        assert(pcp.get_variable(var) == pcp.get_variable(other_var));
-                        break;
-                    case constraint::BitConstraint::ANY:
-                        break;
-                }
+                assert(constraint::evaluateBitConstraint(
+                    constraint,
+                    pcp.get_variable(var), 
+                    pcp.get_variable(other_var)
+                )); // should not fail any constraint
             }
         }
     },
@@ -64,20 +60,11 @@ std::vector<std::function<void()>> test_cases = {
         // The resulting BitPCP should not satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                switch (constraint) {
-                    case constraint::BitConstraint::NOTEQUAL:
-                        if (pcp.get_variable(var) == pcp.get_variable(other_var)) {
-                            invalid_count++;
-                        }
-                        break;
-                    case constraint::BitConstraint::EQUAL:
-                        if (pcp.get_variable(var) != pcp.get_variable(other_var)) {
-                            invalid_count++;
-                        }
-                        break;
-                    case constraint::BitConstraint::ANY:
-                        break;
-                }
+                invalid_count += !constraint::evaluateBitConstraint(
+                    constraint,
+                    pcp.get_variable(var), 
+                    pcp.get_variable(other_var)
+                ); // count failed constraints
             }
         }
         assert(invalid_count > 0);
@@ -95,16 +82,11 @@ std::vector<std::function<void()>> test_cases = {
         // The resulting BitPCP should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                switch (constraint) {
-                    case constraint::BitConstraint::NOTEQUAL:
-                        assert(pcp.get_variable(var) != pcp.get_variable(other_var));
-                        break;
-                    case constraint::BitConstraint::EQUAL:
-                        assert(pcp.get_variable(var) == pcp.get_variable(other_var));
-                        break;
-                    case constraint::BitConstraint::ANY:
-                        break;
-                }
+                assert(constraint::evaluateBitConstraint(
+                    constraint,
+                    pcp.get_variable(var), 
+                    pcp.get_variable(other_var)
+                )); // should not fail any constraint
             }
         }
     },
@@ -122,20 +104,11 @@ std::vector<std::function<void()>> test_cases = {
         // The resulting BitPCP not should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                switch (constraint) {
-                    case constraint::BitConstraint::NOTEQUAL:
-                        if (pcp.get_variable(var) == pcp.get_variable(other_var)) {
-                            invalid_count++;
-                        }
-                        break;
-                    case constraint::BitConstraint::EQUAL:
-                        if (pcp.get_variable(var) != pcp.get_variable(other_var)) {
-                            invalid_count++;
-                        }
-                        break;
-                    case constraint::BitConstraint::ANY:
-                        break;
-                }
+                invalid_count += !constraint::evaluateBitConstraint(
+                    constraint,
+                    pcp.get_variable(var), 
+                    pcp.get_variable(other_var)
+                ); // count failed constraints
             }
         }
         assert(invalid_count > 0);

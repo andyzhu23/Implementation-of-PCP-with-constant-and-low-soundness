@@ -25,7 +25,11 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
+#ifdef ENFORCE_CONSISTENCY
             reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::EQUAL);
+#else
+            reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::ANY);
+#endif
             // Set bits to match original variable
             reduced_pcp.set_variable(curr, pcp.get_variable(i));
             reduced_pcp.set_variable(next, pcp.get_variable(i));

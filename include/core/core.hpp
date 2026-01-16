@@ -4,13 +4,9 @@
 
 #include "pcp/BitPCP.hpp"
 #include "constants.hpp"
-#include "pcp/PoweringPCP.hpp"
 #include "three_color/ThreeColor.hpp"
 
 namespace core {
-
-// Powering operation on a BitPCP to produce a PoweringPCP from Dinur's PCP proof
-pcp::PoweringPCP powering_operation(const pcp::BitPCP &pcp, int radius);
 
 // to_expander turns a BitPCP into a BitPCP where the graph is an expander
 pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient);

@@ -1,4 +1,5 @@
 #include "three_csp/ThreeCSP.hpp"
+#include "pcp/BitDomain.hpp"
 
 namespace three_csp {
 
@@ -30,10 +31,7 @@ pcp::BitPCP ThreeCSP::toBitPCP() const {
     pcp::BitPCP bitpcp;
     // Add variables
     for (Domain val : assignment) {
-        pcp::BitDomain bitdomain;
-        bitdomain[0] = val; // first bit
-        bitdomain[1] = val; // second bit
-        bitdomain[2] = val; // third bit
+        pcp::BitDomain bitdomain(val, val, val, Constraint::ENCODED_BINARY);
         bitpcp.add_variable(bitdomain);
     }
     // Add binary constraints
@@ -43,10 +41,7 @@ pcp::BitPCP ThreeCSP::toBitPCP() const {
 
     // Add ternary constraints
     for (const auto &[var1, var2, var3, constraint] : ternary_constraints) {
-        pcp::BitDomain value;
-        value[0] = assignment[var1];
-        value[1] = assignment[var2];
-        value[2] = assignment[var3];
+        pcp::BitDomain value(assignment[var1], assignment[var2], assignment[var3], constraint);
         bitpcp.add_variable(value);
 
         bitpcp.add_constraint(var1, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
