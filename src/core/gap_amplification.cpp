@@ -99,7 +99,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 #ifdef ENFORCE_CONSISTENCY
     add_consistency_constraints(total_size, pcp, occuring_location, reduced_pcps);
 #endif
-
+    pcp.clean();
     return pcp;
 }
 
@@ -128,7 +128,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 #ifdef ENFORCE_CONSISTENCY
     add_consistency_constraints(pcp, occuring_location, reduced_pcps);
 #endif
-
+    pcp.clean();
     return pcp;
 }
 
