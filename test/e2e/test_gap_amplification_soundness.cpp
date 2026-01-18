@@ -16,6 +16,8 @@ std::vector<std::function<void()>> test_cases = {
         pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
         double soundness = analyzer::approximate_soundness(amplified_pcp);
         std::cout << "Approximated soundness: " << soundness << std::endl;
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 10000);
+        std::cout << "Amplified PCP soundness (analyzer): " << analyzer_amplified.getSoundness() << std::endl;
     }
 };
 
