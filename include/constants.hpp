@@ -9,6 +9,7 @@
 
 namespace constants {
 
+const long long SOUNDNESS_APPROXIMATION_ITERATIONS = 100'000'000;
 const int CONSTRAINT_COMBINATION_REPETITION = 12;
 const int LINEARITY_TEST_REPETITION = 2;
 const int POWERING_RADIUS = 5;

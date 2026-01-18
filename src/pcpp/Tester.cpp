@@ -34,11 +34,13 @@ Tester::Tester(three_color::Color u, three_color::Color v) {
     three_csp.add_variable(!bit0[0]); // var 8, negation of u's first bit
 
     // constraints to ensure proper coloring
+#ifdef ENFORCE_CONSISTENCY
     three_csp.add_ternary_constraint(0, 2, 4, three_csp::Constraint::PRODUCT);
     three_csp.add_ternary_constraint(0, 3, 5, three_csp::Constraint::PRODUCT);
     three_csp.add_ternary_constraint(1, 2, 6, three_csp::Constraint::PRODUCT);
     three_csp.add_ternary_constraint(1, 3, 7, three_csp::Constraint::PRODUCT);
     three_csp.add_binary_constraint(0, 8, constraint::BitConstraint::NOTEQUAL);
+#endif
     hadamard = Hadamard(three_csp.get_assignment());
 
     constraint_matrix = std::vector<std::vector<bool>>{
