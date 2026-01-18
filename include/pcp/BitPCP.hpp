@@ -20,6 +20,12 @@ public:
     BitPCP(const std::vector<BitDomain> &variables);
 
     BitPCP(std::vector<BitDomain> &&variables);
+
+    BitPCP(std::vector<BitDomain> &&variables,
+        const std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>> &constraints_list);
+
+    BitPCP(std::vector<BitDomain> &&variables,
+        std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>> &&constraints_list);
     
     // Member functions
     size_t get_size() const;

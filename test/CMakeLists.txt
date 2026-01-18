@@ -27,6 +27,19 @@ add_test(NAME Test_PCPAnalyzer COMMAND test_PCPAnalyzer)
 target_include_directories(test_PCPAnalyzer PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
+    test_SoundnessApproximater
+    ./unit/test_SoundnessApproximater.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/BitDomain.cpp
+    ../../src/util.cpp
+
+    ../../src/constraint/BitConstraint.cpp
+)
+add_test(NAME Test_SoundnessApproximater COMMAND test_SoundnessApproximater)
+target_include_directories(test_SoundnessApproximater PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
     test_to_expander 
     ./unit/test_to_expander.cpp 
     ../../src/core/to_expander.cpp 
@@ -233,4 +246,29 @@ if(BUILD_E2E_TESTS)
     )
     add_test(NAME Test_Three_Color_Gap_Amplification_Completeness COMMAND test_three_color_gap_amplification_completeness)
     target_include_directories(test_three_color_gap_amplification_completeness PRIVATE ${CMAKE_SOURCE_DIR}/include)
+endif()
+
+if(BUILD_E2E_TESTS)
+    add_executable(
+        test_gap_amplification_soundness
+        ./e2e/test_gap_amplification_soundness.cpp
+        ../../src/three_color/ThreeColor.cpp
+        ../../src/three_color/generators.cpp
+        ../../src/three_csp/ThreeCSP.cpp
+        ../../src/pcp/BitPCP.cpp
+        ../../src/pcp/BitDomain.cpp
+        ../../src/core/gap_amplification.cpp
+        ../../src/core/reduce_degree.cpp
+        ../../src/core/to_expander.cpp
+        ../../src/core/three_color_gap_amplification.cpp
+        ../../src/pcpp/Hadamard.cpp
+        ../../src/pcpp/Tester.cpp
+        ../../src/util.cpp
+        ../../src/analyzer/SoundnessApproximater.cpp
+        ../../src/analyzer/PCPAnalyzer.cpp
+        ../../src/constraint/BitConstraint.cpp
+    )
+    add_test(NAME Test_Gap_Amplification_Soundness COMMAND test_gap_amplification_soundness)
+    target_include_directories(test_gap_amplification_soundness PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    target_compile_definitions(test_gap_amplification_soundness PRIVATE ENFORCE_CONSISTENCY)
 endif()

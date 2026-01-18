@@ -31,6 +31,22 @@ BitPCP::BitPCP(std::vector<BitDomain> &&variables)
    constraints(size), 
    constraint_indices(size) {}
 
+BitPCP::BitPCP(std::vector<BitDomain> &&variables,
+    const std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>> &constraints_list)
+ : BitPCP(std::move(variables)) {
+    for (const auto& [u, v, c] : constraints_list) {
+        add_constraint(u, v, c);
+    }
+}
+
+BitPCP::BitPCP(std::vector<BitDomain> &&variables,
+    std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>> &&constraints_list)
+ : BitPCP(std::move(variables)) {
+    for (const auto& [u, v, c] : constraints_list) {
+        add_constraint(u, v, c);
+    }
+}
+
 // Member functions
 size_t BitPCP::get_size() const { return size; }
 
