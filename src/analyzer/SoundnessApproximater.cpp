@@ -15,7 +15,7 @@ const double startingT = 1.0;
 // minimum temperature
 const double Tmin = 1e-4;
 // cooling rate
-const double alpha = 0.795;
+const double alpha = 0.995;
 // iterations per temperature
 const size_t iter_per_temp = 100;
 

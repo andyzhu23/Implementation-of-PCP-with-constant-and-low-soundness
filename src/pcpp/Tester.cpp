@@ -189,6 +189,64 @@ pcp::BitPCP Tester::buildBitPCP() {
         );
     }
 
+    // add linearity test to ensure hadamard code is linear
+    for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
+        std::vector<bool> position1(original_size, 0);
+        for (size_t j = 0; j < original_size; ++j) {
+            position1[j] = bernoulli(constants::RANDOM_SEED);
+        }
+        std::vector<bool> position2(original_size, 0);
+        for (size_t j = 0; j < original_size; ++j) {
+            position2[j] = bernoulli(constants::RANDOM_SEED);
+        }
+
+        // compute their differences to find third position to query
+        std::vector<bool> *minuend, *subtrahend;
+        if (position1 < position2) {
+            minuend = &position2;
+            subtrahend = &position1;
+        } else {
+            minuend = &position1;
+            subtrahend = &position2;
+        }
+
+        // set up position3 = minuend - subtrahend
+        std::vector<bool> position3 = *subtrahend;
+        // convert position3 to 2's complement
+        // step 1: bitwise negation
+        position3.flip();
+        // step 2: add 1 to carry
+        bool carry = 1;
+        for (size_t j = 0; j < original_size; ++j) {
+            bool tmp = position3[j];
+            position3[j] = position3[j] ^ minuend->at(j) ^ carry;
+            carry = minuend->at(j) & tmp;
+        }
+
+        // ensure all three positions are added to three_csp
+        if (used_positions.find(position1) == used_positions.end()) {
+            used_positions[position1] = three_csp.size();
+            three_csp.add_variable(hadamard.query(position1));
+        }
+
+        if (used_positions.find(position2) == used_positions.end()) {
+            used_positions[position2] = three_csp.size();
+            three_csp.add_variable(hadamard.query(position2));
+        }
+
+        if (used_positions.find(position3) == used_positions.end()) {
+            used_positions[position3] = three_csp.size();
+            three_csp.add_variable(hadamard.query(position3));
+        }
+
+        three_csp.add_ternary_constraint(
+            used_positions[position1],
+            used_positions[position2],
+            used_positions[position3],
+            three_csp::Constraint::SUM
+        );
+    }
+
     return three_csp.toBitPCP();
 }
 

@@ -1,5 +1,76 @@
 #include "three_color/ThreeColor.hpp"
 #include "pcpp/Tester.hpp"
+#include "util.hpp"
+
+void merge_variables(
+    std::vector<three_color::Color> colors,
+    pcp::BitPCP &pcp, 
+    const std::vector<std::vector<std::pair<size_t, int>>> &occuring_location,
+    const std::vector<pcp::BitPCP> &reduced_pcps
+) {
+
+    util::disjoint_set_union dsu(pcp.get_size());
+
+    for (three_color::Node u = 0; u < colors.size(); ++u) {
+        const auto &locations = occuring_location[u];
+        for (size_t i = 1; i < locations.size(); ++i) {
+            size_t x = locations[i].first;
+            size_t y = locations[i - 1].first;
+            switch (locations[i].second) {
+                case 0:  // position 0: u's bits at (var 0, 1st bit) and (var 0, 3rd bit)
+                    switch (locations[i - 1].second) {
+                        case 0:  // both at position 0
+                            dsu.merge(x, y);
+                            dsu.merge(x + 2, y + 2);
+                            break;
+                        case 1:  // current at position 0, previous at position 1
+                            dsu.merge(x, y + 1);
+                            dsu.merge(x + 2, y + 3);
+                            break;
+                    }
+                    break;
+                case 1:  // position 1: v's bits at (var 0, 2nd bit) and (var 1, 1st bit)
+                    switch (locations[i - 1].second) {
+                        case 0:  // current at position 1, previous at position 0
+                            dsu.merge(x + 1, y);
+                            dsu.merge(x + 3, y + 2);
+                            break;
+                        case 1:  // both at position 1
+                            dsu.merge(x + 1, y + 1);
+                            dsu.merge(x + 3, y + 3);
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+    
+    std::unordered_map<pcp::Variable, pcp::Variable> representative_map;
+    size_t new_size = 0;
+    for (pcp::Variable i = 0; i < pcp.get_size(); ++i) {
+        if (dsu.find(i) == i) {
+            representative_map[i] = new_size++;
+        }
+    }
+
+    pcp::BitPCP new_bitpcp(new_size);
+
+    for (pcp::Variable i = 0; i < pcp.get_size(); ++i) {
+        if (dsu.find(i) == i) {
+            new_bitpcp.set_variable(
+                representative_map[i],
+                pcp.get_variable(i)
+            );
+        }
+    }
+
+    for (const auto &[u, v, c] : pcp.get_constraints_list()) {
+        pcp::Variable new_u = representative_map[dsu.find(u)];
+        pcp::Variable new_v = representative_map[dsu.find(v)];
+        new_bitpcp.add_constraint(new_u, new_v, c);
+    }
+    pcp = std::move(new_bitpcp);
+}
 
 namespace three_color {
 
@@ -61,41 +132,7 @@ pcp::BitPCP ThreeColor::to_BitPCP() const {
         }
     }
     auto result = pcp::merge_BitPCPs(edge_pcps);
-    #ifdef ENFORCE_CONSISTENCY
-    for (Node u = 0; u < colors.size(); ++u) {
-        const auto &locations = occuring_locations[u];
-        for (size_t i = 1; i < locations.size(); ++i) {
-            size_t x = locations[i].first;
-            size_t y = locations[i - 1].first;
-            switch (locations[i].second) {
-                case 0:  // position 0: u's bits at (var 0, 1st bit) and (var 0, 3rd bit)
-                    switch (locations[i - 1].second) {
-                        case 0:  // both at position 0
-                            result.add_constraint(x, y, constraint::BitConstraint::EQUAL);
-                            result.add_constraint(x + 2, y + 2, constraint::BitConstraint::EQUAL);
-                            break;
-                        case 1:  // current at position 0, previous at position 1
-                            result.add_constraint(x, y + 1, constraint::BitConstraint::EQUAL);
-                            result.add_constraint(x + 2, y + 3, constraint::BitConstraint::EQUAL);
-                            break;
-                    }
-                    break;
-                case 1:  // position 1: v's bits at (var 0, 2nd bit) and (var 1, 1st bit)
-                    switch (locations[i - 1].second) {
-                        case 0:  // current at position 1, previous at position 0
-                            result.add_constraint(x + 1, y, constraint::BitConstraint::EQUAL);
-                            result.add_constraint(x + 3, y + 2, constraint::BitConstraint::EQUAL);
-                            break;
-                        case 1:  // both at position 1
-                            result.add_constraint(x + 1, y + 1, constraint::BitConstraint::EQUAL);
-                            result.add_constraint(x + 3, y + 3, constraint::BitConstraint::EQUAL);
-                            break;
-                    }
-                    break;
-            }
-        }
-    }
-#endif
+    merge_variables(colors, result, occuring_locations, edge_pcps);
     result.clean();
     return result;
 }

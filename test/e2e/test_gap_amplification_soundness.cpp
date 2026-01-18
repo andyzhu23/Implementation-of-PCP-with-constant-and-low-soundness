@@ -10,14 +10,34 @@
 
 
 std::vector<std::function<void()>> test_cases = {
+    // // Test 1: Simple non-three-colorable graph
+    // []() -> void {
+    //     three_color::ThreeColor input({three_color::Color::RED, three_color::Color::RED, three_color::Color::RED, three_color::Color::RED}, {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {2, 3}});
+    //     pcp::BitPCP bitpcp = input.to_BitPCP();
+    //     pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
+    //     double original_soundness = analyzer::approximate_soundness(bitpcp);
+    //     double amplified_soundness = analyzer::approximate_soundness(amplified_pcp);
+    //     std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
+        
+    //     std::cout << "Approximated amplified gap: " << 1 - amplified_soundness << std::endl;
+    // },
+    // Test 2: Simple non-satisfiable CSP
     []() -> void {
-        three_color::ThreeColor input({three_color::Color::RED, three_color::Color::RED, three_color::Color::RED, three_color::Color::RED}, {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {2, 3}});
-        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP bitpcp(1000);
+        for (pcp::Variable i = 0; i < 1000; ++i) {
+            bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
+        }
+        for (pcp::Variable i = 1; i < 1000; ++i) {
+            bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
+        }
+        bitpcp.add_constraint(999, 0, constraint::BitConstraint::NOTEQUAL); // make it unsatisfiable
+
         pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
-        double soundness = analyzer::approximate_soundness(amplified_pcp);
-        std::cout << "Approximated soundness: " << soundness << std::endl;
-        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 10000);
-        std::cout << "Amplified PCP soundness (analyzer): " << analyzer_amplified.getSoundness() << std::endl;
+        double original_soundness = analyzer::approximate_soundness(bitpcp);
+        double amplified_soundness = analyzer::approximate_soundness(amplified_pcp);
+        std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
+        
+        std::cout << "Approximated amplified gap: " << 1 - amplified_soundness << std::endl;
     }
 };
 

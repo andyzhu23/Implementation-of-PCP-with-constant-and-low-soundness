@@ -10,7 +10,11 @@
 namespace constants {
 
 const int CONSTRAINT_COMBINATION_REPETITION = 12;
-const int LINEARITY_TEST_REPETITION = 2;
+#ifdef ENFORCE_CONSISTENCY
+const int LINEARITY_TEST_REPETITION = 20;
+#else
+const int LINEARITY_TEST_REPETITION = 1;
+#endif
 const int POWERING_RADIUS = 5;
 const int EXPANDING_COEFFICIENT = 1;
 const int DEGREE = 5;
