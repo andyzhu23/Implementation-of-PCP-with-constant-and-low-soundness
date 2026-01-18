@@ -54,7 +54,6 @@ pcp::BitPCP ThreeColor::to_BitPCP() const {
             pcpp::Tester tester(colors[u], colors[v]);
             pcp::BitPCP tmp = tester.buildBitPCP();
             // reduce unnecessary variables
-            tmp.clean();
             edge_pcps.push_back(std::move(tmp));
             occuring_locations[u].emplace_back(variable_count, 0);
             occuring_locations[v].emplace_back(variable_count, 1);
@@ -97,6 +96,7 @@ pcp::BitPCP ThreeColor::to_BitPCP() const {
         }
     }
 #endif
+    result.clean();
     return result;
 }
 
