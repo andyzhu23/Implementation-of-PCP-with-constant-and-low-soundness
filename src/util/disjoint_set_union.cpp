@@ -1,18 +1,8 @@
+#include "util/disjoint_set_union.hpp"
 
-#include <vector>
-
-#include "util.hpp"
+#include <numeric>
 
 namespace util {
-
-visit_guard::visit_guard(std::vector<bool> &visited, const std::vector<pcp::Variable> &nodes)
-    : visited(visited), nodes(nodes) {}
-
-visit_guard::~visit_guard() {
-    for (const pcp::Variable &node : nodes) {
-        visited[static_cast<size_t>(node)] = false;
-    }
-}
 
 disjoint_set_union::disjoint_set_union(size_t size) : size(size), representative(size) {
     std::iota(representative.begin(), representative.end(), 0);

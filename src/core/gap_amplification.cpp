@@ -6,7 +6,7 @@
 #include "core/core.hpp"
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
-#include "util.hpp"
+#include "util/disjoint_set_union.hpp"
 
 #include <iostream>
 #include <cassert>
@@ -34,7 +34,7 @@ void merge_variables(
             size_t pos1 = locations[0].second;
             pcp::Variable u2 = locations[i].first;
             size_t pos2 = locations[i].second;
-            
+
             // merge the variables in DSU
             dsu.merge(
                 offsets[u1] + pos1 * 3,

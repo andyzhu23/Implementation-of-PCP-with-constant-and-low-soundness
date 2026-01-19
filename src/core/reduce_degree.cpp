@@ -2,7 +2,7 @@
 
 #include "core/core.hpp"
 #include "pcp/BitPCP.hpp"
-#include "util.hpp"
+#include "util/random_picker.hpp"
 
 namespace core {
 
