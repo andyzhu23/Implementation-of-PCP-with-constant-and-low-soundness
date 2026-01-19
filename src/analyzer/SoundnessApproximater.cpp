@@ -17,7 +17,7 @@ const double Tmin = 1e-4;
 // cooling rate
 const double alpha = 0.995;
 // iterations per temperature
-const size_t iter_per_temp = 100;
+const size_t iter_per_temp = 10;
 
 std::vector<pcp::BitDomain> get_possible_values(three_csp::Constraint domain_type) {
     std::vector<pcp::BitDomain> possible_values;

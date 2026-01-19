@@ -41,12 +41,15 @@ pcp::BitPCP ThreeCSP::toBitPCP() const {
 
     // Add ternary constraints
     for (const auto &[var1, var2, var3, constraint] : ternary_constraints) {
-        pcp::BitDomain value(assignment[var1], assignment[var2], assignment[var3], constraint);
-        bitpcp.add_variable(value);
+        // ENCODED_BINARY is enforced by binary constraint assignment itself, ANY means no constraint
+        if (constraint != Constraint::ENCODED_BINARY && constraint != Constraint::ANY) {
+            pcp::BitDomain value(assignment[var1], assignment[var2], assignment[var3], constraint);
+            bitpcp.add_variable(value);
 
-        bitpcp.add_constraint(var1, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
-        bitpcp.add_constraint(var2, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL);
-        bitpcp.add_constraint(var3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL);
+            bitpcp.add_constraint(var1, bitpcp.get_size() - 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
+            bitpcp.add_constraint(var2, bitpcp.get_size() - 1, constraint::BitConstraint::SECOND_BIT_EQUAL);
+            bitpcp.add_constraint(var3, bitpcp.get_size() - 1, constraint::BitConstraint::THIRD_BIT_EQUAL);
+        }
     }
 
     return bitpcp;

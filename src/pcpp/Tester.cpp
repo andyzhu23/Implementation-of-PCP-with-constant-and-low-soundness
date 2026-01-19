@@ -50,11 +50,17 @@ Tester::Tester(three_color::Color u, three_color::Color v) {
 }
 
 // Construct Tester from a BitPCP
-Tester::Tester(pcp::BitPCP pcp) {
+Tester::Tester(const pcp::BitPCP &pcp) {
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
         three_csp.add_variable(pcp.get_variable(i)[0]);
         three_csp.add_variable(pcp.get_variable(i)[1]);
         three_csp.add_variable(pcp.get_variable(i)[2]);
+        // record index shift for encoded binary variables
+        // shift second and third bits' index to point to first bit's index
+        if (pcp.get_variable(i).get_domain_type() == three_csp::Constraint::ENCODED_BINARY) {
+            binary_index_shift[three_csp.size() - 2] = three_csp.size() - 3;
+            binary_index_shift[three_csp.size() - 1] = three_csp.size() - 3;
+        }
 #ifdef ENFORCE_CONSISTENCY
         if (pcp.get_variable(i).get_domain_type() != three_csp::Constraint::ANY) {
             three_csp.add_ternary_constraint(
@@ -163,6 +169,9 @@ pcp::BitPCP Tester::buildBitPCP() {
     // add linearity test to verify hadamard code encodes original variables correctly
     for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
         size_t idx = dist(constants::RANDOM_SEED);
+        if (binary_index_shift.find(idx) != binary_index_shift.end()) {
+            idx = binary_index_shift[idx];
+        }
         std::vector<bool> position1(original_size, 0);
         for (size_t j = 0; j < original_size; ++j) {
             position1[j] = bernoulli(constants::RANDOM_SEED);

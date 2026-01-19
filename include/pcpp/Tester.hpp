@@ -10,6 +10,7 @@
 #include <chrono>
 #include <vector>
 #include <random>
+#include <unordered_map>
 
 #include "pcp/BitPCP.hpp"
 #include "constraint/BitConstraint.hpp"
@@ -24,7 +25,7 @@ public:
 
     Tester(three_color::Color u, three_color::Color v);
 
-    Tester(pcp::BitPCP powering_pcp);
+    Tester(const pcp::BitPCP &powering_pcp);
 
     // Build a BitPCP from the constraint matrix and hadamard code
     pcp::BitPCP buildBitPCP();
@@ -35,6 +36,7 @@ private:
     std::vector<std::vector<bool>> constraint_matrix;
     // Expected parity (in GF(2)) for each constraint row under the canonical assignment
     std::vector<bool> constraint_parities;
+    std::unordered_map<size_t, size_t> binary_index_shift;
 };
 
 }
