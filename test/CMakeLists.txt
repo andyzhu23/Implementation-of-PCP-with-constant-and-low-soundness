@@ -5,7 +5,6 @@ add_executable(
     ./unit/test_get_neighbors.cpp 
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
-    ../../src/util.cpp 
 
     ../../src/constraint/BitConstraint.cpp
  
@@ -16,11 +15,10 @@ target_include_directories(test_get_neighbors PRIVATE ${CMAKE_SOURCE_DIR}/includ
 add_executable(
     test_PCPAnalyzer 
     ./unit/test_PCPAnalyzer.cpp 
-    ../../src/pcp/BitPCP.cpp 
+    ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
 
     ../../src/constraint/BitConstraint.cpp
-    ../../src/util.cpp
     ../../src/analyzer/PCPAnalyzer.cpp
 )
 add_test(NAME Test_PCPAnalyzer COMMAND test_PCPAnalyzer)
@@ -32,8 +30,6 @@ add_executable(
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
-    ../../src/util.cpp
-
     ../../src/constraint/BitConstraint.cpp
 )
 add_test(NAME Test_SoundnessApproximater COMMAND test_SoundnessApproximater)
@@ -45,7 +41,8 @@ add_executable(
     ../../src/core/to_expander.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/BitDomain.cpp
-    ../../src/util.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
 
     ../../src/constraint/BitConstraint.cpp
  
@@ -59,7 +56,8 @@ add_executable(
     ../../src/core/reduce_degree.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/BitDomain.cpp
-    ../../src/util.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
 
     ../../src/constraint/BitConstraint.cpp
  
@@ -85,8 +83,8 @@ add_executable(
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
- 
-    ../../src/util.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
 )
 add_test(NAME Test_Tester COMMAND test_Tester)
 target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -98,8 +96,8 @@ add_executable(
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/constraint/BitConstraint.cpp
- 
-    ../../src/util.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
 )
 add_test(NAME Test_ThreeCSP COMMAND test_ThreeCSP)
 target_include_directories(test_ThreeCSP PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -112,7 +110,8 @@ add_executable(
     ../../src/pcpp/Tester.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
-    ../../src/util.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
     ../../src/three_color/generators.cpp
  
     ../../src/three_color/ThreeColor.cpp
@@ -129,7 +128,8 @@ add_executable(
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
-    ../../src/util.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
     ../../src/three_color/ThreeColor.cpp
  
     ../../src/constraint/BitConstraint.cpp
@@ -140,7 +140,6 @@ target_include_directories(test_three_color_to_bitpcp PRIVATE ${CMAKE_SOURCE_DIR
 add_executable(
     test_random_picker
     ./unit/test_random_picker.cpp
-    ../../src/util.cpp
 )
 add_test(NAME Test_Random_Picker COMMAND test_random_picker)
 target_include_directories(test_random_picker PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -160,7 +159,8 @@ add_executable(
     ../../src/pcp/BitDomain.cpp
     ../../src/pcpp/Hadamard.cpp
     ../../src/pcpp/Tester.cpp
-    ../../src/util.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
     ../../src/analyzer/PCPAnalyzer.cpp
 
     ../../src/constraint/BitConstraint.cpp
@@ -185,7 +185,8 @@ if(BUILD_E2E_TESTS)
         ../../src/pcp/BitDomain.cpp
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
-        ../../src/util.cpp
+        ../../src/util/disjoint_set_union.cpp
+        ../../src/util/visit_guard.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
 
         ../../src/constraint/BitConstraint.cpp
@@ -212,7 +213,7 @@ if(BUILD_E2E_TESTS)
         ../../src/pcp/BitDomain.cpp
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
-        ../../src/util.cpp
+        ../../src/util/disjoint_set_union.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
     
         ../../src/constraint/BitConstraint.cpp
@@ -238,7 +239,7 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
         ../../src/three_csp/ThreeCSP.cpp
-        ../../src/util.cpp
+        ../../src/util/disjoint_set_union.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
     
         ../../src/constraint/BitConstraint.cpp
@@ -263,7 +264,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/three_color_gap_amplification.cpp
         ../../src/pcpp/Hadamard.cpp
         ../../src/pcpp/Tester.cpp
-        ../../src/util.cpp
+        ../../src/util/disjoint_set_union.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
         ../../src/constraint/BitConstraint.cpp

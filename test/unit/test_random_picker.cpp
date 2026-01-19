@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "util.hpp"
+#include "util/random_picker.hpp"
 
 std::vector<std::function<void()>> test_cases = {
 	// Test 1: basic add/pick behavior with two items (counts = 1 each)

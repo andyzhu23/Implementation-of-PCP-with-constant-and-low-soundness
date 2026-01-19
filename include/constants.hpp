@@ -11,7 +11,7 @@ namespace constants {
 
 const int CONSTRAINT_COMBINATION_REPETITION = 12;
 #ifdef ENFORCE_CONSISTENCY
-const int LINEARITY_TEST_REPETITION = 20;
+const int LINEARITY_TEST_REPETITION = 12;
 #else
 const int LINEARITY_TEST_REPETITION = 1;
 #endif

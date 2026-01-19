@@ -1,6 +1,6 @@
 #include "three_color/ThreeColor.hpp"
 #include "pcpp/Tester.hpp"
-#include "util.hpp"
+#include "util/disjoint_set_union.hpp"
 
 void merge_variables(
     std::vector<three_color::Color> colors,
