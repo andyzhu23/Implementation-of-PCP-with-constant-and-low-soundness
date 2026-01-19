@@ -9,16 +9,6 @@
 #include "analyzer/SoundnessApproximater.hpp"
 #include "constraint/BitConstraint.hpp"
 
-// Simulated annealing parameters
-// starting temperature
-const double startingT = 1.0;
-// minimum temperature
-const double Tmin = 1e-4;
-// cooling rate
-const double alpha = 0.995;
-// iterations per temperature
-const size_t iter_per_temp = 100;
-
 std::vector<pcp::BitDomain> get_possible_values(three_csp::Constraint domain_type) {
     std::vector<pcp::BitDomain> possible_values;
     switch (domain_type) {
@@ -62,21 +52,31 @@ std::vector<pcp::BitDomain> get_possible_values(three_csp::Constraint domain_typ
 
 namespace analyzer {
 
-double approximate_soundness(pcp::BitPCP pcp) { 
-    std::cout << pcp.get_size() << std::endl;
+double approximate_soundness(pcp::BitPCP pcp) {
     // Gather constraints list
     const auto &constraints_list = pcp.get_constraints_list();
     size_t m = constraints_list.size();
 
     if (m == 0) return 1.0; // no constraints
 
+    // Function to count number of satisfied constraints
     auto count_satisfied = [&]() {
         int count = 0;
-        for (const auto &t : constraints_list) {
-            auto [u, v, c] = t;
-            if (constraint::evaluateBitConstraint(c, pcp.get_variable(u), pcp.get_variable(v))) {
-                ++count;
-            }
+        for (const auto &[var1, var2, constraint] : constraints_list) {
+            pcp::BitDomain val1 = pcp.get_variable(var1);
+            pcp::BitDomain val2 = pcp.get_variable(var2);
+            count += constraint::evaluateBitConstraint(constraint, val1, val2) ? 1 : 0;
+        }
+        return count;
+    };
+
+    // Function to count number of satisfied constraints involving a specific variable
+    auto count_local_satisfied = [&](pcp::Variable changed_var) {
+        int count = 0;
+        for (const auto &[other_var, constraint] : pcp.get_constraints(changed_var)) {
+            pcp::BitDomain val1 = pcp.get_variable(changed_var);
+            pcp::BitDomain val2 = pcp.get_variable(other_var);
+            count += constraint::evaluateBitConstraint(constraint, val1, val2) ? 1 : 0;
         }
         return count;
     };
@@ -93,17 +93,12 @@ double approximate_soundness(pcp::BitPCP pcp) {
 
     int current_satisfied = count_satisfied();
     int best_satisfied = current_satisfied;
-    std::vector<pcp::BitDomain> best_assignment(pcp.get_size());
-    for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
-        best_assignment[i] = pcp.get_variable(i);
-    }
 
     std::uniform_int_distribution<pcp::Variable> var_dist(0, static_cast<pcp::Variable>(std::max<size_t>(1, pcp.get_size()) - 1));
 
     double T = startingT;
 
     while (T > Tmin) {
-        std::cout << "Temperature: " << T << ", Current satisfied: " << current_satisfied << ", Best satisfied: " << best_satisfied << std::endl;
         for (size_t it = 0; it < iter_per_temp; ++it) {
             // pick random variable
             pcp::Variable v = var_dist(constants::RANDOM_SEED);
@@ -122,25 +117,21 @@ double approximate_soundness(pcp::BitPCP pcp) {
             }
             if (cand == old) continue;
 
+            int previous_satisfied = count_local_satisfied(v);
             // apply candidate
             pcp.set_variable(v, cand);
-            int new_satisfied = count_satisfied();
-            int delta = new_satisfied - current_satisfied;
+            int new_satisfied = count_local_satisfied(v);
+            int delta = new_satisfied - previous_satisfied;
 
             if (delta >= 0) {
-                current_satisfied = new_satisfied;
-                if (new_satisfied > best_satisfied) {
-                    best_satisfied = new_satisfied;
-                    for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
-                        best_assignment[i] = pcp.get_variable(i);
-                    }
-                }
+                current_satisfied += delta;
+                best_satisfied = std::max(best_satisfied, current_satisfied);
             } else {
                 // accept with probability exp(delta / T) where delta is negative
                 double prob = std::exp(static_cast<double>(delta) / T);
                 std::uniform_real_distribution<double> ud(0.0, 1.0);
                 if (ud(constants::RANDOM_SEED) < prob) {
-                    current_satisfied = new_satisfied;
+                    current_satisfied += delta;
                 } else {
                     // revert
                     pcp.set_variable(v, old);
@@ -148,11 +139,6 @@ double approximate_soundness(pcp::BitPCP pcp) {
             }
         }
         T *= alpha;
-    }
-
-    // restore best assignment
-    for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
-        pcp.set_variable(i, best_assignment[i]);
     }
 
     return static_cast<double>(best_satisfied) / static_cast<double>(m);
