@@ -2,53 +2,12 @@
 #include <functional>
 #include <vector>
 #include <random>
+#include <map>
 
 #include <iostream>
 
-#include "constants.hpp"
 #include "analyzer/SoundnessApproximater.hpp"
 #include "constraint/BitConstraint.hpp"
-
-std::vector<pcp::BitDomain> get_possible_values(three_csp::Constraint domain_type) {
-    std::vector<pcp::BitDomain> possible_values;
-    switch (domain_type) {
-        case three_csp::Constraint::ENCODED_BINARY:
-            possible_values = {
-                pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY),
-                pcp::BitDomain(1, 1, 1, three_csp::Constraint::ENCODED_BINARY)
-            };
-            break;
-        case three_csp::Constraint::PRODUCT:
-            possible_values = {
-                pcp::BitDomain(0, 0, 0, three_csp::Constraint::PRODUCT),
-                pcp::BitDomain(0, 1, 0, three_csp::Constraint::PRODUCT),
-                pcp::BitDomain(1, 0, 0, three_csp::Constraint::PRODUCT),
-                pcp::BitDomain(1, 1, 1, three_csp::Constraint::PRODUCT)
-            };
-            break;
-        case three_csp::Constraint::SUM:
-            possible_values = {
-                pcp::BitDomain(0, 0, 0, three_csp::Constraint::SUM),
-                pcp::BitDomain(0, 1, 1, three_csp::Constraint::SUM),
-                pcp::BitDomain(1, 0, 1, three_csp::Constraint::SUM),
-                pcp::BitDomain(1, 1, 0, three_csp::Constraint::SUM)
-            };
-            break;
-        case three_csp::Constraint::ANY:
-            possible_values = {
-                pcp::BitDomain(0, 0, 0, three_csp::Constraint::ANY),
-                pcp::BitDomain(0, 0, 1, three_csp::Constraint::ANY),
-                pcp::BitDomain(0, 1, 0, three_csp::Constraint::ANY),
-                pcp::BitDomain(0, 1, 1, three_csp::Constraint::ANY),
-                pcp::BitDomain(1, 0, 0, three_csp::Constraint::ANY),
-                pcp::BitDomain(1, 0, 1, three_csp::Constraint::ANY),
-                pcp::BitDomain(1, 1, 0, three_csp::Constraint::ANY),
-                pcp::BitDomain(1, 1, 1, three_csp::Constraint::ANY)
-            };
-            break;
-    }
-    return possible_values;
-}
 
 namespace analyzer {
 
@@ -84,7 +43,7 @@ double approximate_soundness(pcp::BitPCP pcp) {
     // Initialize each variable randomly from its domain's possible values
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
         auto domain_type = pcp.get_variable(i).get_domain_type();
-        auto opts = get_possible_values(domain_type);
+        const auto &opts = possible_values.at(domain_type);
         if (!opts.empty()) {
             std::uniform_int_distribution<size_t> dist(0, opts.size() - 1);
             pcp.set_variable(i, opts[dist(constants::RANDOM_SEED)]);
@@ -99,11 +58,12 @@ double approximate_soundness(pcp::BitPCP pcp) {
     double T = startingT;
 
     while (T > Tmin) {
+        std::cout << "Temperature: " << T << ", Current satisfied: " << current_satisfied << ", Best satisfied: " << best_satisfied << std::endl;
         for (size_t it = 0; it < iter_per_temp; ++it) {
             // pick random variable
             pcp::Variable v = var_dist(constants::RANDOM_SEED);
             auto domain_type = pcp.get_variable(v).get_domain_type();
-            auto opts = get_possible_values(domain_type);
+            const auto &opts = possible_values.at(domain_type);
             if (opts.size() <= 1) continue; // nothing to change
 
             // pick a new random value different from current

@@ -4,20 +4,22 @@
 #include <random>
 #include <functional>
 #include <cmath>
+#include <map>
+#include <vector>
 
 #include "Aliases.hpp"
 
 namespace constants {
 
-const int CONSTRAINT_COMBINATION_REPETITION = 100;
+const int CONSTRAINT_COMBINATION_REPETITION = 2000;
 #ifdef ENFORCE_CONSISTENCY
-const int LINEARITY_TEST_REPETITION = 50;
+const int LINEARITY_TEST_REPETITION = 1000;
 #else
 const int LINEARITY_TEST_REPETITION = 1;
 #endif
-const int POWERING_RADIUS = 5;
+const int POWERING_RADIUS = 10;
 const int EXPANDING_COEFFICIENT = 1;
-const int DEGREE = 5;
+const int DEGREE = 10;
 const unsigned int SAFE_THREAD_NUMBER = 4;
 const pcp::Variable PCPVARIABLE_ONE = 1;
 
