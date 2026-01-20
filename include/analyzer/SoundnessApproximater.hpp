@@ -2,6 +2,7 @@
 #define SOUNDNESSAPPROXIMATER_HPP
 
 #include "pcp/BitPCP.hpp"
+#include "constants.hpp"
 
 namespace analyzer {
 
