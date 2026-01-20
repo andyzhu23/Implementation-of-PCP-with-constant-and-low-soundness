@@ -10,17 +10,17 @@
 
 
 std::vector<std::function<void()>> test_cases = {
-    // // Test 1: Simple non-three-colorable graph
-    // []() -> void {
-    //     three_color::ThreeColor input({three_color::Color::RED, three_color::Color::RED, three_color::Color::RED, three_color::Color::RED}, {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {2, 3}});
-    //     pcp::BitPCP bitpcp = input.to_BitPCP();
-    //     pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
-    //     double original_soundness = analyzer::approximate_soundness(bitpcp);
-    //     double amplified_soundness = analyzer::approximate_soundness(amplified_pcp);
-    //     std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
+    // Test 1: Simple non-three-colorable graph
+    []() -> void {
+        three_color::ThreeColor input({three_color::Color::RED, three_color::Color::RED, three_color::Color::RED, three_color::Color::RED}, {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {2, 3}});
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
+        double original_soundness = analyzer::approximate_soundness(bitpcp);
+        double amplified_soundness = analyzer::approximate_soundness(amplified_pcp);
+        std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
         
-    //     std::cout << "Approximated amplified gap: " << 1 - amplified_soundness << std::endl;
-    // },
+        std::cout << "Approximated amplified gap: " << 1 - amplified_soundness << std::endl;
+    },
     // Test 2: Simple non-satisfiable CSP
     []() -> void {
         pcp::BitPCP bitpcp(100);
