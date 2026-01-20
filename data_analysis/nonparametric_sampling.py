@@ -1,5 +1,5 @@
-"""
-Nonparametric sampling methods for data analysis.
+"""Nonparametric sampling methods for data analysis.
+
 This module provides functions to perform bootstrap resampling to compute
 confidence intervals for differences in means between two datasets.
 

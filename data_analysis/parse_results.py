@@ -1,3 +1,9 @@
+"""Parse results from log files to extract original and amplified gaps.
+
+Each log file is expected to contain lines indicating the original and amplified gaps
+for various test cases.
+"""
+
 import sys
 
 def parse_results(lines):
