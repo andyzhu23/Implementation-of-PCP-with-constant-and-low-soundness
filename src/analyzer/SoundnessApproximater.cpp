@@ -43,7 +43,7 @@ double approximate_soundness(pcp::BitPCP pcp) {
     // Initialize each variable randomly from its domain's possible values
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
         auto domain_type = pcp.get_variable(i).get_domain_type();
-        const auto &opts = constants::possible_values.at(domain_type);
+        const auto &opts = possible_values.at(domain_type);
         if (!opts.empty()) {
             std::uniform_int_distribution<size_t> dist(0, opts.size() - 1);
             pcp.set_variable(i, opts[dist(constants::RANDOM_SEED)]);
@@ -63,7 +63,7 @@ double approximate_soundness(pcp::BitPCP pcp) {
             // pick random variable
             pcp::Variable v = var_dist(constants::RANDOM_SEED);
             auto domain_type = pcp.get_variable(v).get_domain_type();
-            const auto &opts = constants::possible_values.at(domain_type);
+            const auto &opts = possible_values.at(domain_type);
             if (opts.size() <= 1) continue; // nothing to change
 
             // pick a new random value different from current
