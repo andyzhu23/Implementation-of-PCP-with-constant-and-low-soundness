@@ -58,7 +58,7 @@ double approximate_soundness(pcp::BitPCP pcp) {
     double T = startingT;
 
     while (T > Tmin) {
-        std::cout << "Temperature: " << T << ", Current satisfied: " << current_satisfied << ", Best satisfied: " << best_satisfied << std::endl;
+        // std::cout << "Temperature: " << T << ", Current satisfied: " << current_satisfied << ", Best satisfied: " << best_satisfied << std::endl;
         for (size_t it = 0; it < iter_per_temp; ++it) {
             // pick random variable
             pcp::Variable v = var_dist(constants::RANDOM_SEED);
