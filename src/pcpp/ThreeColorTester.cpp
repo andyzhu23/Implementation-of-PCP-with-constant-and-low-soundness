@@ -1,6 +1,7 @@
 #include <chrono>
 #include <random>
 #include <unordered_map>
+#include <stdexcept>
 
 #include "constants.hpp"
 #include "pcpp/ThreeColorTester.hpp"

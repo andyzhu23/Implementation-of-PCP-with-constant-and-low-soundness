@@ -79,9 +79,8 @@ pcp::BitPCP ThreeCSP::toBitPCP(
             } else {
                 throw std::invalid_argument("ThreeCSP::toBitPCP: three_csp_index not found in mapping");
             }
-        } else {
-            return {three_csp_index - pcp_in_three_csp_size + original_size, std::nullopt}; // new variable index in PCP
-        }
+        } 
+        return {three_csp_index - pcp_in_three_csp_size + original_size, std::nullopt}; // new variable index in PCP
     };
 
     // Add binary constraints
