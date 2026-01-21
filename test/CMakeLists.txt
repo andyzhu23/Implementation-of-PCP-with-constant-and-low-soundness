@@ -85,9 +85,27 @@ add_executable(
     ../../src/pcp/BitDomain.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
+    ../../src/pcpp/ThreeColorTester.cpp
 )
 add_test(NAME Test_Tester COMMAND test_Tester)
 target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
+    test_ThreeColorTester
+    ./unit/test_ThreeColorTester.cpp
+    ../../src/pcpp/ThreeColorTester.cpp
+    ../../src/three_color/ThreeColor.cpp
+    ../../src/three_csp/ThreeCSP.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/BitDomain.cpp
+    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcpp/Tester.cpp
+    ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
+    ../../src/constraint/BitConstraint.cpp
+)
+add_test(NAME Test_ThreeColorTester COMMAND test_ThreeColorTester)
+target_include_directories(test_ThreeColorTester PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_ThreeCSP
@@ -115,6 +133,7 @@ add_executable(
     ../../src/three_color/generators.cpp
  
     ../../src/three_color/ThreeColor.cpp
+    ../../src/pcpp/ThreeColorTester.cpp
 )
 add_test(NAME Test_Three_Color_Generators COMMAND test_three_color_generators)
 target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -131,7 +150,7 @@ add_executable(
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/three_color/ThreeColor.cpp
- 
+    ../../src/pcpp/ThreeColorTester.cpp
     ../../src/constraint/BitConstraint.cpp
 )
 add_test(NAME Test_Three_Color_To_BitPCP COMMAND test_three_color_to_bitpcp)
@@ -154,6 +173,7 @@ add_executable(
     ../../src/core/to_expander.cpp
     ../../src/core/three_color_gap_amplification.cpp
     ../../src/three_color/ThreeColor.cpp
+    ../../src/pcpp/ThreeColorTester.cpp
     ../../src/three_color/generators.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
@@ -180,6 +200,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/to_expander.cpp
         ../../src/core/three_color_gap_amplification.cpp
         ../../src/three_color/ThreeColor.cpp
+        ../../src/pcpp/ThreeColorTester.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
@@ -207,6 +228,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
         ../../src/three_color/ThreeColor.cpp
+        ../../src/pcpp/ThreeColorTester.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitPCP.cpp
@@ -233,6 +255,7 @@ if(BUILD_E2E_TESTS)
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
         ../../src/three_color/ThreeColor.cpp
+        ../../src/pcpp/ThreeColorTester.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
@@ -254,6 +277,7 @@ if(BUILD_E2E_TESTS)
         test_gap_amplification_soundness
         ./e2e/test_gap_amplification_soundness.cpp
         ../../src/three_color/ThreeColor.cpp
+        ../../src/pcpp/ThreeColorTester.cpp
         ../../src/three_color/generators.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/pcp/BitPCP.cpp

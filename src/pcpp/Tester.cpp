@@ -1,6 +1,9 @@
 #include <chrono>
 #include <random>
 #include <unordered_map>
+#include <stdexcept>
+
+#include <iostream>
 
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
@@ -9,113 +12,99 @@
 
 namespace pcpp {
 
-const int THREE_COLOR_ASSIGNMENT = 2 + 2 + 2 * 2 + 1; // 2 bits per color, 4 products, and 1 negation bit
-
-Tester::Tester(three_color::Color u, three_color::Color v) {
-    std::bitset<2> ubits = three_color::color_to_bits(u);
-    std::bitset<2> vbits = three_color::color_to_bits(v);
-    std::bitset<2> bit0;
-    bit0[0] = ubits[0];
-    bit0[1] = vbits[0];
-    std::bitset<2> bit1;
-    bit1[0] = ubits[1];
-    bit1[1] = vbits[1];
-
-    // stores 3 bits per variable, and their products
-    // hardcode products
-    three_csp.add_variable(bit0[0]); // var 0, first bit of u
-    three_csp.add_variable(bit0[1]); // var 1, first bit of v
-    three_csp.add_variable(bit1[0]); // var 2, second bit of u
-    three_csp.add_variable(bit1[1]); // var 3, second bit of v
-    three_csp.add_variable(bit0[0] * bit1[0]); // var 4, product of first bits
-    three_csp.add_variable(bit0[0] * bit1[1]); // var 5, product of u's first bit and v's second bit
-    three_csp.add_variable(bit0[1] * bit1[0]); // var 6, product of v's first bit and u's second bit
-    three_csp.add_variable(bit0[1] * bit1[1]); // var 7, product of second bits
-    three_csp.add_variable(!bit0[0]); // var 8, negation of u's first bit
-
-    // constraints to ensure proper coloring
-#ifdef ENFORCE_CONSISTENCY
-    three_csp.add_ternary_constraint(0, 2, 4, three_csp::Constraint::PRODUCT);
-    three_csp.add_ternary_constraint(0, 3, 5, three_csp::Constraint::PRODUCT);
-    three_csp.add_ternary_constraint(1, 2, 6, three_csp::Constraint::PRODUCT);
-    three_csp.add_ternary_constraint(1, 3, 7, three_csp::Constraint::PRODUCT);
-    three_csp.add_binary_constraint(0, 8, constraint::BitConstraint::NOTEQUAL);
-#endif
-    hadamard = Hadamard(three_csp.get_assignment());
-
-    constraint_matrix = std::vector<std::vector<bool>>{
-        // the local assignment u and v have different colors
-        {0, 1, 1, 1, 1, 1, 1, 1, 1},
-    };
-}
-
 // Construct Tester from a BitPCP
-Tester::Tester(const pcp::BitPCP &pcp) {
+Tester::Tester(const pcp::BitPCP &pcp) : pcp(pcp) {
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
-        three_csp.add_variable(pcp.get_variable(i)[0]);
-        three_csp.add_variable(pcp.get_variable(i)[1]);
-        three_csp.add_variable(pcp.get_variable(i)[2]);
-        // record index shift for encoded binary variables
-        // shift second and third bits' index to point to first bit's index
         if (pcp.get_variable(i).get_domain_type() == three_csp::Constraint::ENCODED_BINARY) {
-            binary_index_shift[three_csp.size() - 2] = three_csp.size() - 3;
-            binary_index_shift[three_csp.size() - 1] = three_csp.size() - 3;
+            three_csp.add_variable(pcp.get_variable(i)[0]);
+            three_csp_to_pcp_index[three_csp.size() - 1] = {i, 0};
+
+            pcp_to_three_csp_index[i] = three_csp.size() - 1;
+        } else {
+            // each variable in three_csp is represented by 3 bits in BitPCP
+            three_csp.add_variable(pcp.get_variable(i)[0]);
+            three_csp_to_pcp_index[three_csp.size() - 1] = {i, 0};
+
+            three_csp.add_variable(pcp.get_variable(i)[1]);
+            three_csp_to_pcp_index[three_csp.size() - 1] = {i, 1};
+            
+            three_csp.add_variable(pcp.get_variable(i)[2]);
+            three_csp_to_pcp_index[three_csp.size() - 1] = {i, 2};
+
+            pcp_to_three_csp_index[i] = three_csp.size() - 3;
         }
-#ifdef ENFORCE_CONSISTENCY
-        if (pcp.get_variable(i).get_domain_type() != three_csp::Constraint::ANY) {
-            three_csp.add_ternary_constraint(
-                i * 3, 
-                i * 3 + 1, 
-                i * 3 + 2, 
-                pcp.get_variable(i).get_domain_type()
-            );
-        }
-#endif
     }
 
-    three_csp.add_variable(!three_csp.get_variable(0)); // negation bit for first variable
+    pcp_in_three_csp_size = three_csp.size();
 
-    three_csp.add_binary_constraint(0, three_csp.size() - 1, constraint::BitConstraint::NOTEQUAL);
+    three_csp.add_variable(0); // negation bits
+    three_csp.add_variable(1); // negation bits
+
+
+    three_csp.add_binary_constraint(three_csp.size() - 2, three_csp.size() - 1, constraint::BitConstraint::NOTEQUAL);
 
     hadamard = Hadamard(three_csp.get_assignment());
+
     // Build constraint matrix from BitPCP constraints
     for (const auto &[var1, var2, bit_constraint] : pcp.get_constraints_list()) {
         if (bit_constraint != constraint::BitConstraint::ANY) {
             std::vector<bool> row(three_csp.size());
             switch (bit_constraint) {
                 case constraint::BitConstraint::EQUAL:
-                    row[var1 * 3] = 1;
-                    row[var1 * 3 + 1] = 1;
-                    row[var1 * 3 + 2] = 1;
-                    row[var2 * 3] = 1;
-                    row[var2 * 3 + 1] = 1;
-                    row[var2 * 3 + 2] = 1;
+                    if (pcp.get_variable(var1).get_domain_type() != three_csp::Constraint::ENCODED_BINARY && pcp.get_variable(var2).get_domain_type() != three_csp::Constraint::ENCODED_BINARY) {
+                        // both are non ENCODED_BINARY
+                        std::uniform_int_distribution<size_t> dist(0, 2);
+                        size_t offset = dist(constants::RANDOM_SEED);
+                        row[pcp_to_three_csp_index.at(var1) + offset] = 1;
+                        row[pcp_to_three_csp_index.at(var2) + offset] = 1;
+                    } else if (pcp.get_variable(var1).get_domain_type() != three_csp::Constraint::ENCODED_BINARY || pcp.get_variable(var2).get_domain_type() != three_csp::Constraint::ENCODED_BINARY) {
+                        throw std::invalid_argument("EQUAL constraint between variables with non ENCODED_BINARY domain types");
+                    } else {
+                        // both are ENCODED_BINARY
+                        row[pcp_to_three_csp_index.at(var1)] = 1;
+                        row[pcp_to_three_csp_index.at(var2)] = 1;
+                    }
+                    break;
+                case constraint::BitConstraint::NOTEQUAL:
+                    if (pcp.get_variable(var1).get_domain_type() != three_csp::Constraint::ENCODED_BINARY || pcp.get_variable(var2).get_domain_type() != three_csp::Constraint::ENCODED_BINARY) {
+                        throw std::invalid_argument("NOTEQUAL constraint between variables with non ENCODED_BINARY domain types");
+                    }
+                    row[pcp_to_three_csp_index.at(var1)] = 1;
+                    row[pcp_to_three_csp_index.at(var2)] = 1;
+                    row[row.size() - 2] = 1;
+                    row.back() = 1; // constant 1 for inequality
                     break;
                 case constraint::BitConstraint::FIRST_BIT_EQUAL:
-                    row[var1 * 3] = 1;
-                    row[var2 * 3] = 1;
+                    row[pcp_to_three_csp_index.at(var1)] = 1;
+                    row[pcp_to_three_csp_index.at(var2)] = 1;
                     break;
                 case constraint::BitConstraint::SECOND_BIT_EQUAL:
-                    row[var1 * 3 + 1] = 1;
-                    row[var2 * 3 + 1] = 1;
+                    // it might be the case where the variable is encoded in 2 bits only, in which case there is no need for offset
+                    if (pcp.get_variable(var1).get_domain_type() == three_csp::Constraint::ENCODED_BINARY) {
+                        row[pcp_to_three_csp_index.at(var1)] = 1;
+                    } else {
+                        row[pcp_to_three_csp_index.at(var1) + 1] = 1;
+                    }
+                    if (pcp.get_variable(var2).get_domain_type() == three_csp::Constraint::ENCODED_BINARY) {
+                        row[pcp_to_three_csp_index.at(var2)] = 1;
+                    } else {
+                        row[pcp_to_three_csp_index.at(var2) + 1] = 1;
+                    }
                     break;
                 case constraint::BitConstraint::THIRD_BIT_EQUAL:
-                    row[var1 * 3 + 2] = 1;
-                    row[var2 * 3 + 2] = 1;
+                    // it might be the case where the variable is encoded in 2 bits only, in which case there is no need for offset
+                    if (pcp.get_variable(var1).get_domain_type() == three_csp::Constraint::ENCODED_BINARY) {
+                        row[pcp_to_three_csp_index.at(var1)] = 1;
+                    } else {
+                        row[pcp_to_three_csp_index.at(var1) + 2] = 1;
+                    }
+                    if (pcp.get_variable(var2).get_domain_type() == three_csp::Constraint::ENCODED_BINARY) {
+                        row[pcp_to_three_csp_index.at(var2)] = 1;
+                    } else {
+                        row[pcp_to_three_csp_index.at(var2) + 2] = 1;
+                    }
                     break;
-                // Note that NOTEQUAL constraint is only added between three bit encoded of 0 and 1, meaning all three bits must be different to qualify as NOTEQUAL
-                case constraint::BitConstraint::NOTEQUAL:
-                    row[var1 * 3] = 1;
-                    row[var1 * 3 + 1] = 1;
-                    row[var1 * 3 + 2] = 1;
-                    row[var2 * 3] = 1;
-                    row[var2 * 3 + 1] = 1;
-                    row[var2 * 3 + 2] = 1;
-                    row[0] = !row[0]; 
-                    row.back() = 1; // negation bit
-                    break;
-                case constraint::BitConstraint::ANY:
-                    // impossible case
+                default:
                     break;
             }
             constraint_matrix.push_back(std::move(row));
@@ -162,16 +151,15 @@ pcp::BitPCP Tester::buildBitPCP() {
 
     size_t zero_pos = used_positions[std::vector<bool>(original_size, 0)];
     for (const auto &[pos, idx] : used_positions) {
-        three_csp.add_binary_constraint(zero_pos, idx, constraint::BitConstraint::EQUAL);
+        if (idx != zero_pos) {
+            three_csp.add_binary_constraint(zero_pos, idx, constraint::BitConstraint::EQUAL);
+        }
     }
 
     std::uniform_int_distribution<size_t> dist(0, original_size - 1);
     // add linearity test to verify hadamard code encodes original variables correctly
     for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
         size_t idx = dist(constants::RANDOM_SEED);
-        if (binary_index_shift.find(idx) != binary_index_shift.end()) {
-            idx = binary_index_shift[idx];
-        }
         std::vector<bool> position1(original_size, 0);
         for (size_t j = 0; j < original_size; ++j) {
             position1[j] = bernoulli(constants::RANDOM_SEED);
@@ -256,7 +244,7 @@ pcp::BitPCP Tester::buildBitPCP() {
         );
     }
 
-    return three_csp.toBitPCP();
+    return three_csp.toBitPCP(pcp, three_csp_to_pcp_index, pcp_in_three_csp_size);
 }
 
 }

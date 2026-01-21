@@ -39,49 +39,7 @@ bool checkBitPCPCompleteness(const pcp::BitPCP &bitpcp) {
 }
 
 std::vector<std::function<void()>> test_cases = {
-    // Test 1: Simple case with two different colors
-    []() -> void {
-        pcpp::Tester tester(three_color::Color::RED, three_color::Color::GREEN);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is satisfiable
-        assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
-    },
-    // Test 2: Simple case with two different colors
-    []() -> void {
-        pcpp::Tester tester(three_color::Color::RED, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is satisfiable
-        assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
-    },
-    // Test 3: Simple case with two different colors
-    []() -> void {
-        pcpp::Tester tester(three_color::Color::GREEN, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is satisfiable
-        assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
-    },
-    // Test 4: Simple case with two same colors
-    []() -> void {
-        pcpp::Tester tester(three_color::Color::RED, three_color::Color::RED);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is not satisfiable
-        assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
-    },
-    // Test 5: Simple case with two same colors
-    []() -> void {
-        pcpp::Tester tester(three_color::Color::GREEN, three_color::Color::GREEN);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is not satisfiable
-        assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
-    },
-    // Test 6: Simple case with two same colors
-    []() -> void {
-        pcpp::Tester tester(three_color::Color::BLUE, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is not satisfiable
-        assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
-    },
-    // Test 7: Test BitPCP completeness with a satisfiable BitPCP
+    // Test 1: Test BitPCP completeness with a satisfiable BitPCP
     []() -> void {
         // Create a simple satisfiable BitPCP: two variables with NOTEQUAL constraint
         pcp::BitPCP bitpcp(2);
@@ -92,7 +50,7 @@ std::vector<std::function<void()>> test_cases = {
         bool is_complete = checkBitPCPCompleteness(bitpcp);
         assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
     },
-    // Test 8: Test BitPCP completeness with a satisfiable BitPCP
+    // Test 2: Test BitPCP completeness with a satisfiable BitPCP
     []() -> void {
         // Create a BitPCP with EQUAL constraint that is satisfied
         pcp::BitPCP bitpcp(2);
@@ -103,7 +61,7 @@ std::vector<std::function<void()>> test_cases = {
         bool is_complete = checkBitPCPCompleteness(bitpcp);
         assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
     },
-    // Test 9: Test BitPCP completeness with a satisfiable BitPCP with bit-specific constraints
+    // Test 3: Test BitPCP completeness with a satisfiable BitPCP with bit-specific constraints
     []() -> void {
         // Create a BitPCP with FIRST_BIT_EQUAL constraint that is satisfied
         pcp::BitPCP bitpcp(3);
@@ -116,7 +74,7 @@ std::vector<std::function<void()>> test_cases = {
         bool is_complete = checkBitPCPCompleteness(bitpcp);
         assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
     },
-    // Test 10: Test BitPCP completeness with an unsatisfiable BitPCP
+    // Test 4: Test BitPCP completeness with an unsatisfiable BitPCP
     []() -> void {
         // Create an unsatisfiable BitPCP: two equal variables with NOTEQUAL constraint
         pcp::BitPCP bitpcp(2);
@@ -127,7 +85,7 @@ std::vector<std::function<void()>> test_cases = {
         bool is_complete = checkBitPCPCompleteness(bitpcp);
         assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
     },
-    // Test 11: Test BitPCP completeness with an unsatisfiable BitPCP
+    // Test 5: Test BitPCP completeness with an unsatisfiable BitPCP
     []() -> void {
         // Create an unsatisfiable BitPCP: two different variables with EQUAL constraint
         pcp::BitPCP bitpcp(2);
@@ -138,7 +96,7 @@ std::vector<std::function<void()>> test_cases = {
         bool is_complete = checkBitPCPCompleteness(bitpcp);
         assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
     },
-    // Test 12: Test BitPCP completeness with an unsatisfiable BitPCP with bit-specific constraints
+    // Test 6: Test BitPCP completeness with an unsatisfiable BitPCP with bit-specific constraints
     []() -> void {
         // Create an unsatisfiable BitPCP: FIRST_BIT_EQUAL constraint violated
         pcp::BitPCP bitpcp(2);

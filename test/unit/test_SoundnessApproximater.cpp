@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <functional>
 #include <iostream>
 #include <vector>
@@ -7,7 +8,6 @@
 #include "pcp/BitPCP.hpp"
 #include "pcp/BitDomain.hpp"
 #include "constraint/BitConstraint.hpp"
-#include <cmath>
 
 std::vector<std::function<void()>> test_cases = {
     []() {

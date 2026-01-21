@@ -37,16 +37,8 @@ void merge_variables(
 
             // merge the variables in DSU
             dsu.merge(
-                offsets[u1] + pos1 * 3,
-                offsets[u2] + pos2 * 3
-            );
-            dsu.merge(
-                offsets[u1] + pos1 * 3 + 1,
-                offsets[u2] + pos2 * 3 + 1
-            );
-            dsu.merge(
-                offsets[u1] + pos1 * 3 + 2,
-                offsets[u2] + pos2 * 3 + 2
+                offsets[u1] + pos1,
+                offsets[u2] + pos2
             );
         }
     }
@@ -143,11 +135,9 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 
     for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(pcp.get_size()); ++u) {
         std::vector<pcp::Variable> neighbors = pcp.get_neighbors(u, constants::POWERING_RADIUS);
-#ifdef ENFORCE_CONSISTENCY
         for (size_t i = 0; i < neighbors.size(); ++i) {
             occuring_location[neighbors[i]].emplace_back(u, i);
         }
-#endif
         pcp::BitPCP powering_u = pcp.build_sub_pcp(neighbors);
         pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();
         reduced_pcps.push_back(reduced_pcp);

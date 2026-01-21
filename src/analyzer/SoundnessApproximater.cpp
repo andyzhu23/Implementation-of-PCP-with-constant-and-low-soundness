@@ -57,6 +57,8 @@ double approximate_soundness(pcp::BitPCP pcp) {
 
     double T = startingT;
 
+    std::cout << "Initial satisfied: " << current_satisfied << " out of " << m << std::endl;
+
     while (T > Tmin) {
         // std::cout << "Temperature: " << T << ", Current satisfied: " << current_satisfied << ", Best satisfied: " << best_satisfied << std::endl;
         for (size_t it = 0; it < iter_per_temp; ++it) {

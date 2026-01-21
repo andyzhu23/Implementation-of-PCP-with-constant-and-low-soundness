@@ -4,8 +4,8 @@
  * @version 1.0.0
  */
 
-#ifndef TESTER_HPP
-#define TESTER_HPP
+#ifndef THREE_COLOR_TESTER_HPP
+#define THREE_COLOR_TESTER_HPP
 
 #include <chrono>
 #include <vector>
@@ -20,23 +20,20 @@
 
 namespace pcpp {
 
-class Tester {
+const int THREE_COLOR_ASSIGNMENT = 2 + 2 + 2 * 2 + 1; // 2 bits per color, 4 products, and 1 negation bit
+
+class ThreeColorTester {
 public:
 
-    Tester(const pcp::BitPCP &powering_pcp);
+    ThreeColorTester(three_color::Color u, three_color::Color v);
 
     // Build a BitPCP from the constraint matrix and hadamard code
     pcp::BitPCP buildBitPCP();
 
 private:
-    pcp::BitPCP pcp;
     three_csp::ThreeCSP three_csp;
     Hadamard hadamard;
     std::vector<std::vector<bool>> constraint_matrix;
-    // Map from three_csp variable index to (pcp variable index, bit index), nullopt for encoding binary variables
-    std::unordered_map<size_t, std::pair<size_t, std::optional<size_t>>> three_csp_to_pcp_index;
-    std::unordered_map<size_t, size_t> pcp_to_three_csp_index;
-    size_t pcp_in_three_csp_size;
 };
 
 }

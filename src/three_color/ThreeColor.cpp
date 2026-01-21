@@ -1,5 +1,5 @@
 #include "three_color/ThreeColor.hpp"
-#include "pcpp/Tester.hpp"
+#include "pcpp/ThreeColorTester.hpp"
 #include "util/disjoint_set_union.hpp"
 
 void merge_variables(
@@ -122,7 +122,7 @@ pcp::BitPCP ThreeColor::to_BitPCP() const {
     std::vector<std::vector<std::pair<size_t, int>>> occuring_locations(colors.size());
     for (Node u = 0; u < colors.size(); ++u) {
         for (Node v : adj_list[u]) if (v > u) {
-            pcpp::Tester tester(colors[u], colors[v]);
+            pcpp::ThreeColorTester tester(colors[u], colors[v]);
             pcp::BitPCP tmp = tester.buildBitPCP();
             // reduce unnecessary variables
             edge_pcps.push_back(std::move(tmp));

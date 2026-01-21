@@ -27,6 +27,12 @@ public:
 
     pcp::BitPCP toBitPCP() const;
 
+    pcp::BitPCP toBitPCP(
+        pcp::BitPCP original_pcp, 
+        const std::unordered_map<size_t, std::pair<size_t, std::optional<size_t>>> &three_csp_to_pcp_index,
+        size_t pcp_in_three_csp_size
+    ) const;
+
 private:
     std::vector<Domain> assignment;
     std::vector<std::tuple<size_t, size_t, size_t, Constraint>> ternary_constraints;
