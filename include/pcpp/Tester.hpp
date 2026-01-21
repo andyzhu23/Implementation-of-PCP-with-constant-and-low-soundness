@@ -11,6 +11,7 @@
 #include <vector>
 #include <random>
 #include <unordered_map>
+#include <optional>
 
 #include "pcp/BitPCP.hpp"
 #include "constraint/BitConstraint.hpp"

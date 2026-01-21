@@ -2,6 +2,7 @@
 #define THREECSP_HPP
 
 #include <vector>
+#include <optional>
 
 #include "pcp/BitPCP.hpp"
 #include "constraint/BitConstraint.hpp"
