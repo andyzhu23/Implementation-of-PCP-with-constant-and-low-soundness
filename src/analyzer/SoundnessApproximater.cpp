@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "core/core.hpp"
+#include "constants.hpp"
 #include "analyzer/SoundnessApproximater.hpp"
 #include "constraint/BitConstraint.hpp"
 

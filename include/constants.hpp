@@ -17,7 +17,7 @@ const int LINEARITY_TEST_REPETITION = 1;
 #else
 const int LINEARITY_TEST_REPETITION = 1;
 #endif
-const int POWERING_RADIUS = 5;
+const int POWERING_RADIUS = 6;
 const int EXPANDING_COEFFICIENT = 1;
 const int DEGREE = 5;
 const unsigned int SAFE_THREAD_NUMBER = 4;

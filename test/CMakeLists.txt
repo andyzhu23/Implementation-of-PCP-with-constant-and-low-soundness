@@ -28,6 +28,7 @@ add_executable(
     test_SoundnessApproximater
     ./unit/test_SoundnessApproximater.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
+    ../../src/core/reduce_degree.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/constraint/BitConstraint.cpp

@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "three_csp/ThreeCSP.hpp"
 #include "pcp/BitDomain.hpp"
 
