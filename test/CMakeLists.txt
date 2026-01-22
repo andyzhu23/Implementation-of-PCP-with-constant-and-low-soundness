@@ -43,7 +43,6 @@ add_executable(
     ../../src/pcp/BitDomain.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
-
     ../../src/constraint/BitConstraint.cpp
  
 )
