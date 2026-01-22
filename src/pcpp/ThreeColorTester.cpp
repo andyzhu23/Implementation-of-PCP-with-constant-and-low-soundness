@@ -92,7 +92,7 @@ pcp::BitPCP ThreeColorTester::buildBitPCP() {
 
     std::uniform_int_distribution<size_t> dist(0, original_size - 1);
     // add linearity test to verify hadamard code encodes original variables correctly
-    for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
+    for (size_t _ = 0; _ < constants::CONSISTENCY_TEST_REPETITION; ++_) {
         size_t idx = dist(constants::RANDOM_SEED);
         std::vector<bool> position1(original_size, 0);
         for (size_t j = 0; j < original_size; ++j) {

@@ -10,7 +10,7 @@
 #include "constraint/BitConstraint.hpp"
 
 std::vector<std::function<void()>> test_cases = {
-    []() {
+    []() -> void {
         using namespace pcp;
         using namespace three_csp;
         // Single variable, trivially satisfiable
@@ -19,7 +19,7 @@ std::vector<std::function<void()>> test_cases = {
         double res1 = analyzer::approximate_soundness(p1);
         assert(std::fabs(res1 - 1.0) < 1e-9);
     },
-    []() {
+    []() -> void {
         using namespace pcp;
         using namespace three_csp;
         using namespace constraint;
@@ -33,7 +33,7 @@ std::vector<std::function<void()>> test_cases = {
         double res2 = analyzer::approximate_soundness(p2);
         assert(std::fabs(res2 - 1.0) < 1e-9);
     },
-    []() {
+    []() -> void {
         using namespace pcp;
         using namespace three_csp;
         using namespace constraint;

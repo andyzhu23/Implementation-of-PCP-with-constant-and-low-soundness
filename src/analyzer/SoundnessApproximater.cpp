@@ -114,6 +114,8 @@ double approximate_soundness_via_random_subset(pcp::BitPCP &pcp) {
 
     double accumulated_soundness = 0.0;
 
+    std::cout << pcp.get_size() << std::endl;
+
     for (int _ = 0; _ < constants::QUERY_SAMPLING_REPETITION; ++_) {
         std::shuffle(all_vars.begin(), all_vars.end(), constants::RANDOM_SEED);
         pcp::BitPCP sub_pcp;
