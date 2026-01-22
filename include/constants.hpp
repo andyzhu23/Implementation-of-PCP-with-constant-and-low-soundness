@@ -23,6 +23,10 @@ const int DEGREE = 5;
 const unsigned int SAFE_THREAD_NUMBER = 4;
 const pcp::Variable PCPVARIABLE_ONE = 1;
 
+const int QUERY_SAMPLING_REPETITION = 10;
+
+const int SUBSET_SIZE = 1000;
+
 const std::function<int(size_t)> DEFAULT_ITERATION_FUNC = [](size_t edge_size) {
     return static_cast<int>(std::ceil(std::log10(edge_size)));
 };

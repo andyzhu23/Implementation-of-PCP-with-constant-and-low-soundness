@@ -5,6 +5,7 @@
 
 #include "pcp/BitPCP.hpp"
 #include "pcp/BitDomain.hpp"
+#include "constants.hpp"
 
 namespace pcp {
 

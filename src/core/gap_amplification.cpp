@@ -3,6 +3,8 @@
 #include <vector>
 #include <mutex>
 
+#include <iostream>
+
 #include "core/core.hpp"
 #include "constants.hpp"
 #include "pcpp/Tester.hpp"
