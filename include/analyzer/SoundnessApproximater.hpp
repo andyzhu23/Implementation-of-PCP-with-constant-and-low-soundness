@@ -57,7 +57,9 @@ const std::map<three_csp::Constraint, std::vector<pcp::BitDomain>> possible_valu
     }
 };
 
-double approximate_soundness(pcp::BitPCP pcp); 
+double approximate_soundness(pcp::BitPCP &pcp); 
+
+double approximate_soundness_via_random_subset(pcp::BitPCP &pcp);
 
 }
 

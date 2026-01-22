@@ -11,7 +11,7 @@
 
 namespace analyzer {
 
-double approximate_soundness(pcp::BitPCP pcp) {
+double approximate_soundness(pcp::BitPCP &pcp) {
     // Gather constraints list
     const auto &constraints_list = pcp.get_constraints_list();
     size_t m = constraints_list.size();
@@ -102,7 +102,36 @@ double approximate_soundness(pcp::BitPCP pcp) {
     }
 
     return static_cast<double>(best_satisfied) / static_cast<double>(m);
-    
 }
+
+double approximate_soundness_via_random_subset(pcp::BitPCP &pcp) {
+    std::vector<pcp::Variable> all_vars(pcp.get_size());
+    std::iota(all_vars.begin(), all_vars.end(), 0);
+
+    double accumulated_soundness = 0.0;
+
+    for (int _ = 0; _ < constants::QUERY_SAMPLING_REPETITION; ++_) {
+        std::shuffle(all_vars.begin(), all_vars.end(), constants::RANDOM_SEED);
+        pcp::BitPCP sub_pcp;
+        std::map<pcp::Variable, pcp::Variable> var_mapping;
+        size_t subset_size = std::min<size_t>(constants::SUBSET_SIZE, pcp.get_size());
+        for (size_t i = 0; i < subset_size; ++i) {
+            pcp::Variable old_var = all_vars[i];
+            pcp::BitDomain val = pcp.get_variable(old_var);
+            sub_pcp.add_variable(val);
+            var_mapping[old_var] = i;
+        }
+        // add constraints
+        for (const auto &[var1, var2, constraint] : pcp.get_constraints_list()) {
+            if (var_mapping.find(var1) != var_mapping.end() && var_mapping.find(var2) != var_mapping.end()) {
+                sub_pcp.add_constraint(var_mapping[var1], var_mapping[var2], constraint);
+            }
+        }
+        double soundness_estimate = approximate_soundness(sub_pcp);
+        accumulated_soundness += soundness_estimate;
+    }
+    return accumulated_soundness / static_cast<double>(constants::QUERY_SAMPLING_REPETITION);
+}
+
 
 }
