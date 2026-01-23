@@ -124,7 +124,7 @@ std::vector<std::function<void()>> test_cases = {
 };
 
 int main() {
-    std::cout << "Running test_soundness_amplification.cpp" << std::endl;
+    std::cout << "Running test_gap_amplification_completeness.cpp" << std::endl;
     for (size_t i = 0; i < test_cases.size(); ++i) {
         std::cout << "Running test case: " << (i + 1) << std::endl;
         test_cases[i]();

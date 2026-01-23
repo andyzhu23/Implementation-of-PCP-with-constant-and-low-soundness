@@ -1,9 +1,9 @@
-
 #ifndef BITPCP_HPP
 #define BITPCP_HPP
 
 #include <functional>
 #include <vector>
+#include <iostream>
 
 #include "constraint/BitConstraint.hpp"
 #include "Aliases.hpp"
@@ -55,6 +55,9 @@ public:
 
     // getting rid of variables with no constraints running through it
     void clean();
+
+    // Overload output stream operator for easy printing for debugging
+    friend std::ostream& operator<<(std::ostream &os, const BitPCP &bitpcp);
 
 private:
     size_t size;

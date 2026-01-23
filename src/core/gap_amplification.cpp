@@ -8,7 +8,6 @@
 #include "pcpp/Tester.hpp"
 #include "util/disjoint_set_union.hpp"
 
-#include <iostream>
 #include <cassert>
 
 void merge_variables(
@@ -138,6 +137,8 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
     to_expander(pcp, constants::EXPANDING_COEFFICIENT);
     pcp = reduce_degree(pcp, constants::DEGREE);
+    size_t original_size = pcp.get_size();
+    std::vector<std::vector<std::pair<pcp::Variable, size_t>>> occuring_location(original_size);
 
     std::vector<pcp::BitPCP> reduced_pcps;
 
@@ -152,7 +153,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
     }
     pcp = pcp::merge_BitPCPs(reduced_pcps);
 
-    merge_variables(pcp, occuring_location, reduced_pcps);
+    merge_variables(original_size, pcp, occuring_location, reduced_pcps);
     pcp.clean();
     return pcp;
 }

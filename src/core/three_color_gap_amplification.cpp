@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 #include <functional>
 
 #include "core/core.hpp"
