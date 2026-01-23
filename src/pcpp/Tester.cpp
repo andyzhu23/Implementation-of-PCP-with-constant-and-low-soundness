@@ -76,7 +76,6 @@ Tester::Tester(const pcp::BitPCP &pcp) {
     three_csp.add_variable(!three_csp.get_variable(0)); // negation bit for first variable
 
     three_csp.add_binary_constraint(0, three_csp.size() - 1, constraint::BitConstraint::NOTEQUAL);
-
     hadamard = Hadamard(three_csp.get_assignment());
     // Build constraint matrix from BitPCP constraints
     for (const auto &[var1, var2, bit_constraint] : pcp.get_constraints_list()) {
@@ -209,27 +208,10 @@ pcp::BitPCP Tester::buildBitPCP() {
             position2[j] = bernoulli(constants::RANDOM_SEED);
         }
 
-        // compute their differences to find third position to query
-        std::vector<bool> *minuend, *subtrahend;
-        if (position1 < position2) {
-            minuend = &position2;
-            subtrahend = &position1;
-        } else {
-            minuend = &position1;
-            subtrahend = &position2;
-        }
-
-        // set up position3 = minuend - subtrahend
-        std::vector<bool> position3 = *subtrahend;
-        // convert position3 to 2's complement
-        // step 1: bitwise negation
-        position3.flip();
-        // step 2: add 1 to carry
-        bool carry = 1;
+        // position3 is the xor sum of position1 and position2
+        std::vector<bool> position3(original_size, 0);
         for (size_t j = 0; j < original_size; ++j) {
-            bool tmp = position3[j];
-            position3[j] = position3[j] ^ minuend->at(j) ^ carry;
-            carry = minuend->at(j) & tmp;
+            position3[j] = position1[j] ^ position2[j];
         }
 
         // ensure all three positions are added to three_csp
