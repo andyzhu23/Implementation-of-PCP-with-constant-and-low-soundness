@@ -56,10 +56,10 @@ def main():
     print(f"mean of amplified gaps (test 1): {mean1}")
 
     # bootstrap CIs for the difference in means (test1 - other)
-    diff_ci_1_vs_4 = bootstrap_diff_confidence_interval(amplified_gaps[0], amplified_gaps[3], alpha=0.05, n_resamples=10000)
-    diff_ci_1_vs_10 = bootstrap_diff_confidence_interval(amplified_gaps[0], amplified_gaps[9], alpha=0.05, n_resamples=10000)
-    print(f"95% CI for mean difference (test1 - test4): ({diff_ci_1_vs_4[0]:.5f}, {diff_ci_1_vs_4[1]:.5f})")
-    print(f"95% CI for mean difference (test1 - test10): ({diff_ci_1_vs_10[0]:.5f}, {diff_ci_1_vs_10[1]:.5f})")
+    diff_ci_1_vs_4 = bootstrap_diff_confidence_interval(amplified_gaps[0], amplified_gaps[1], alpha=0.05, n_resamples=10000)
+    diff_ci_1_vs_10 = bootstrap_diff_confidence_interval(amplified_gaps[0], amplified_gaps[2], alpha=0.05, n_resamples=10000)
+    print(f"95% CI for mean difference (test1 - test2): ({diff_ci_1_vs_4[0]:.5f}, {diff_ci_1_vs_4[1]:.5f})")
+    print(f"95% CI for mean difference (test1 - test3): ({diff_ci_1_vs_10[0]:.5f}, {diff_ci_1_vs_10[1]:.5f})")
 
 if __name__ == "__main__":
     main()

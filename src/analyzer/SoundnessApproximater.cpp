@@ -4,14 +4,13 @@
 #include <random>
 #include <map>
 
-#include <iostream>
-
+#include "constants.hpp"
 #include "analyzer/SoundnessApproximater.hpp"
 #include "constraint/BitConstraint.hpp"
 
 namespace analyzer {
 
-double approximate_soundness(pcp::BitPCP pcp) {
+double approximate_soundness(pcp::BitPCP &pcp) {
     // Gather constraints list
     const auto &constraints_list = pcp.get_constraints_list();
     size_t m = constraints_list.size();
@@ -58,7 +57,6 @@ double approximate_soundness(pcp::BitPCP pcp) {
     double T = startingT;
 
     while (T > Tmin) {
-        // std::cout << "Temperature: " << T << ", Current satisfied: " << current_satisfied << ", Best satisfied: " << best_satisfied << std::endl;
         for (size_t it = 0; it < iter_per_temp; ++it) {
             // pick random variable
             pcp::Variable v = var_dist(constants::RANDOM_SEED);
@@ -102,7 +100,44 @@ double approximate_soundness(pcp::BitPCP pcp) {
     }
 
     return static_cast<double>(best_satisfied) / static_cast<double>(m);
-    
 }
+
+double approximate_soundness_via_random_subset(pcp::BitPCP &pcp) {
+    auto constraint_list = pcp.get_constraints_list();
+
+    double accumulated_soundness = 0.0;
+
+    for (int _ = 0; _ < constants::QUERY_SAMPLING_REPETITION; ++_) {
+        std::shuffle(constraint_list.begin(), constraint_list.end(), constants::RANDOM_SEED);
+        pcp::BitPCP sub_pcp;
+        std::map<pcp::Variable, pcp::Variable> var_mapping;
+        size_t subset_size = std::min<size_t>(constants::SUBSET_SIZE, constraint_list.size());
+        for (size_t i = 0; i < subset_size; ++i) {
+            auto [old_var1, old_var2, old_constraint] = constraint_list[i];
+            if (var_mapping.find(old_var1) == var_mapping.end()) {
+                pcp::BitDomain val = pcp.get_variable(old_var1);
+                pcp::Variable new_var = static_cast<pcp::Variable>(sub_pcp.get_size());
+                sub_pcp.add_variable(val);
+                var_mapping[old_var1] = new_var;
+            }
+            if (var_mapping.find(old_var2) == var_mapping.end()) {
+                pcp::BitDomain val = pcp.get_variable(old_var2);
+                pcp::Variable new_var = static_cast<pcp::Variable>(sub_pcp.get_size());
+                sub_pcp.add_variable(val);
+                var_mapping[old_var2] = new_var;
+            }
+            sub_pcp.add_constraint(
+                var_mapping[old_var1],
+                var_mapping[old_var2],
+                old_constraint
+            );
+        }
+
+        double soundness_estimate = approximate_soundness(sub_pcp);
+        accumulated_soundness += soundness_estimate;
+    }
+    return accumulated_soundness / static_cast<double>(constants::QUERY_SAMPLING_REPETITION);
+}
+
 
 }

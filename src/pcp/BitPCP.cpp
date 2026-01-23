@@ -2,6 +2,7 @@
 #include <queue>
 #include <stdexcept>
 #include <unordered_set>
+#include <string>
 
 #include "pcp/BitPCP.hpp"
 #include "pcp/BitDomain.hpp"
@@ -160,6 +161,69 @@ void BitPCP::clean() {
 
     // reset current object
     *this = std::move(new_bitpcp);
+}
+
+std::ostream& operator<<(std::ostream &os, const BitPCP &bitpcp) {
+    os << "BitPCP with " << bitpcp.get_size() << " variables and " << bitpcp.get_constraints_list().size() << " constraints.\n";
+    os << "Variables:\n";
+    for (pcp::Variable i = 0; i < bitpcp.get_size(); ++i) {
+        os << "Variable " << (int)i << ": ";
+        const BitDomain &bd = bitpcp.get_variable(i);
+        os << "[";
+        for (size_t bit_idx = 0; bit_idx < 3; ++bit_idx) {
+            os << bd[bit_idx];
+            if (bit_idx < 2) os << ", ";
+        }
+        std::string domain_type_str;
+        switch (bd.get_domain_type()) {
+            case three_csp::Constraint::ANY:
+                domain_type_str = "ANY";
+                break;
+            case three_csp::Constraint::PRODUCT:
+                domain_type_str = "PRODUCT";
+                break;
+            case three_csp::Constraint::SUM:
+                domain_type_str = "SUM";
+                break;
+            case three_csp::Constraint::ENCODED_BINARY:
+                domain_type_str = "ENCODED_BINARY";
+                break;
+            default:
+                domain_type_str = "UNKNOWN";
+                break;
+        }
+        os << "], Domain Type: " << domain_type_str << "\n";
+    }
+    os << "Constraints:\n";
+    for (const auto& [u, v, c] : bitpcp.get_constraints_list()) {
+        std::string constraint_type_string;
+        switch (c) {
+            case constraint::BitConstraint::ANY:
+                constraint_type_string = "ANY";
+                break;
+            case constraint::BitConstraint::EQUAL:
+                constraint_type_string = "EQUAL";
+                break;
+            case constraint::BitConstraint::NOTEQUAL:
+                constraint_type_string = "NOTEQUAL";
+                break;
+            case constraint::BitConstraint::FIRST_BIT_EQUAL:
+                constraint_type_string = "FIRST_BIT_EQUAL";
+                break;
+            case constraint::BitConstraint::SECOND_BIT_EQUAL:
+                constraint_type_string = "SECOND_BIT_EQUAL";
+                break;
+            case constraint::BitConstraint::THIRD_BIT_EQUAL:
+                constraint_type_string = "THIRD_BIT_EQUAL";
+                break;
+            default:
+                constraint_type_string = "UNKNOWN";
+                break;
+        }
+        os << "Constraint between Variable " << (int)u << " and Variable " << (int)v 
+           << ": Type " << constraint_type_string << "\n";
+    }
+    return os;
 }
 
 BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps) {

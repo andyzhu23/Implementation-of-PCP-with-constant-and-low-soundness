@@ -43,7 +43,6 @@ add_executable(
     ../../src/pcp/BitDomain.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
-
     ../../src/constraint/BitConstraint.cpp
  
 )
@@ -221,6 +220,7 @@ if(BUILD_E2E_TESTS)
     )
     add_test(NAME Test_Three_Color_Gap_Amplification_Amplification COMMAND test_three_color_gap_amplification_amplification)
     target_include_directories(test_three_color_gap_amplification_amplification PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    # target_compile_definitions(test_three_color_gap_amplification_amplification PRIVATE ENFORCE_CONSISTENCY)
 endif()
 
 if(BUILD_E2E_TESTS)
