@@ -14,7 +14,7 @@ const double Tmin = 1e-4;
 // cooling rate
 const double alpha = 0.995;
 // iterations per temperature
-const size_t iter_per_temp = 10000;
+const size_t iter_per_temp = 1000000;
 // Map from constraint type to possible values in its domain
 const std::map<three_csp::Constraint, std::vector<pcp::BitDomain>> possible_values = {
     {
