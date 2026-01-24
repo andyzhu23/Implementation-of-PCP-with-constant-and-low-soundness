@@ -127,11 +127,19 @@ pcp::BitPCP Tester::buildBitPCP() {
     size_t original_size = three_csp.size();
 
     std::unordered_map<std::vector<bool>, size_t> used_positions;
+    std::vector<std::vector<bool>> used_positions_list;
 
     used_positions[std::vector<bool>(original_size, 0)] = three_csp.size();
-    three_csp.add_variable(hadamard.query(std::vector<bool>(original_size, 0)));
-    
 
+    auto add_position = [&](const std::vector<bool>& position) {
+        if (used_positions.find(position) == used_positions.end()) {
+            used_positions[position] = three_csp.size();
+            three_csp.add_variable(hadamard.query(position));
+            used_positions_list.push_back(position);
+        }
+    };
+
+    three_csp.add_variable(hadamard.query(std::vector<bool>(original_size, 0)));
     std::uniform_int_distribution<pcp::Variable> bernoulli(0, 1);
 
     // add constraints from original constraint matrix
@@ -152,11 +160,7 @@ pcp::BitPCP Tester::buildBitPCP() {
                 }
             }
         }
-
-        if (used_positions.find(position) == used_positions.end()) {
-            used_positions[position] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position));
-        }
+        add_position(position);
     }
 
     size_t zero_pos = used_positions[std::vector<bool>(original_size, 0)];
@@ -171,23 +175,15 @@ pcp::BitPCP Tester::buildBitPCP() {
         if (binary_index_shift.find(idx) != binary_index_shift.end()) {
             idx = binary_index_shift[idx];
         }
-        std::vector<bool> position1(original_size, 0);
-        for (size_t j = 0; j < original_size; ++j) {
-            position1[j] = bernoulli(constants::RANDOM_SEED);
-        }
+
+        std::uniform_int_distribution<size_t> dist(0, used_positions_list.size() - 1);
+        std::vector<bool> position1 = used_positions_list[dist(constants::RANDOM_SEED)];
 
         std::vector<bool> position2 = position1;
         position2[idx] = !position2[idx];
 
-        if (used_positions.find(position1) == used_positions.end()) {
-            used_positions[position1] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position1));
-        }
-
-        if (used_positions.find(position2) == used_positions.end()) {
-            used_positions[position2] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position2));
-        }
+        add_position(position1);
+        add_position(position2);
 
         three_csp.add_ternary_constraint(
             idx,
@@ -199,14 +195,14 @@ pcp::BitPCP Tester::buildBitPCP() {
 
     // add linearity test to ensure hadamard code is linear
     for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
-        std::vector<bool> position1(original_size, 0);
-        for (size_t j = 0; j < original_size; ++j) {
-            position1[j] = bernoulli(constants::RANDOM_SEED);
-        }
-        std::vector<bool> position2(original_size, 0);
-        for (size_t j = 0; j < original_size; ++j) {
-            position2[j] = bernoulli(constants::RANDOM_SEED);
-        }
+
+        // only add positions that are already used for better coverage
+        std::uniform_int_distribution<size_t> dist(0, used_positions_list.size() - 1);
+
+        std::vector<bool> position1 = used_positions_list[dist(constants::RANDOM_SEED)];
+
+        std::vector<bool> position2 = used_positions_list[dist(constants::RANDOM_SEED)];
+
 
         // position3 is the xor sum of position1 and position2
         std::vector<bool> position3(original_size, 0);
@@ -215,20 +211,9 @@ pcp::BitPCP Tester::buildBitPCP() {
         }
 
         // ensure all three positions are added to three_csp
-        if (used_positions.find(position1) == used_positions.end()) {
-            used_positions[position1] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position1));
-        }
-
-        if (used_positions.find(position2) == used_positions.end()) {
-            used_positions[position2] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position2));
-        }
-
-        if (used_positions.find(position3) == used_positions.end()) {
-            used_positions[position3] = three_csp.size();
-            three_csp.add_variable(hadamard.query(position3));
-        }
+        add_position(position1);
+        add_position(position2);
+        add_position(position3);
 
         three_csp.add_ternary_constraint(
             used_positions[position1],
