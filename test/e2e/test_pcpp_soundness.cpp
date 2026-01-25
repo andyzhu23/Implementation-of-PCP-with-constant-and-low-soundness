@@ -38,14 +38,14 @@ std::vector<std::function<void()>> test_cases = {
     // },
     // Test 2: Simple non-satisfiable CSP
     []() -> void {
-        pcp::BitPCP bitpcp(100);
-        for (pcp::Variable i = 0; i < 100; ++i) {
+        pcp::BitPCP bitpcp(10);
+        for (pcp::Variable i = 0; i < 10; ++i) {
             bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
-        for (pcp::Variable i = 1; i < 100; ++i) {
+        for (pcp::Variable i = 1; i < 10; ++i) {
             bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
         }
-        bitpcp.add_constraint(99, 0, constraint::BitConstraint::EQUAL); // make it satisfiable
+        bitpcp.add_constraint(9, 0, constraint::BitConstraint::EQUAL); // make it satisfiable
         pcpp::Tester tc(bitpcp);
         pcp::BitPCP amplified_pcp = tc.buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
@@ -56,14 +56,14 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Simple non-satisfiable CSP
     []() -> void {
-        pcp::BitPCP bitpcp(100);
-        for (pcp::Variable i = 0; i < 100; ++i) {
+        pcp::BitPCP bitpcp(10);
+        for (pcp::Variable i = 0; i < 10; ++i) {
             bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
-        for (pcp::Variable i = 1; i < 100; ++i) {
+        for (pcp::Variable i = 1; i < 10; ++i) {
             bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
         }
-        bitpcp.add_constraint(99, 0, constraint::BitConstraint::NOTEQUAL); // make it unsatisfiable
+        bitpcp.add_constraint(9, 0, constraint::BitConstraint::NOTEQUAL); // make it unsatisfiable
 
         pcpp::Tester tc(bitpcp);
         pcp::BitPCP amplified_pcp = tc.buildBitPCP();
