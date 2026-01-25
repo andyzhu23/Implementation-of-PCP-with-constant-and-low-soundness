@@ -21,32 +21,33 @@ std::vector<std::function<void()>> test_cases = {
         
     //     std::cout << "Approximated amplified gap: " << 1 - amplified_soundness << std::endl;
     // },
-    // // Test 1: Simple non-satisfiable CSP
-    // []() -> void {
-    //     pcp::BitPCP bitpcp(2);
-    //     bitpcp.add_constraint(1, 0, constraint::BitConstraint::EQUAL); 
-    //     bitpcp.add_constraint(1, 0, constraint::BitConstraint::NOTEQUAL); // make it unsatisfiable
+    // Test 1: Simple non-satisfiable CSP
+    []() -> void {
+        pcp::BitPCP bitpcp(2);
+        bitpcp.add_constraint(1, 0, constraint::BitConstraint::EQUAL); 
+        bitpcp.add_constraint(1, 0, constraint::BitConstraint::NOTEQUAL); // make it unsatisfiable
 
-    //     pcpp::Tester tester(bitpcp);
-    //     pcp::BitPCP amplified_pcp = tester.buildBitPCP();
+        pcpp::Tester tester(bitpcp);
+        pcp::BitPCP amplified_pcp = tester.buildBitPCP();
 
-    //     double original_soundness = analyzer::approximate_soundness_via_random_subset(bitpcp);
-    //     double amplified_soundness = analyzer::approximate_soundness_via_random_subset(amplified_pcp);
-    //     std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
+        double original_soundness = analyzer::approximate_soundness_via_random_subset(bitpcp);
+        double amplified_soundness = analyzer::approximate_soundness_via_random_subset(amplified_pcp);
+        std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
         
-    //     std::cout << "Approximated amplified gap: " << 1 - amplified_soundness << std::endl;
-    // },
+        std::cout << "Approximated amplified gap: " << 1 - amplified_soundness << std::endl;
+    },
     // Test 2: Simple non-satisfiable CSP
     []() -> void {
-        pcp::BitPCP bitpcp(100);
-        for (pcp::Variable i = 0; i < 100; ++i) {
+        pcp::BitPCP bitpcp(10);
+        for (pcp::Variable i = 0; i < 10; ++i) {
             bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
-        for (pcp::Variable i = 1; i < 100; ++i) {
+        for (pcp::Variable i = 1; i < 10; ++i) {
             bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
         }
-        bitpcp.add_constraint(99, 0, constraint::BitConstraint::EQUAL); // make it satisfiable
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
+        bitpcp.add_constraint(9, 0, constraint::BitConstraint::EQUAL); // make it satisfiable
+        pcpp::Tester tester(bitpcp);
+        pcp::BitPCP amplified_pcp = tester.buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double amplified_soundness = analyzer::approximate_soundness(amplified_pcp);
         std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
@@ -55,16 +56,17 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Simple non-satisfiable CSP
     []() -> void {
-        pcp::BitPCP bitpcp(100);
-        for (pcp::Variable i = 0; i < 100; ++i) {
+        pcp::BitPCP bitpcp(10);
+        for (pcp::Variable i = 0; i < 10; ++i) {
             bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
-        for (pcp::Variable i = 1; i < 100; ++i) {
+        for (pcp::Variable i = 1; i < 10; ++i) {
             bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
         }
-        bitpcp.add_constraint(99, 0, constraint::BitConstraint::NOTEQUAL); // make it unsatisfiable
+        bitpcp.add_constraint(9, 0, constraint::BitConstraint::NOTEQUAL); // make it unsatisfiable
 
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp);
+        pcpp::Tester tester(bitpcp);
+        pcp::BitPCP amplified_pcp = tester.buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double amplified_soundness = analyzer::approximate_soundness(amplified_pcp);
         std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;

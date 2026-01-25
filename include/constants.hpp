@@ -15,12 +15,12 @@ namespace constants {
 const int CONSTRAINT_COMBINATION_REPETITION = 70;
 const int CONSISTENCY_TEST_REPETITION = 70;
 const int LINEARITY_TEST_REPETITION = 70;
-const int POWERING_RADIUS = 10;
+const int POWERING_RADIUS = 5;
 const int DEGREE = 3;
 #else
-const int CONSTRAINT_COMBINATION_REPETITION = 20;
-const int CONSISTENCY_TEST_REPETITION = 1;
-const int LINEARITY_TEST_REPETITION = 1;
+const int CONSTRAINT_COMBINATION_REPETITION = 10;
+const int CONSISTENCY_TEST_REPETITION = 2;
+const int LINEARITY_TEST_REPETITION = 2;
 const int POWERING_RADIUS = 5;
 const int DEGREE = 3;
 #endif
@@ -28,7 +28,7 @@ const int EXPANDING_COEFFICIENT = 1;
 const unsigned int SAFE_THREAD_NUMBER = 4;
 const pcp::Variable PCPVARIABLE_ONE = 1;
 const int QUERY_SAMPLING_REPETITION = 100;
-const int SUBSET_SIZE = 1000;
+const int SUBSET_SIZE = 100;
 
 const std::function<int(size_t)> DEFAULT_ITERATION_FUNC = [](size_t edge_size) {
     return static_cast<int>(std::ceil(std::log10(edge_size)));

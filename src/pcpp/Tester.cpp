@@ -129,8 +129,6 @@ pcp::BitPCP Tester::buildBitPCP() {
     std::unordered_map<std::vector<bool>, size_t> used_positions;
     std::vector<std::vector<bool>> used_positions_list;
 
-    used_positions[std::vector<bool>(original_size, 0)] = three_csp.size();
-
     auto add_position = [&](const std::vector<bool>& position) {
         if (used_positions.find(position) == used_positions.end()) {
             used_positions[position] = three_csp.size();
@@ -138,6 +136,8 @@ pcp::BitPCP Tester::buildBitPCP() {
             used_positions_list.push_back(position);
         }
     };
+
+    add_position(std::vector<bool>(original_size, 0));
 
     three_csp.add_variable(hadamard.query(std::vector<bool>(original_size, 0)));
     std::uniform_int_distribution<pcp::Variable> bernoulli(0, 1);
@@ -176,8 +176,8 @@ pcp::BitPCP Tester::buildBitPCP() {
             idx = binary_index_shift[idx];
         }
 
-        std::uniform_int_distribution<size_t> dist(0, used_positions_list.size() - 1);
-        std::vector<bool> position1 = used_positions_list[dist(constants::RANDOM_SEED)];
+        std::uniform_int_distribution<size_t> position_dist(0, used_positions_list.size() - 1);
+        std::vector<bool> position1 = used_positions_list[position_dist(constants::RANDOM_SEED)];
 
         std::vector<bool> position2 = position1;
         position2[idx] = !position2[idx];
@@ -197,12 +197,11 @@ pcp::BitPCP Tester::buildBitPCP() {
     for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
 
         // only add positions that are already used for better coverage
-        std::uniform_int_distribution<size_t> dist(0, used_positions_list.size() - 1);
+        std::uniform_int_distribution<size_t> position_dist(0, used_positions_list.size() - 1);
 
-        std::vector<bool> position1 = used_positions_list[dist(constants::RANDOM_SEED)];
+        std::vector<bool> position1 = used_positions_list[position_dist(constants::RANDOM_SEED)];
 
-        std::vector<bool> position2 = used_positions_list[dist(constants::RANDOM_SEED)];
-
+        std::vector<bool> position2 = used_positions_list[position_dist(constants::RANDOM_SEED)];
 
         // position3 is the xor sum of position1 and position2
         std::vector<bool> position3(original_size, 0);
