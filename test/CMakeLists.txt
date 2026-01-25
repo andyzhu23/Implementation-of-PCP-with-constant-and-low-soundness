@@ -251,8 +251,8 @@ endif()
 
 if(BUILD_E2E_TESTS)
     add_executable(
-        test_gap_amplification_soundness
-        ./e2e/test_gap_amplification_soundness.cpp
+        test_pcpp_soundness
+        ./e2e/test_pcpp_soundness.cpp
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
         ../../src/three_csp/ThreeCSP.cpp
@@ -269,7 +269,7 @@ if(BUILD_E2E_TESTS)
         ../../src/analyzer/PCPAnalyzer.cpp
         ../../src/constraint/BitConstraint.cpp
     )
-    add_test(NAME Test_Gap_Amplification_Soundness COMMAND test_gap_amplification_soundness)
-    target_include_directories(test_gap_amplification_soundness PRIVATE ${CMAKE_SOURCE_DIR}/include)
-    target_compile_definitions(test_gap_amplification_soundness PRIVATE ENFORCE_CONSISTENCY)
+    add_test(NAME Test_Gap_Amplification_Soundness COMMAND test_pcpp_soundness)
+    target_include_directories(test_pcpp_soundness PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    target_compile_definitions(test_pcpp_soundness PRIVATE ENFORCE_CONSISTENCY)
 endif()
