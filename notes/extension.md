@@ -36,4 +36,11 @@ Let $T$ be the number of rounds we simulate for the protocol where $T = O(\log |
 For each row in the table of $u$, it would store the message it received from its neighbor $v$ for all time $t\le T$ for the specific perfect matching which is executed as a routing problem via its fault tolerant routing protocol.
 
 ### Folding
-For the original constraints $\phi(u, v)$, it is checked within the new graph $G$ as follow: In the corresponding perfect matching where $u$ is matched with $v$, $v$ must have received the value of $u$ at some time $t \le T$ when the routing is complete. We simply check if the value received and the value of $v$ stored satisfies the original constraint.
+For the original constraints $\phi(u, v)$, it is checked within the new graph $G$ as follow: In the corresponding perfect matching where $u$ is matched with $v$, $v$ must have received the value of $u$ at some time $t \le T$ when the routing is complete. We simply check if the value received and the value of $v$ stored satisfies the original constraint. Let $\psi$ be the new CSP.
+
+
+The resulting soundness of $\psi$ is $\le 1 - \frac{1}{|\text{path}|}$, but if the protocol is fault-tolerant, then $\psi$ will have soundness of a constant
+
+Fault-Tolerance: If at most 0.01-fractions of edges of $G$ behave adversarially, then at most 0.01-fractions of message-transmissions fail.
+
+This means we can reduce arbitary CSPs onto HDX if HDX has a fault-tolerant routing protocols.
