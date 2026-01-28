@@ -3,7 +3,7 @@
 Usage:
   python3 analyze_amplification.py --input PATH [--outdir DIR]
 Example:
-  python3 data_analysis/analyze_amplification.py --input build/test_three_color_gap_amplification_amplification_result.txt --outdir data_analysis/output
+  python3 data_analysis/analyze_amplification.py --input results/test_three_color_gap_amplification_amplification_result.txt --outdir data_analysis/output
 
 This script uses the non-interactive Agg backend and writes PNGs to the output
 directory (defaults to the script directory). It prints the saved filenames.

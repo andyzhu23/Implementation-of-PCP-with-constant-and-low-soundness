@@ -1,6 +1,7 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 #include "core/core.hpp"
@@ -9,9 +10,9 @@
 #include "analyzer/SoundnessApproximater.hpp"
 #include "pcpp/Tester.hpp"
 
-std::vector<std::function<void()>> test_cases = {
+std::vector<std::function<void(std::ofstream&)>> test_cases = {
     // Simple non-satisfiable CSP
-    []() -> void {
+    [](std::ofstream& fout) -> void {
         pcp::BitPCP bitpcp(10);
         for (pcp::Variable i = 0; i < 10; ++i) {
             bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
@@ -24,12 +25,12 @@ std::vector<std::function<void()>> test_cases = {
         pcp::BitPCP pcpp = tc.buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
-        std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
-        std::cout << "Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
+        fout << "Approximated original gap: " << 1 - original_soundness << std::endl;
+        fout << "Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
         assert(1 - pcpp_soundness == 0);
     },
     // Simple non-satisfiable CSP
-    []() -> void {
+    [](std::ofstream& fout) -> void {
         pcp::BitPCP bitpcp(10);
         for (pcp::Variable i = 0; i < 10; ++i) {
             bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
@@ -43,17 +44,18 @@ std::vector<std::function<void()>> test_cases = {
         pcp::BitPCP pcpp = tc.buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
-        std::cout << "Approximated original gap: " << 1 - original_soundness << std::endl;
-        std::cout << "Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
+        fout << "Approximated original gap: " << 1 - original_soundness << std::endl;
+        fout << "Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
         assert(pcpp_soundness > 0);
     },
 };
 
 int main() {
-    std::cout << "Running test_pcpp_soundness.cpp" << std::endl;
+    std::ofstream fout("../results/test_pcpp_soundness_result.txt");
+    fout << "Running test_pcpp_soundness.cpp" << std::endl;
     for (size_t i = 0; i < test_cases.size(); ++i) {
-        std::cout << "Running test case: " << (i + 1) << std::endl;
-        test_cases[i]();
+        fout << "Running test case: " << (i + 1) << std::endl;
+        test_cases[i](fout);
     }
     return 0;
 }
