@@ -1,0 +1,7 @@
+Running test_pcpp_soundness.cpp
+Running test case: 1
+Approximated original gap: 0
+Approximated pcpp gap: 0
+Running test case: 2
+Approximated original gap: 0.1
+Approximated pcpp gap: 0.00288184

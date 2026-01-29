@@ -48,7 +48,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
 
 
 int main() {
-    std::ofstream fout("test_three_color_gap_amplification_amplification_result.txt");
+    std::ofstream fout("../results/test_three_color_gap_amplification_amplification_result.txt");
     fout << "Running test_three_color_gap_amplification_amplification.cpp" << std::endl;
     for (size_t i = 0; i < test_cases.size(); ++i) {
         fout << "Running test case: " << (i + 1) << std::endl;

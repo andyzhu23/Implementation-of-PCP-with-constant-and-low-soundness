@@ -1,6 +1,7 @@
 #ifndef DISJOINT_SET_UNION_HPP
 #define DISJOINT_SET_UNION_HPP
 
+#include <cstddef>
 #include <vector>
 
 namespace util {
@@ -16,7 +17,7 @@ public:
     bool same_set(size_t x, size_t y);
 
 private:
-    int size;
+    size_t size;
     std::vector<size_t> representative;
 };
 
