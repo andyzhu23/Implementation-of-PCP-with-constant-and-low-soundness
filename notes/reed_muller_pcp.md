@@ -23,3 +23,20 @@ We check the sum by first let the variable $x_1$ be a free variable $z$, and con
 
 The verifier receives $g_1(z)$, and checks that $g_1(0) + g_1(1) = 0$. Then a random point $r_1$ is chosen, and we want to keep check if the value $g_1(r_1)$ is $$\sum_{r_1,x_2,...,x_l} P(r_1, ..., x_l) = 0$$
 
+When translating to a CSP, $\forall z.g_1(z)$ is a variable in the CSP. 
+
+Checking $g_1(0) + g_1(1) = 0$ becomes checking the corresponding variables with a corresponding sum.
+
+For corresponding iterations, we check $g_i(r_1,...,r_i) = g_{i+1}(r_1,...,r_i,0) + g_{i+1}(r_1,...,r_i,1)$ for randomly picked points $r_i$.
+
+
+## Low Degree Test
+
+We need low degree test to show that the functions we claim $g$ are indeed low degree polynomials. 
+
+We pick a random line $l(t) = x+ty$
+
+we query $g_i$ on points $l(t)$ to get $v_t = g_i(l(t))$
+
+to test $g$ is a degree-$d$ polynomial, we can run linear constraints on list of $d$ points $(l(t), v_t)$.
+
