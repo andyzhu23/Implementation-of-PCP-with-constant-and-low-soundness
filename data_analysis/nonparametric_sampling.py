@@ -15,25 +15,20 @@ import parse_results
 
 import numpy as np
 
-def bootstrap_diff_confidence_interval(a, b, alpha=0.05, n_resamples=10000, seed=None):
-    """Bootstrap percentile CI for the mean difference (mean(a) - mean(b))."""
+def bootstrap_mean_confidence_interval(a, alpha=0.05, n_resamples=10000, seed=None):
+    """Bootstrap percentile CI for the mean of a single sample."""
     a = np.asarray(a, dtype=float)
-    b = np.asarray(b, dtype=float)
     a = a[~np.isnan(a)]
-    b = b[~np.isnan(b)]
-    na, nb = a.size, b.size
-    if na == 0 or nb == 0:
+    n = a.size
+    if n == 0:
         return (float('nan'), float('nan'))
 
     rng = np.random.default_rng(seed)
-    draws_a = rng.choice(a, size=(n_resamples, na), replace=True)
-    draws_b = rng.choice(b, size=(n_resamples, nb), replace=True)
-    means_a = draws_a.mean(axis=1)
-    means_b = draws_b.mean(axis=1)
-    diffs = means_a - means_b
+    draws = rng.choice(a, size=(n_resamples, n), replace=True)
+    means = draws.mean(axis=1)
 
-    lower = np.percentile(diffs, 100 * (alpha / 2.0))
-    upper = np.percentile(diffs, 100 * (1 - alpha / 2.0))
+    lower = np.percentile(means, 100 * (alpha / 2.0))
+    upper = np.percentile(means, 100 * (1 - alpha / 2.0))
     return (float(lower), float(upper))
     
 
@@ -55,11 +50,13 @@ def main():
     mean1 = float(np.nanmean(amplified_gaps[0]))
     print(f"mean of amplified gaps (test 1): {mean1}")
 
-    # bootstrap CIs for the difference in means (test1 - other)
-    diff_ci_1_vs_4 = bootstrap_diff_confidence_interval(amplified_gaps[0], amplified_gaps[1], alpha=0.05, n_resamples=10000)
-    diff_ci_1_vs_10 = bootstrap_diff_confidence_interval(amplified_gaps[0], amplified_gaps[2], alpha=0.05, n_resamples=10000)
-    print(f"95% CI for mean difference (test1 - test2): ({diff_ci_1_vs_4[0]:.5f}, {diff_ci_1_vs_4[1]:.5f})")
-    print(f"95% CI for mean difference (test1 - test3): ({diff_ci_1_vs_10[0]:.5f}, {diff_ci_1_vs_10[1]:.5f})")
+    # bootstrap CIs for the mean of each test
+    ci_test1 = bootstrap_mean_confidence_interval(amplified_gaps[0], alpha=0.05, n_resamples=10000)
+    ci_test2 = bootstrap_mean_confidence_interval(amplified_gaps[1], alpha=0.05, n_resamples=10000)
+    ci_test3 = bootstrap_mean_confidence_interval(amplified_gaps[2], alpha=0.05, n_resamples=10000)
+    print(f"95% CI for mean (test1): ({ci_test1[0]:.5f}, {ci_test1[1]:.5f})")
+    print(f"95% CI for mean (test2): ({ci_test2[0]:.5f}, {ci_test2[1]:.5f})")
+    print(f"95% CI for mean (test3): ({ci_test3[0]:.5f}, {ci_test3[1]:.5f})")
 
 if __name__ == "__main__":
     main()

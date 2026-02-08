@@ -1,7 +1,13 @@
 Running test_pcpp_soundness.cpp
 Running test case: 1
-Approximated original gap: 0
-Approximated pcpp gap: 0
+Cycle graph (satisfiable): Approximated original gap: 0
+Cycle graph (satisfiable): Approximated pcpp gap: 0
 Running test case: 2
-Approximated original gap: 0.1
-Approximated pcpp gap: 0.00288184
+Cycle graph (unsatisfiable): Approximated original gap: 0.1
+Cycle graph (unsatisfiable): Approximated pcpp gap: 0.00288184
+Running test case: 3
+Star graph: Approximated original gap: 0
+Star graph: Approximated pcpp gap: 0
+Running test case: 4
+Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated original gap: 0.166667
+Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated pcpp gap: 0.0107692
