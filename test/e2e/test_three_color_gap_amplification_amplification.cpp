@@ -13,7 +13,7 @@ std::function<int(size_t)> test_iteration_func = [](size_t edge_size) {
 
 std::vector<std::function<void(std::ofstream&)>> test_cases = {
     [](std::ofstream &fout) -> void {
-        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 32, 1, 10, 10, 10);
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 30, 1, 10, 10, 10);
         pcp::BitPCP bitpcp = input.to_BitPCP();
         pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
@@ -21,7 +21,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
     },
     [](std::ofstream &fout) -> void {
-        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 64, 1, 10, 10, 10);
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 40, 1, 10, 10, 10);
         pcp::BitPCP bitpcp = input.to_BitPCP();
         pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
@@ -29,7 +29,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
     },
     [](std::ofstream &fout) -> void {
-        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 128, 1, 10, 10, 10);
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 50, 1, 10, 10, 10);
         pcp::BitPCP bitpcp = input.to_BitPCP();
         pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
@@ -37,7 +37,55 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
     },
     [](std::ofstream &fout) -> void {
-        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 256, 1, 10, 10, 10);
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 60, 1, 10, 10, 10);
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
+        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100000);
+        fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
+    },
+    [](std::ofstream &fout) -> void {
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 70, 1, 10, 10, 10);
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
+        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100000);
+        fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
+    },
+    [](std::ofstream &fout) -> void {
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 80, 1, 10, 10, 10);
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
+        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100000);
+        fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
+    },
+    [](std::ofstream &fout) -> void {
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 90, 1, 10, 10, 10);
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
+        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100000);
+        fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
+    },
+    [](std::ofstream &fout) -> void {
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 100, 1, 10, 10, 10);
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
+        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100000);
+        fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
+    },
+    [](std::ofstream &fout) -> void {
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 110, 1, 10, 10, 10);
+        pcp::BitPCP bitpcp = input.to_BitPCP();
+        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
+        analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);
+        analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, false}}, 100000);
+        fout << "original gap: " << analyzer_original.getGap() << ", amplified gap: " << analyzer_amplified.getGap() << std::endl;
+    },
+    [](std::ofstream &fout) -> void {
+        three_color::ThreeColor input = three_color::generate_invalid_three_coloring_graph(30, 120, 1, 10, 10, 10);
         pcp::BitPCP bitpcp = input.to_BitPCP();
         pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, test_iteration_func);
         analyzer::PCPAnalyzer analyzer_original({{bitpcp, false}}, 100000);

@@ -40,3 +40,7 @@ we query $g_i$ on points $l(t)$ to get $v_t = g_i(l(t))$
 
 to test $g$ is a degree-$d$ polynomial, we can run linear constraints on list of $d$ points $(l(t), v_t)$.
 
+
+Try to find external libraries for pcpp
+
+implement a fake pcpp
