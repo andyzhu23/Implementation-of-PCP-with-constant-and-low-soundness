@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "pcpp/Tester.hpp"
+#include "pcpp/TesterFactory.hpp"
 #include "three_color/ThreeColor.hpp"
 #include "pcp/BitPCP.hpp"
 #include "pcp/BitDomain.hpp"
@@ -41,43 +41,44 @@ bool checkBitPCPCompleteness(const pcp::BitPCP &bitpcp) {
 std::vector<std::function<void()>> test_cases = {
     // Test 1: Simple case with two different colors
     []() -> void {
-        pcpp::Tester tester(three_color::Color::RED, three_color::Color::GREEN);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        tester->create_tester(three_color::Color::RED, three_color::Color::GREEN);
+        pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is satisfiable
         assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
     },
     // Test 2: Simple case with two different colors
     []() -> void {
-        pcpp::Tester tester(three_color::Color::RED, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::GREEN, three_color::Color::BLUE);
+        pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is satisfiable
         assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
     },
     // Test 3: Simple case with two different colors
     []() -> void {
-        pcpp::Tester tester(three_color::Color::GREEN, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::GREEN, three_color::Color::BLUE);
+        pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is satisfiable
         assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
     },
     // Test 4: Simple case with two same colors
     []() -> void {
-        pcpp::Tester tester(three_color::Color::RED, three_color::Color::RED);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::RED, three_color::Color::RED);
+        pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is not satisfiable
         assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
     },
     // Test 5: Simple case with two same colors
     []() -> void {
-        pcpp::Tester tester(three_color::Color::GREEN, three_color::Color::GREEN);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::GREEN, three_color::Color::GREEN);
+        pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is not satisfiable
         assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
     },
     // Test 6: Simple case with two same colors
     []() -> void {
-        pcpp::Tester tester(three_color::Color::BLUE, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::BLUE, three_color::Color::BLUE);
+        pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is not satisfiable
         assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
     },

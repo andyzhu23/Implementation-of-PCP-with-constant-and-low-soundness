@@ -2,7 +2,7 @@
 
 #include "Aliases.hpp"
 #include "constants.hpp"
-#include "pcpp/Hadamard.hpp"
+#include "pcpp/HadamardPCPP/Hadamard.hpp"
 
 namespace pcpp {
 

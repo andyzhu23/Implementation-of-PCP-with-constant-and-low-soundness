@@ -41,6 +41,11 @@ add_executable(
     ../../src/core/to_expander.cpp 
     ../../src/pcp/BitPCP.cpp 
     ../../src/pcp/BitDomain.cpp
+    ../../src/three_color/ThreeColor.cpp
+    ../../src/three_csp/ThreeCSP.cpp
+    ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
+    ../../src/pcpp/HadamardPCPP/Hadamard.cpp
+    ../../src/pcpp/TesterFactory.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/constraint/BitConstraint.cpp
@@ -68,25 +73,27 @@ target_compile_definitions(test_reduce_degree PRIVATE ENFORCE_CONSISTENCY)
 add_executable(
     test_Hadamard
     ./unit/test_Hadamard.cpp
-    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcpp/HadamardPCPP/Hadamard.cpp
 )
 add_test(NAME Test_Hadamard COMMAND test_Hadamard)
 target_include_directories(test_Hadamard PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
-    test_Tester
-    ./unit/test_Tester.cpp
-    ../../src/pcpp/Tester.cpp
-    ../../src/pcpp/Hadamard.cpp
+    test_HadamardTester
+    ./unit/test_HadamardTester.cpp
+    ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
+    ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/pcpp/TesterFactory.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
+    ../../src/constraint/BitConstraint.cpp
 )
-add_test(NAME Test_Tester COMMAND test_Tester)
-target_include_directories(test_Tester PRIVATE ${CMAKE_SOURCE_DIR}/include)
+add_test(NAME Test_HadamardTester COMMAND test_HadamardTester)
+target_include_directories(test_HadamardTester PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_ThreeCSP
@@ -106,14 +113,16 @@ add_executable(
     ./unit/test_three_color_generators.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
-    ../../src/pcpp/Tester.cpp
-    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
+    ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/pcpp/TesterFactory.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/three_color/generators.cpp
  
     ../../src/three_color/ThreeColor.cpp
+    ../../src/constraint/BitConstraint.cpp
 )
 add_test(NAME Test_Three_Color_Generators COMMAND test_three_color_generators)
 target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -122,9 +131,10 @@ target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DI
 add_executable(
     test_three_color_to_bitpcp
     ./unit/test_three_color_to_bitpcp.cpp
-    ../../src/pcpp/Tester.cpp
-    ../../src/pcpp/Hadamard.cpp
+    ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
+    ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
+    ../../src/pcpp/TesterFactory.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/util/disjoint_set_union.cpp
@@ -154,10 +164,11 @@ add_executable(
     ../../src/core/three_color_gap_amplification.cpp
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_color/generators.cpp
+    ../../src/pcpp/TesterFactory.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
-    ../../src/pcpp/Hadamard.cpp
-    ../../src/pcpp/Tester.cpp
+    ../../src/pcpp/HadamardPCPP/Hadamard.cpp
+    ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/analyzer/PCPAnalyzer.cpp
@@ -180,10 +191,11 @@ if(BUILD_E2E_TESTS)
         ../../src/core/three_color_gap_amplification.cpp
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
+        ../../src/pcpp/TesterFactory.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
-        ../../src/pcpp/Hadamard.cpp
-        ../../src/pcpp/Tester.cpp
+        ../../src/pcpp/HadamardPCPP/Hadamard.cpp
+        ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/util/disjoint_set_union.cpp
         ../../src/util/visit_guard.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
@@ -208,10 +220,11 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
+        ../../src/pcpp/TesterFactory.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
-        ../../src/pcpp/Hadamard.cpp
-        ../../src/pcpp/Tester.cpp
+        ../../src/pcpp/HadamardPCPP/Hadamard.cpp
+        ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/util/disjoint_set_union.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
     
@@ -234,10 +247,11 @@ if(BUILD_E2E_TESTS)
         ../../src/core/to_expander.cpp
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
+        ../../src/pcpp/TesterFactory.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
-        ../../src/pcpp/Hadamard.cpp
-        ../../src/pcpp/Tester.cpp
+        ../../src/pcpp/HadamardPCPP/Hadamard.cpp
+        ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/util/disjoint_set_union.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
@@ -251,25 +265,27 @@ endif()
 
 if(BUILD_E2E_TESTS)
     add_executable(
-        test_pcpp_soundness
-        ./e2e/test_pcpp_soundness.cpp
+        test_HadamardPCPP_soundness
+        ./e2e/test_HadamardPCPP_soundness.cpp
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
         ../../src/three_csp/ThreeCSP.cpp
+        ../../src/pcpp/TesterFactory.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/core/gap_amplification.cpp
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
         ../../src/core/three_color_gap_amplification.cpp
-        ../../src/pcpp/Hadamard.cpp
-        ../../src/pcpp/Tester.cpp
+        ../../src/pcpp/HadamardPCPP/Hadamard.cpp
+        ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/util/disjoint_set_union.cpp
+        ../../src/util/visit_guard.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
         ../../src/constraint/BitConstraint.cpp
     )
-    add_test(NAME Test_Gap_Amplification_Soundness COMMAND test_pcpp_soundness)
-    target_include_directories(test_pcpp_soundness PRIVATE ${CMAKE_SOURCE_DIR}/include)
-    target_compile_definitions(test_pcpp_soundness PRIVATE ENFORCE_CONSISTENCY)
+    add_test(NAME Test_HadamardPCPP_Soundness COMMAND test_HadamardPCPP_soundness)
+    target_include_directories(test_HadamardPCPP_soundness PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    target_compile_definitions(test_HadamardPCPP_soundness PRIVATE ENFORCE_CONSISTENCY)
 endif()

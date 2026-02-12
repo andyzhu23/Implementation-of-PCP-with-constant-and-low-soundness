@@ -5,7 +5,7 @@
 
 #include "core/core.hpp"
 #include "constants.hpp"
-#include "pcpp/Tester.hpp"
+#include "pcpp/TesterFactory.hpp"
 #include "util/disjoint_set_union.hpp"
 
 #include <cassert>
@@ -81,7 +81,7 @@ namespace core {
 
 #ifndef SINGLE_THREAD
 
-pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
+pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
     to_expander(pcp, constants::EXPANDING_COEFFICIENT);
     pcp = reduce_degree(pcp, constants::DEGREE);
 
@@ -105,7 +105,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
         if (start >= original_size) break;
 
         futures.push_back(std::async(std::launch::async,
-            [&reduced_pcps, start, end, &pcp, &occuring_location, &mtx]() {
+            [&reduced_pcps, start, end, &pcp, &occuring_location, &mtx, tester_type]() {
                 for (size_t u = start; u < end; ++u) {
                     std::vector<pcp::Variable> neighbors = pcp.get_neighbors(u, constants::POWERING_RADIUS);
                     {
@@ -115,7 +115,9 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
                         }
                     }
                     pcp::BitPCP powering_u = pcp.build_sub_pcp(neighbors);
-                    pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();
+
+                    std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(tester_type); tester->create_tester(powering_u);
+                    pcp::BitPCP reduced_pcp = tester->buildBitPCP();
                     reduced_pcps[u] = std::move(reduced_pcp);
                 }
             }
@@ -134,7 +136,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
 
 #else
 
-pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
+pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
     to_expander(pcp, constants::EXPANDING_COEFFICIENT);
     pcp = reduce_degree(pcp, constants::DEGREE);
     size_t original_size = pcp.get_size();
@@ -148,7 +150,8 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp) {
             occuring_location[neighbors[i]].emplace_back(u, i);
         }
         pcp::BitPCP powering_u = pcp.build_sub_pcp(neighbors);
-        pcp::BitPCP reduced_pcp = pcpp::Tester(powering_u).buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(tester_type); tester->create_tester(powering_u);
+        pcp::BitPCP reduced_pcp = tester->buildBitPCP();
         reduced_pcps.push_back(reduced_pcp);
     }
     pcp = pcp::merge_BitPCPs(reduced_pcps);
