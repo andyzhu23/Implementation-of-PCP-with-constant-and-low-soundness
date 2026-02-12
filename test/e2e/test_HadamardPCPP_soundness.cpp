@@ -8,7 +8,7 @@
 #include "three_color/ThreeColor.hpp"
 #include "analyzer/PCPAnalyzer.hpp"
 #include "analyzer/SoundnessApproximater.hpp"
-#include "pcpp/Tester.hpp"
+#include "pcpp/TesterFactory.hpp"
 
 std::vector<std::function<void(std::ofstream&)>> test_cases = {
     // Cycle graph, satisfiable
@@ -21,8 +21,9 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
             bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
         }
         bitpcp.add_constraint(9, 0, constraint::BitConstraint::EQUAL); // cycle, satisfiable
-        pcpp::Tester tc(bitpcp);
-        pcp::BitPCP pcpp = tc.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tc = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        tc->create_tester(bitpcp);
+        pcp::BitPCP pcpp = tc->buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Cycle graph (satisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
@@ -39,8 +40,9 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
             bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
         }
         bitpcp.add_constraint(9, 0, constraint::BitConstraint::NOTEQUAL); // cycle, unsatisfiable
-        pcpp::Tester tc(bitpcp);
-        pcp::BitPCP pcpp = tc.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tc = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        tc->create_tester(bitpcp);
+        pcp::BitPCP pcpp = tc->buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Cycle graph (unsatisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
@@ -56,8 +58,9 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         for (pcp::Variable i = 1; i < 10; ++i) {
             bitpcp.add_constraint(0, i, constraint::BitConstraint::EQUAL);
         }
-        pcpp::Tester tc(bitpcp);
-        pcp::BitPCP pcpp = tc.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tc = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        tc->create_tester(bitpcp);
+        pcp::BitPCP pcpp = tc->buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Star graph: Approximated original gap: " << 1 - original_soundness << std::endl;
@@ -79,8 +82,8 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         }
         // Add a constraint that contradicts the above
         bitpcp.add_constraint(0, 1, constraint::BitConstraint::SECOND_BIT_EQUAL);
-        pcpp::Tester tc(bitpcp);
-        pcp::BitPCP pcpp = tc.buildBitPCP();
+        std::unique_ptr<pcpp::Tester> tc = pcpp::get_tester(pcpp::TesterType::HADAMARD); tc->create_tester(bitpcp);
+        pcp::BitPCP pcpp = tc->buildBitPCP();
         double original_soundness = analyzer::approximate_soundness(bitpcp);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;

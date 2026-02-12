@@ -6,6 +6,10 @@
 
 #include "pcp/BitPCP.hpp"
 
+namespace pcpp {
+    enum class TesterType;
+}
+
 namespace three_color {
 
 using Node = size_t;
@@ -33,7 +37,7 @@ public:
 
     size_t get_edge_size() const;
 
-    pcp::BitPCP to_BitPCP() const;
+    pcp::BitPCP to_BitPCP(pcpp::TesterType tester_type) const;
 private:
     size_t num_edges;
     std::vector<Color> colors;

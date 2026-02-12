@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "pcpp/Hadamard.hpp"
+#include "pcpp/HadamardPCPP/Hadamard.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: Empty value vector

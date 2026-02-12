@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "constants.hpp"
-#include "pcpp/Tester.hpp"
+#include "pcpp/HadamardPCPP/HadamardTester.hpp"
 #include "Aliases.hpp"
 #include "three_color/ThreeColor.hpp"
 
@@ -11,7 +11,9 @@ namespace pcpp {
 
 const int THREE_COLOR_ASSIGNMENT = 2 + 2 + 2 * 2 + 1; // 2 bits per color, 4 products, and 1 negation bit
 
-Tester::Tester(three_color::Color u, three_color::Color v) {
+HadamardTester::HadamardTester() {}
+
+HadamardTester::HadamardTester(three_color::Color u, three_color::Color v) {
     std::bitset<2> ubits = three_color::color_to_bits(u);
     std::bitset<2> vbits = three_color::color_to_bits(v);
     std::bitset<2> bit0;
@@ -49,8 +51,8 @@ Tester::Tester(three_color::Color u, three_color::Color v) {
     };
 }
 
-// Construct Tester from a BitPCP
-Tester::Tester(const pcp::BitPCP &pcp) {
+// Construct HadamardTester from a BitPCP
+HadamardTester::HadamardTester(const pcp::BitPCP &pcp) {
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
         three_csp.add_variable(pcp.get_variable(i)[0]);
         three_csp.add_variable(pcp.get_variable(i)[1]);
@@ -122,7 +124,15 @@ Tester::Tester(const pcp::BitPCP &pcp) {
     }
 }
 
-pcp::BitPCP Tester::buildBitPCP() {
+void HadamardTester::create_tester(three_color::Color u, three_color::Color v) { 
+    *this = std::move(HadamardTester(u, v));
+} 
+
+void HadamardTester::create_tester(const pcp::BitPCP &powering_pcp) { 
+    *this = std::move(HadamardTester(powering_pcp));
+}
+
+pcp::BitPCP HadamardTester::buildBitPCP() {
 
     size_t original_size = three_csp.size();
 

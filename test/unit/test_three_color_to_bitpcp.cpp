@@ -6,6 +6,7 @@
 
 #include "three_color/ThreeColor.hpp"
 #include "pcp/BitPCP.hpp"
+#include "pcpp/TesterFactory.hpp"
 #include "constraint/BitConstraint.hpp"
 
 std::vector<std::function<void()>> test_cases = {
@@ -34,7 +35,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::GREEN };
         std::vector<Edge> edges = { {0,1} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP();
+        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
         // The resulting BitPCP should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
@@ -55,7 +56,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::RED };
         std::vector<Edge> edges = { {0,1} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP();
+        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
         int invalid_count = 0;
         // The resulting BitPCP should not satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
@@ -78,7 +79,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::GREEN, Color::BLUE };
         std::vector<Edge> edges = { {0,1}, {1,2}, {2,0} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP();
+        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
         // The resulting BitPCP should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
@@ -99,7 +100,7 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::RED, Color::BLUE };
         std::vector<Edge> edges = { {0,1}, {1,2}, {2,0} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP();
+        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
         int invalid_count = 0;
         // The resulting BitPCP not should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
