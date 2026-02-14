@@ -195,7 +195,7 @@ HadamardTester::HadamardTester(const pcp::BitPCP &pcp) {
     }
 }
 
-void HadamardTester::create_tester(const three_color::ThreeColor &tc) { 
+pcp::BitPCP HadamardTester::three_color_to_bitpcp(const three_color::ThreeColor &tc) { 
     std::vector<pcp::BitPCP> edge_pcps;
     size_t variable_count = 0;
     std::vector<std::vector<std::pair<size_t, int>>> occuring_locations(tc.get_colors().size());
@@ -213,8 +213,8 @@ void HadamardTester::create_tester(const three_color::ThreeColor &tc) {
     auto result = pcp::merge_BitPCPs(edge_pcps);
     merge_variables(tc.get_colors(), result, occuring_locations, edge_pcps);
     result.clean();
-    *this = std::move(HadamardTester(result));
-} 
+    return result;
+}
 
 void HadamardTester::create_tester(const pcp::BitPCP &powering_pcp) { 
     *this = std::move(HadamardTester(powering_pcp));

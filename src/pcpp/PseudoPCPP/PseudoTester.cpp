@@ -27,11 +27,9 @@ PseudoTester::PseudoTester(const three_color::ThreeColor &tc) : pcp(tc.get_color
     }
 }
 
-void PseudoTester::create_tester(const three_color::ThreeColor &tc) {
+pcp::BitPCP PseudoTester::three_color_to_bitpcp(const three_color::ThreeColor &tc) {
     PseudoTester ptester(tc);
-    double soundness = analyzer::approximate_soundness(ptester.pcp);
-    ptester.satisfiable = soundness == 1;
-    *this = std::move(ptester);
+    return ptester.pcp;
 }
 
 void PseudoTester::create_tester(const pcp::BitPCP &powering_pcp) {

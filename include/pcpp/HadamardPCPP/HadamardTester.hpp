@@ -30,7 +30,7 @@ public:
 
     HadamardTester(const pcp::BitPCP &powering_pcp);
 
-    void create_tester(const three_color::ThreeColor &tc) override; 
+    pcp::BitPCP three_color_to_bitpcp(const three_color::ThreeColor &tc) override; 
     
     void create_tester(const pcp::BitPCP &powering_pcp) override;
 
