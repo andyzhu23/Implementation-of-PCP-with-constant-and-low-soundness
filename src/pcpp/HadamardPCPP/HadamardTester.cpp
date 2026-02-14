@@ -213,6 +213,7 @@ void HadamardTester::create_tester(const three_color::ThreeColor &tc) {
     auto result = pcp::merge_BitPCPs(edge_pcps);
     merge_variables(tc.get_colors(), result, occuring_locations, edge_pcps);
     result.clean();
+    *this = std::move(HadamardTester(result));
 } 
 
 void HadamardTester::create_tester(const pcp::BitPCP &powering_pcp) { 
