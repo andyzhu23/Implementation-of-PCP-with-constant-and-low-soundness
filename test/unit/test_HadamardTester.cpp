@@ -42,42 +42,53 @@ std::vector<std::function<void()>> test_cases = {
     // Test 1: Simple case with two different colors
     []() -> void {
         std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD);
-        tester->create_tester(three_color::Color::RED, three_color::Color::GREEN);
+        three_color::ThreeColor tc({three_color::Color::RED, three_color::Color::GREEN}, {{0, 1}});
+        tester->create_tester(tc);
         pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is satisfiable
         assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
     },
     // Test 2: Simple case with two different colors
     []() -> void {
-        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::GREEN, three_color::Color::BLUE);
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        three_color::ThreeColor tc({three_color::Color::GREEN, three_color::Color::BLUE}, {{0, 1}});
+        tester->create_tester(tc);
         pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is satisfiable
         assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
     },
     // Test 3: Simple case with two different colors
     []() -> void {
-        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::GREEN, three_color::Color::BLUE);
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        three_color::ThreeColor tc({three_color::Color::GREEN, three_color::Color::BLUE}, {{0, 1}});
+        tester->create_tester(tc);
         pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is satisfiable
         assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
     },
     // Test 4: Simple case with two same colors
     []() -> void {
-        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::RED, three_color::Color::RED);
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        three_color::ThreeColor tc({three_color::Color::RED, three_color::Color::RED}, {{0, 1}});
+        tester->create_tester(tc);
         pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is not satisfiable
         assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
     },
     // Test 5: Simple case with two same colors
     []() -> void {
-        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::GREEN, three_color::Color::GREEN);
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        three_color::ThreeColor tc({three_color::Color::GREEN, three_color::Color::GREEN}, {{0, 1}});
+        tester->create_tester(tc);
         pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is not satisfiable
         assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
     },
     // Test 6: Simple case with two same colors
     []() -> void {
-        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD); tester->create_tester(three_color::Color::BLUE, three_color::Color::BLUE);
+        std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(pcpp::TesterType::HADAMARD);
+        three_color::ThreeColor tc({three_color::Color::BLUE, three_color::Color::BLUE}, {{0, 1}});
+        tester->create_tester(tc);
         pcp::BitPCP bitpcp = tester->buildBitPCP();
         // Check that the BitPCP is not satisfiable
         assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");

@@ -8,7 +8,7 @@ namespace pcpp {
 
 class Tester {
 public:
-    virtual void create_tester(three_color::Color u, three_color::Color v) = 0;
+    virtual void create_tester(const three_color::ThreeColor &tc) = 0;
 
     virtual void create_tester(const pcp::BitPCP &powering_pcp) = 0;
 

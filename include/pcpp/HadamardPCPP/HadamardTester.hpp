@@ -30,12 +30,12 @@ public:
 
     HadamardTester(const pcp::BitPCP &powering_pcp);
 
-    void create_tester(three_color::Color u, three_color::Color v); 
+    void create_tester(const three_color::ThreeColor &tc) override; 
     
-    void create_tester(const pcp::BitPCP &powering_pcp);
+    void create_tester(const pcp::BitPCP &powering_pcp) override;
 
     // Build a BitPCP from the constraint matrix and hadamard code
-    pcp::BitPCP buildBitPCP();
+    pcp::BitPCP buildBitPCP() override;
 
 private:
     three_csp::ThreeCSP three_csp;
