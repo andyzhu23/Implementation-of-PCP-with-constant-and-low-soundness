@@ -36,7 +36,8 @@ enum class Constraint {
     ANY,
     PRODUCT,
     SUM,
-    ENCODED_BINARY
+    ENCODED_BINARY,
+    ONE_HOT_COLOR,
 };
 
 }

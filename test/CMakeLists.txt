@@ -36,6 +36,19 @@ add_test(NAME Test_SoundnessApproximater COMMAND test_SoundnessApproximater)
 target_include_directories(test_SoundnessApproximater PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
+    test_PseudoTester
+    ./unit/test_PseudoTester.cpp
+    ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/BitDomain.cpp
+    ../../src/constraint/BitConstraint.cpp
+    ../../src/util/disjoint_set_union.cpp
+)
+add_test(NAME Test_PseudoTester COMMAND test_PseudoTester)
+target_include_directories(test_PseudoTester PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
     test_to_expander 
     ./unit/test_to_expander.cpp 
     ../../src/core/to_expander.cpp 
@@ -46,6 +59,8 @@ add_executable(
     ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/constraint/BitConstraint.cpp
@@ -86,6 +101,8 @@ add_executable(
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/util/disjoint_set_union.cpp
@@ -117,6 +134,8 @@ add_executable(
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/three_color/generators.cpp
@@ -135,6 +154,8 @@ add_executable(
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/util/disjoint_set_union.cpp
@@ -165,6 +186,8 @@ add_executable(
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_color/generators.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
@@ -192,6 +215,8 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
@@ -210,8 +235,8 @@ endif()
 
 if(BUILD_E2E_TESTS)
     add_executable(
-        test_three_color_gap_amplification_amplification
-        ./e2e/test_three_color_gap_amplification_amplification.cpp
+        test_three_color_gap_amplification_hadamard
+        ./e2e/test_three_color_gap_amplification_hadamard.cpp
         ../../src/core/three_color_gap_amplification.cpp
         ../../src/core/gap_amplification.cpp
     
@@ -221,6 +246,8 @@ if(BUILD_E2E_TESTS)
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+        ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
@@ -231,9 +258,39 @@ if(BUILD_E2E_TESTS)
         ../../src/constraint/BitConstraint.cpp
      
     )
-    add_test(NAME Test_Three_Color_Gap_Amplification_Amplification COMMAND test_three_color_gap_amplification_amplification)
-    target_include_directories(test_three_color_gap_amplification_amplification PRIVATE ${CMAKE_SOURCE_DIR}/include)
-    # target_compile_definitions(test_three_color_gap_amplification_amplification PRIVATE ENFORCE_CONSISTENCY)
+    add_test(NAME Test_Three_Color_Gap_Amplification_Hadamard COMMAND test_three_color_gap_amplification_hadamard   )
+    target_include_directories(test_three_color_gap_amplification_hadamard PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    # target_compile_definitions(test_three_color_gap_amplification_hadamard PRIVATE ENFORCE_CONSISTENCY)
+endif()
+
+if(BUILD_E2E_TESTS)
+    add_executable(
+        test_three_color_gap_amplification_pseudo
+        ./e2e/test_three_color_gap_amplification_pseudo.cpp
+        ../../src/core/three_color_gap_amplification.cpp
+        ../../src/core/gap_amplification.cpp
+    
+        ../../src/core/reduce_degree.cpp
+        ../../src/core/to_expander.cpp
+        ../../src/three_color/ThreeColor.cpp
+        ../../src/three_csp/ThreeCSP.cpp
+        ../../src/three_color/generators.cpp
+        ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+        ../../src/pcpp/HadamardPCPP/Hadamard.cpp
+        ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
+        ../../src/analyzer/SoundnessApproximater.cpp
+        ../../src/pcp/BitPCP.cpp
+        ../../src/pcp/BitDomain.cpp
+        ../../src/util/disjoint_set_union.cpp
+        ../../src/analyzer/PCPAnalyzer.cpp
+    
+        ../../src/constraint/BitConstraint.cpp
+     
+    )
+    add_test(NAME Test_Three_Color_Gap_Amplification_Pseudo COMMAND test_three_color_gap_amplification_pseudo   )
+    target_include_directories(test_three_color_gap_amplification_pseudo PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    # target_compile_definitions(test_three_color_gap_amplification_pseudo PRIVATE ENFORCE_CONSISTENCY)
 endif()
 
 if(BUILD_E2E_TESTS)
@@ -248,12 +305,14 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
         ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/util/disjoint_set_union.cpp
+        ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
     
         ../../src/constraint/BitConstraint.cpp
@@ -271,6 +330,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/generators.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/core/gap_amplification.cpp

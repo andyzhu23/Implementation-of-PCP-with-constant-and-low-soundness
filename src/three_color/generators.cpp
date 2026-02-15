@@ -132,4 +132,22 @@ ThreeColor generate_invalid_three_coloring_graph(size_t num_nodes, size_t num_ed
     return graph;
 }
 
+ThreeColor generate_non_three_colorable_graph(size_t num_nodes, size_t num_edges, size_t num_red, size_t num_green, size_t num_blue) {
+    if (num_red + num_green + num_blue != num_nodes) {
+        throw std::invalid_argument("Sum of color counts must equal number of nodes");
+    }
+    if (num_edges < 6 && num_nodes >= 4) {
+        throw std::invalid_argument("Number of edges must be at least 6 to create a non-3-colorable graph");
+    }
+    ThreeColor graph = generate_valid_three_coloring_graph(num_nodes, num_edges - 6, num_red, num_green, num_blue);
+    // Add 5 edges that violates the coloring
+    graph.add_edge(0, 1);
+    graph.add_edge(0, 2);
+    graph.add_edge(0, 3);
+    graph.add_edge(1, 2);
+    graph.add_edge(2, 3);
+    graph.add_edge(1, 3);
+    return graph;
+}
+
 }

@@ -10,7 +10,7 @@
 
 namespace analyzer {
 
-double approximate_soundness(pcp::BitPCP &pcp) {
+double approximate_soundness(pcp::BitPCP &pcp, size_t iter_per_temp) {
     // Gather constraints list
     const auto &constraints_list = pcp.get_constraints_list();
     size_t m = constraints_list.size();

@@ -1,0 +1,3 @@
+Running test_three_color_gap_amplification_pseudo.cpp
+Running test case: 1
+ Trial 1 ...

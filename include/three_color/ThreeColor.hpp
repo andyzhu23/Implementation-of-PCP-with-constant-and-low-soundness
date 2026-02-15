@@ -47,8 +47,11 @@ private:
 // Generates a random 3-colorable graph
 ThreeColor generate_valid_three_coloring_graph(size_t num_nodes, size_t num_edges, size_t num_red, size_t num_green, size_t num_blue);
 
-// Generates a random graph that is not 3-colorable
+// Generates a random graph that has invalid coloring with the specified number of violated edges
 ThreeColor generate_invalid_three_coloring_graph(size_t num_nodes, size_t num_edges, size_t num_violated_edges, size_t num_red, size_t num_green, size_t num_blue);
+
+// Generates a random non 3-colorable graph
+ThreeColor generate_non_three_colorable_graph(size_t num_nodes, size_t num_edges, size_t num_red, size_t num_green, size_t num_blue);
 
 }
 
