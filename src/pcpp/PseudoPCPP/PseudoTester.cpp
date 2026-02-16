@@ -1,5 +1,5 @@
 #include "pcpp/PseudoPCPP/PseudoTester.hpp"
-#include "analyzer/SoundnessApproximater.hpp"
+#include "pcpp/PseudoPCPP/CSPSolver.hpp"
 #include "util/disjoint_set_union.hpp"
 
 namespace pcpp {
@@ -15,13 +15,13 @@ PseudoTester::PseudoTester(const three_color::ThreeColor &tc) : pcp(tc.get_color
         }
         switch (tc.get_colors()[u]) {
             case three_color::Color::RED:
-                pcp.set_variable(u, pcp::BitDomain(0, 0, 1, three_csp::Constraint::ANY));
+                pcp.set_variable(u, pcp::BitDomain(0, 0, 1, three_csp::Constraint::ONE_HOT_COLOR));
                 break;
             case three_color::Color::GREEN:
-                pcp.set_variable(u, pcp::BitDomain(0, 1, 0, three_csp::Constraint::ANY));
+                pcp.set_variable(u, pcp::BitDomain(0, 1, 0, three_csp::Constraint::ONE_HOT_COLOR));
                 break;
             case three_color::Color::BLUE:
-                pcp.set_variable(u, pcp::BitDomain(1, 0, 0, three_csp::Constraint::ANY));
+                pcp.set_variable(u, pcp::BitDomain(1, 0, 0, three_csp::Constraint::ONE_HOT_COLOR));
                 break;
         }
     }
@@ -34,13 +34,12 @@ pcp::BitPCP PseudoTester::three_color_to_bitpcp(const three_color::ThreeColor &t
 
 void PseudoTester::create_tester(const pcp::BitPCP &powering_pcp) {
     PseudoTester ptester(powering_pcp);
-    double soundness = analyzer::approximate_soundness(ptester.pcp);
-    ptester.satisfiable = soundness == 1;
+    ptester.satisfiable = check_bitPCP_satisfiability(ptester.pcp);
     *this = std::move(ptester);
 }
 
 pcp::BitPCP PseudoTester::buildBitPCP() {
-    size_t size = pcp.get_constraints_list().size();
+    size_t size = 32;
 
     pcp::BitPCP hardcoded_pcpp(size);
 
@@ -53,12 +52,12 @@ pcp::BitPCP PseudoTester::buildBitPCP() {
     }
 
     if (satisfiable) {
-        hardcoded_pcpp.add_constraint(0, size - 1, constraint::BitConstraint::EQUAL);
+        hardcoded_pcpp.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
     } else {
-        hardcoded_pcpp.add_constraint(0, size - 1, constraint::BitConstraint::NOTEQUAL);
+        hardcoded_pcpp.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
     }
 
-    return pcp::merge_BitPCPs(std::vector<pcp::BitPCP>{pcp, hardcoded_pcpp});
+    return hardcoded_pcpp;
 }
 
 }

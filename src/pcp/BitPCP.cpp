@@ -188,6 +188,9 @@ std::ostream& operator<<(std::ostream &os, const BitPCP &bitpcp) {
             case three_csp::Constraint::ENCODED_BINARY:
                 domain_type_str = "ENCODED_BINARY";
                 break;
+            case three_csp::Constraint::ONE_HOT_COLOR:
+                domain_type_str = "ONE_HOT_COLOR";
+                break;
             default:
                 domain_type_str = "UNKNOWN";
                 break;

@@ -128,7 +128,10 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
     }
     pcp = pcp::merge_BitPCPs(reduced_pcps);
 
-    merge_variables(original_size, pcp, occuring_location, reduced_pcps);
+    if (tester_type == pcpp::TesterType::HADAMARD) {
+        // for Hadamard tester, we can further merge variables that are not merged in the tester but are actually the same due to the structure of the powering PCPs
+        merge_variables(original_size, pcp, occuring_location, reduced_pcps);
+    }
 
     pcp.clean();
     return pcp;

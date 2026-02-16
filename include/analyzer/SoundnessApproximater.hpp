@@ -14,7 +14,7 @@ const double Tmin = 1e-4;
 // cooling rate
 const double alpha = 0.995;
 // iterations per temperature
-const size_t iter_per_temp = 100000;
+const size_t iter_per_temp_default = 100000;
 // Map from constraint type to possible values in its domain
 const std::map<three_csp::Constraint, std::vector<pcp::BitDomain>> possible_values = {
     {
@@ -54,10 +54,18 @@ const std::map<three_csp::Constraint, std::vector<pcp::BitDomain>> possible_valu
             pcp::BitDomain(1, 1, 0, three_csp::Constraint::ANY),
             pcp::BitDomain(1, 1, 1, three_csp::Constraint::ANY)
         }
+    }, 
+    {
+        three_csp::Constraint::ONE_HOT_COLOR,
+        {
+            pcp::BitDomain(1, 0, 0, three_csp::Constraint::ONE_HOT_COLOR),
+            pcp::BitDomain(0, 1, 0, three_csp::Constraint::ONE_HOT_COLOR),
+            pcp::BitDomain(0, 0, 1, three_csp::Constraint::ONE_HOT_COLOR)
+        }
     }
 };
 
-double approximate_soundness(pcp::BitPCP &pcp); 
+double approximate_soundness(pcp::BitPCP &pcp, size_t iter_per_temp = iter_per_temp_default); 
 
 double approximate_soundness_via_random_subset(pcp::BitPCP &pcp);
 

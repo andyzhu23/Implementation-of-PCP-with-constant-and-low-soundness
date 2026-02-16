@@ -5,6 +5,7 @@
 
 #include "pcpp/Tester.hpp"
 #include "pcpp/HadamardPCPP/HadamardTester.hpp"
+#include "pcpp/PseudoPCPP/PseudoTester.hpp"
 
 namespace pcpp {
 
