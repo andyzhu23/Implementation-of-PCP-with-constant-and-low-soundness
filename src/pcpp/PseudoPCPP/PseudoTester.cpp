@@ -1,5 +1,5 @@
 #include "pcpp/PseudoPCPP/PseudoTester.hpp"
-#include "analyzer/SoundnessApproximater.hpp"
+#include "pcpp/PseudoPCPP/CSPSolver.hpp"
 #include "util/disjoint_set_union.hpp"
 
 namespace pcpp {
@@ -34,13 +34,12 @@ pcp::BitPCP PseudoTester::three_color_to_bitpcp(const three_color::ThreeColor &t
 
 void PseudoTester::create_tester(const pcp::BitPCP &powering_pcp) {
     PseudoTester ptester(powering_pcp);
-    double soundness = analyzer::approximate_soundness(ptester.pcp, powering_pcp.get_constraints_list().size() * 5);
-    ptester.satisfiable = soundness == 1;
+    ptester.satisfiable = check_bitPCP_satisfiability(ptester.pcp);
     *this = std::move(ptester);
 }
 
 pcp::BitPCP PseudoTester::buildBitPCP() {
-    size_t size = pcp.get_constraints_list().size();
+    size_t size = 32;
 
     pcp::BitPCP hardcoded_pcpp(size);
 
@@ -53,9 +52,9 @@ pcp::BitPCP PseudoTester::buildBitPCP() {
     }
 
     if (satisfiable) {
-        hardcoded_pcpp.add_constraint(0, size - 1, constraint::BitConstraint::EQUAL);
+        hardcoded_pcpp.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
     } else {
-        hardcoded_pcpp.add_constraint(0, size - 1, constraint::BitConstraint::NOTEQUAL);
+        hardcoded_pcpp.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
     }
 
     return hardcoded_pcpp;

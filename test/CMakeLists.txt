@@ -39,14 +39,28 @@ add_executable(
     test_PseudoTester
     ./unit/test_PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
     ../../src/constraint/BitConstraint.cpp
     ../../src/util/disjoint_set_union.cpp
+    ../../src/util/visit_guard.cpp
 )
 add_test(NAME Test_PseudoTester COMMAND test_PseudoTester)
 target_include_directories(test_PseudoTester PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
+    test_CSPSolver
+    ./unit/test_CSPSolver.cpp
+    ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
+    ../../src/pcp/BitPCP.cpp
+    ../../src/pcp/BitDomain.cpp
+    ../../src/constraint/BitConstraint.cpp
+    ../../src/util/disjoint_set_union.cpp
+)
+add_test(NAME Test_CSPSolver COMMAND test_CSPSolver)
+target_include_directories(test_CSPSolver PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
     test_to_expander 
@@ -60,6 +74,7 @@ add_executable(
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/pcpp/TesterFactory.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
@@ -102,6 +117,7 @@ add_executable(
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
@@ -135,6 +151,7 @@ add_executable(
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
@@ -155,6 +172,7 @@ add_executable(
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
@@ -187,6 +205,7 @@ add_executable(
     ../../src/three_color/generators.cpp
     ../../src/pcpp/TesterFactory.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+    ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/pcp/BitPCP.cpp
     ../../src/pcp/BitDomain.cpp
@@ -216,7 +235,8 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
-    ../../src/analyzer/SoundnessApproximater.cpp
+        ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
+        ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
@@ -247,6 +267,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+        ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
@@ -277,6 +298,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+        ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
         ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
@@ -306,6 +328,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+        ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
@@ -331,6 +354,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/pcpp/TesterFactory.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
+        ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/pcp/BitPCP.cpp
         ../../src/pcp/BitDomain.cpp
         ../../src/core/gap_amplification.cpp

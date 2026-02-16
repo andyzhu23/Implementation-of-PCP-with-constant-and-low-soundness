@@ -5,11 +5,12 @@
 #include <random>
 
 #include "pcpp/PseudoPCPP/PseudoTester.hpp"
+#include "pcpp/PseudoPCPP/CSPSolver.hpp"
 #include "constraint/BitConstraint.hpp"
 
-// Helper function to check completeness of a BitPCP
+// Helper function to check if current assignment satisfies all constraints
 // Returns true if all constraints are satisfied, false otherwise
-bool checkBitPCPSatisfiability(const pcp::BitPCP &bitpcp) {
+bool checkCurrentAssignmentSatisfiability(const pcp::BitPCP &bitpcp) {
     for (const auto &[u, v, c] : bitpcp.get_constraints_list()) {
         if (!constraint::evaluateBitConstraint(c, bitpcp.get_variable(u), bitpcp.get_variable(v))) {
             return false;
@@ -64,12 +65,13 @@ std::vector<std::function<void()>> test_cases = {
         original_bitpcp.add_constraint(1, 2, constraint::BitConstraint::EQUAL);
         original_bitpcp.add_constraint(0, 2, constraint::BitConstraint::EQUAL);
 
-        bool original_satisfiable = checkBitPCPSatisfiability(original_bitpcp);
+        pcp::BitPCP original_copy = original_bitpcp;
+        bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
         
         pcpp::PseudoTester tester;
         tester.create_tester(original_bitpcp);
         pcp::BitPCP result_bitpcp = tester.buildBitPCP();
-        bool result_satisfiable = checkBitPCPSatisfiability(result_bitpcp);
+        bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
         
         std::cout << "Test 1 - Original satisfiable: " << original_satisfiable 
                   << ", Result satisfiable: " << result_satisfiable << std::endl;
@@ -84,12 +86,13 @@ std::vector<std::function<void()>> test_cases = {
         original_bitpcp.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
         original_bitpcp.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
 
-        bool original_satisfiable = checkBitPCPSatisfiability(original_bitpcp);
+        pcp::BitPCP original_copy = original_bitpcp;
+        bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
         
         pcpp::PseudoTester tester;
         tester.create_tester(original_bitpcp);
         pcp::BitPCP result_bitpcp = tester.buildBitPCP();
-        bool result_satisfiable = checkBitPCPSatisfiability(result_bitpcp);
+        bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
         
         std::cout << "Test 2 - Original satisfiable: " << original_satisfiable 
                   << ", Result satisfiable: " << result_satisfiable << std::endl;
@@ -97,27 +100,164 @@ std::vector<std::function<void()>> test_cases = {
         assert(original_satisfiable == result_satisfiable && 
                "Satisfiability should be preserved through PseudoTester");
     },
-    // Test 3: Complex satisfiable BitPCP with bit-specific constraints
+    
+    // Test 3: Random BitPCPs with 3 variables
     []() -> void {
-        pcp::BitPCP original_bitpcp({1, 3, 5}); // Binary: 001, 011, 101
-        original_bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL); // bit 0: 0 == 0
-        original_bitpcp.add_constraint(1, 2, constraint::BitConstraint::SECOND_BIT_EQUAL); // bit 1: 1 == 0
+        std::mt19937 rng(12345);
+        int test_count = 50;
+        int passed = 0;
         
-        // Let's make it satisfiable by adjusting variables
-        original_bitpcp.set_variable(2, pcp::BitDomain(7)); // 111, so bit 1: 1 == 1
+        for (int i = 0; i < test_count; ++i) {
+            pcp::BitPCP original_bitpcp = generateRandomBitPCP(3, 2, rng);
+            pcp::BitPCP original_copy = original_bitpcp;
+            bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
+            
+            pcpp::PseudoTester tester;
+            tester.create_tester(original_bitpcp);
+            pcp::BitPCP result_bitpcp = tester.buildBitPCP();
+            bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
+            
+            if (original_satisfiable == result_satisfiable) {
+                passed++;
+            }
+        }
         
-        bool original_satisfiable = checkBitPCPSatisfiability(original_bitpcp);
+        std::cout << "Test 3 - Random 3-variable BitPCPs: " << passed << "/" << test_count 
+                  << " tests passed" << std::endl;
+        
+        assert(passed == test_count && 
+               "All random BitPCPs should preserve satisfiability through PseudoTester");
+    },
+    
+    // Test 4: Random BitPCPs with 4 variables
+    []() -> void {
+        std::mt19937 rng(54321);
+        int test_count = 30;
+        int passed = 0;
+        
+        for (int i = 0; i < test_count; ++i) {
+            pcp::BitPCP original_bitpcp = generateRandomBitPCP(4, 3, rng);
+            pcp::BitPCP original_copy = original_bitpcp;
+            bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
+            
+            pcpp::PseudoTester tester;
+            tester.create_tester(original_bitpcp);
+            pcp::BitPCP result_bitpcp = tester.buildBitPCP();
+            bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
+            
+            if (original_satisfiable == result_satisfiable) {
+                passed++;
+            }
+        }
+        
+        std::cout << "Test 4 - Random 4-variable BitPCPs: " << passed << "/" << test_count 
+                  << " tests passed" << std::endl;
+        
+        assert(passed == test_count && 
+               "All random BitPCPs should preserve satisfiability through PseudoTester");
+    },
+    
+    // Test 5: Random BitPCPs with varying sizes
+    []() -> void {
+        std::mt19937 rng(67890);
+        int test_count = 100;
+        int passed = 0;
+        
+        std::uniform_int_distribution<size_t> size_dist(2, 6);
+        
+        for (int i = 0; i < test_count; ++i) {
+            size_t num_vars = size_dist(rng);
+            size_t num_constraints = std::min(num_vars, (size_t)4);
+            
+            pcp::BitPCP original_bitpcp = generateRandomBitPCP(num_vars, num_constraints, rng);
+            pcp::BitPCP original_copy = original_bitpcp;
+            bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
+            
+            pcpp::PseudoTester tester;
+            tester.create_tester(original_bitpcp);
+            pcp::BitPCP result_bitpcp = tester.buildBitPCP();
+            bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
+            
+            if (original_satisfiable == result_satisfiable) {
+                passed++;
+            }
+        }
+        
+        std::cout << "Test 5 - Random varying-size BitPCPs: " << passed << "/" << test_count 
+                  << " tests passed" << std::endl;
+        
+        assert(passed == test_count && 
+               "All random BitPCPs should preserve satisfiability through PseudoTester");
+    },
+    
+    // Test 6: Edge case - Empty BitPCP (no constraints)
+    []() -> void {
+        pcp::BitPCP original_bitpcp(3);  // 3 variables, no constraints
+        pcp::BitPCP original_copy = original_bitpcp;
+        bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
         
         pcpp::PseudoTester tester;
         tester.create_tester(original_bitpcp);
         pcp::BitPCP result_bitpcp = tester.buildBitPCP();
-        bool result_satisfiable = checkBitPCPSatisfiability(result_bitpcp);
+        bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
+        
+        std::cout << "Test 6 - Empty BitPCP: Original satisfiable: " << original_satisfiable 
+                  << ", Result satisfiable: " << result_satisfiable << std::endl;
+        
+        assert(original_satisfiable == result_satisfiable && 
+               "Empty BitPCP should preserve satisfiability through PseudoTester");
+    },
+    
+    // Test 7: Complex satisfiable BitPCP with bit-specific constraints
+    []() -> void {
+        pcp::BitPCP original_bitpcp({1, 3, 5}); // Binary: 001, 011, 101
+        original_bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL); // bit 0: 0 == 0 ✓
+        original_bitpcp.add_constraint(1, 2, constraint::BitConstraint::SECOND_BIT_EQUAL); // bit 1: 1 == 0 ✗
+        
+        // Let's make it satisfiable by adjusting variables
+        original_bitpcp.set_variable(2, pcp::BitDomain(7)); // 111, so bit 1: 1 == 1 ✓
+        
+        pcp::BitPCP original_copy = original_bitpcp;
+        bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
+        
+        pcpp::PseudoTester tester;
+        tester.create_tester(original_bitpcp);
+        pcp::BitPCP result_bitpcp = tester.buildBitPCP();
+        bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
         
         std::cout << "Test 7 - Complex bit-specific constraints: Original satisfiable: " 
                   << original_satisfiable << ", Result satisfiable: " << result_satisfiable << std::endl;
         
         assert(original_satisfiable == result_satisfiable && 
                "Complex BitPCP should preserve satisfiability through PseudoTester");
+    },
+    
+    // Test 8: Stress test with larger random BitPCPs
+    []() -> void {
+        std::mt19937 rng(13579);
+        int test_count = 20;
+        int passed = 0;
+        
+        for (int i = 0; i < test_count; ++i) {
+            pcp::BitPCP original_bitpcp = generateRandomBitPCP(8, 6, rng);
+            pcp::BitPCP original_copy = original_bitpcp;
+            bool original_satisfiable = pcpp::check_bitPCP_satisfiability(original_copy);
+            
+            pcpp::PseudoTester tester;
+            tester.create_tester(original_bitpcp);
+            pcp::BitPCP result_bitpcp = tester.buildBitPCP();
+            bool result_satisfiable = checkCurrentAssignmentSatisfiability(result_bitpcp);
+            
+            if (original_satisfiable == result_satisfiable) {
+                passed++;
+            }
+        }
+        
+        std::cout << "Test 8 - Large random BitPCPs (8 vars): " << passed << "/" << test_count 
+                  << " tests passed" << std::endl;
+        
+        assert(passed == test_count && 
+               "Large random BitPCPs should preserve satisfiability through PseudoTester");
     },
 };
 
