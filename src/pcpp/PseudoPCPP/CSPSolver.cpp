@@ -1,6 +1,7 @@
 #include <functional>
 #include <vector>
 #include <map>
+#include <optional>
 
 #include "pcpp/PseudoPCPP/CSPSolver.hpp"
 #include "util/disjoint_set_union.hpp"
