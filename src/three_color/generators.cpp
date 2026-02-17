@@ -141,12 +141,13 @@ ThreeColor generate_non_three_colorable_graph(size_t num_nodes, size_t num_edges
     }
     ThreeColor graph = generate_valid_three_coloring_graph(num_nodes, num_edges - 6, num_red, num_green, num_blue);
     // Add 5 edges that violates the coloring
-    graph.add_edge(0, 1);
-    graph.add_edge(0, 2);
-    graph.add_edge(0, 3);
-    graph.add_edge(1, 2);
-    graph.add_edge(2, 3);
-    graph.add_edge(1, 3);
+    Node u = 0, v = 1, w = num_red + 1, x = num_red + num_green + 1;
+    graph.add_edge(u, v);
+    graph.add_edge(v, w);
+    graph.add_edge(w, x);
+    graph.add_edge(x, u);
+    graph.add_edge(u, w);
+    graph.add_edge(v, x);
     return graph;
 }
 
