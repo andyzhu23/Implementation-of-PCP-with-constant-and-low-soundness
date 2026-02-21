@@ -141,7 +141,22 @@ ThreeColor generate_non_three_colorable_graph(size_t num_nodes, size_t num_edges
     }
     ThreeColor graph = generate_valid_three_coloring_graph(num_nodes, num_edges - 6, num_red, num_green, num_blue);
     // Add 5 edges that violates the coloring
-    Node u = 0, v = 1, w = num_red + 1, x = num_red + num_green + 1;
+    Node u, v, w, x;
+    for (Node i = 0; i < num_nodes; ++i) {
+        if (graph.get_colors()[i] == Color::RED) {
+            u = i;
+        } else if (graph.get_colors()[i] == Color::GREEN) {
+            w = i;
+        } else if (graph.get_colors()[i] == Color::BLUE) {
+            x = i;
+        }
+    }
+    for (Node i = 0; i < num_nodes; ++i) {
+        if (graph.get_colors()[i] == Color::RED && u != i) {
+            v = i;
+            break;
+        }
+    }
     graph.add_edge(u, v);
     graph.add_edge(v, w);
     graph.add_edge(w, x);
