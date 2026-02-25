@@ -92,7 +92,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
         assert(1 - pcpp_soundness > 0);
     }, 
-    // Ring graph multiple local views encoded into pcpp, globally satisfiable, check that soundness is preserved
+    // Ring graph with four nodes multiple local views encoded into pcpp, globally satisfiable, check that satisfiability is preserved
     [](std::ofstream& fout) -> void {
         // variables 0, 1
         pcp::BitPCP bitpcp1(2);
@@ -180,7 +180,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         fout << "Alphabet reduced PCP(Satisfiable) gap: " << merged_gap << std::endl;
         assert(merged_gap == 0);
     },
-    // Ring graph, multiple local views encoded into pcpp, globally unsatisfiable, check that soundness is preserved
+    // Ring graph with four nodes, multiple local views encoded into pcpp, globally unsatisfiable, check that unsatisfiability is preserved
     [](std::ofstream& fout) -> void {
         // variables 0, 1
         pcp::BitPCP bitpcp1(2);
