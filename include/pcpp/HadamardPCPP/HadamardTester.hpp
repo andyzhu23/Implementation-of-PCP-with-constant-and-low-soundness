@@ -37,6 +37,12 @@ public:
     // Build a BitPCP from the constraint matrix and hadamard code
     pcp::BitPCP buildBitPCP() override;
 
+    pcp::BitPCP buildBitPCP(
+        int constraint_combination_repetition,
+        int consistency_test_repetition,
+        int linearity_test_repetition
+    );
+
 private:
     three_csp::ThreeCSP three_csp;
     Hadamard hadamard;

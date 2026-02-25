@@ -21,7 +21,7 @@ const int DEGREE = 5;
 const int CONSTRAINT_COMBINATION_REPETITION = 20;
 const int CONSISTENCY_TEST_REPETITION = 0;
 const int LINEARITY_TEST_REPETITION = 0;
-const int POWERING_RADIUS = 10;
+const int POWERING_RADIUS = 5;
 const int DEGREE = 5;
 #endif
 const int EXPANDING_COEFFICIENT = 1;

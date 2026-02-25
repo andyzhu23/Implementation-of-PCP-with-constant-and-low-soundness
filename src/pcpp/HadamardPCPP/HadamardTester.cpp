@@ -221,6 +221,18 @@ void HadamardTester::create_tester(const pcp::BitPCP &powering_pcp) {
 }
 
 pcp::BitPCP HadamardTester::buildBitPCP() {
+    return buildBitPCP(
+        constants::CONSTRAINT_COMBINATION_REPETITION,
+        constants::CONSISTENCY_TEST_REPETITION,
+        constants::LINEARITY_TEST_REPETITION
+    );
+}
+
+pcp::BitPCP HadamardTester::buildBitPCP(
+    int constraint_combination_repetition,
+    int consistency_test_repetition,
+    int linearity_test_repetition
+) {
 
     size_t original_size = three_csp.size();
 
@@ -242,7 +254,7 @@ pcp::BitPCP HadamardTester::buildBitPCP() {
 
     // add constraints from original constraint matrix
 
-    for (size_t _ = 0; _ < constants::CONSTRAINT_COMBINATION_REPETITION; ++_) {
+    for (size_t _ = 0; _ < constraint_combination_repetition; ++_) {
         // random sample
         std::vector<bool> sample(constraint_matrix.size());
         for (size_t i = 0; i < constraint_matrix.size(); ++i) {
@@ -268,7 +280,7 @@ pcp::BitPCP HadamardTester::buildBitPCP() {
 
     std::uniform_int_distribution<size_t> dist(0, original_size - 1);
     // add linearity test to verify hadamard code encodes original variables correctly
-    for (size_t _ = 0; _ < constants::CONSISTENCY_TEST_REPETITION; ++_) {
+    for (size_t _ = 0; _ < consistency_test_repetition; ++_) {
         size_t idx = dist(constants::RANDOM_SEED);
         if (binary_index_shift.find(idx) != binary_index_shift.end()) {
             idx = binary_index_shift[idx];
@@ -292,7 +304,7 @@ pcp::BitPCP HadamardTester::buildBitPCP() {
     }
 
     // add linearity test to ensure hadamard code is linear
-    for (size_t _ = 0; _ < constants::LINEARITY_TEST_REPETITION; ++_) {
+    for (size_t _ = 0; _ < linearity_test_repetition; ++_) {
 
         // only add positions that are already used for better coverage
         std::uniform_int_distribution<size_t> position_dist(0, used_positions_list.size() - 1);
