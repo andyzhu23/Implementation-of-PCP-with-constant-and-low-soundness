@@ -15,5 +15,3 @@ Running test case: 5
 Alphabet reduced PCP(Satisfiable) gap: 0
 Running test case: 6
 Alphabet reduced PCP(UnSatisfiable) gap: 0.00136612
-Running test case: 7
-Alphabet reduced PCP(Satisfiable) gap: 0.000546448
