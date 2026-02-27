@@ -8,6 +8,8 @@ std::unique_ptr<Tester> get_tester(TesterType tester_type) {
             return std::make_unique<PseudoTester>();
         case TesterType::HADAMARD:
             return std::make_unique<HadamardTester>();
+        case TesterType::REEDMULLER:
+            return std::make_unique<ReedMullerTester>();
     }
     return nullptr;
 }
