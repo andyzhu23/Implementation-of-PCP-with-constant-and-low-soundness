@@ -6,7 +6,7 @@ We start with a 3-CNF instance $\phi$.
 
 We create a function $C_\phi:\{0, 1\}^{O(\log n)}\rightarrow\{0, 1\}$.
 
-Where $C_\phi(\alpha, \beta_1, \beta_2, \beta_3) = 1$ iff the $i^\text{th}$ literal in $\alpha^{\text{th}}$ clause is $\beta_i = (\gamma_i, \sigma_i)$. $\sigma_i$ is an encoding of the sign ($\neg$), and $\gamma_i$ is means we are dealing with the $\gamma_i^{\text{th}}$ clause.
+Where $C_\phi(\alpha, \beta_1, \beta_2, \beta_3) = 1$ iff the $i^\text{th}$ literal in $\alpha^{\text{th}}$ clause is $\beta_i = (\gamma_i, \sigma_i)$. $\sigma_i$ is an encoding of the sign ($\neg$), and $\gamma_i$ means we are dealing with the $\gamma_i^{\text{th}}$ clause.
 
 We want $$\sum_{\beta_1\beta_2\beta_3\in\{0, 1\}^{3\log 2n}}\phi(\alpha, \beta_1, \beta_2, \beta_3)\cdot\prod_{i=1}^3(1-A'(\beta_i))=0$$ for every clause $\alpha$
 
@@ -32,15 +32,11 @@ For corresponding iterations, we check $g_i(r_1,...,r_i) = g_{i+1}(r_1,...,r_i,0
 
 ## Low Degree Test
 
-We need low degree test to show that the functions we claim $g$ are indeed low degree polynomials. 
+We need low degree test to show that the functions we claim $g$ are indeed low $d$-degree polynomials. 
 
-We pick a random line $l(t) = x+ty$
+Verifier picks a random line $l(t) = \vec{x}+t\vec{y}$
 
-we query $g_i$ on points $l(t)$ to get $v_t = g_i(l(t))$
-
-to test $g$ is a degree-$d$ polynomial, we can run linear constraints on list of $d$ points $(l(t), v_t)$.
+The prover now sends $d + 1$ values $a_0, a_1,...,a_d$ denoting the polynomial $h(x) = a_0 + a_1x+...+a_dx^d$, where the prover claims that $h = g l$.
 
 
-Try to find external libraries for pcpp
-
-implement a fake pcpp
+Then the verifier verfies the claim by evaluating $h$ at exactly one point $l(t_0)$ for some random $t_0$. Checks $h(l(t_0)) = g(t_0)$.

@@ -84,6 +84,7 @@ void BitPCP::add_constraint(Variable var, Variable other_var, constraint::BitCon
     constraint_indices[other_var].emplace_back(var, constraints[var].size() - 1);
     constraints_list.emplace_back(var, other_var, constraint);
 }
+
 std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     std::vector<Variable> neighbors;
     std::unordered_set<Variable> visited;

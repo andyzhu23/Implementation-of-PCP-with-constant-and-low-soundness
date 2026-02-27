@@ -63,6 +63,25 @@ add_test(NAME Test_CSPSolver COMMAND test_CSPSolver)
 target_include_directories(test_CSPSolver PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
+    test_UnivariatePolynomial
+    ./unit/test_UnivariatePolynomial.cpp
+    ../../src/finite_field/UnivariatePolynomial.cpp
+    ../../src/finite_field/FiniteFieldElement.cpp
+)
+add_test(NAME Test_UnivariatePolynomial COMMAND test_UnivariatePolynomial)
+target_include_directories(test_UnivariatePolynomial PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
+    test_Polynomial
+    ./unit/test_Polynomial.cpp
+    ../../src/finite_field/Polynomial.cpp
+    ../../src/finite_field/Monomial.cpp
+    ../../src/finite_field/FiniteFieldElement.cpp
+)
+add_test(NAME Test_Polynomial COMMAND test_Polynomial)
+target_include_directories(test_Polynomial PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
     test_to_expander 
     ./unit/test_to_expander.cpp 
     ../../src/core/to_expander.cpp 
@@ -73,6 +92,7 @@ add_executable(
     ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
@@ -116,6 +136,7 @@ add_executable(
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
@@ -150,6 +171,7 @@ add_executable(
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
@@ -171,6 +193,7 @@ add_executable(
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
@@ -204,6 +227,7 @@ add_executable(
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_color/generators.cpp
     ../../src/pcpp/TesterFactory.cpp
+    ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
@@ -234,6 +258,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
@@ -266,6 +291,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
@@ -297,6 +323,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
@@ -327,6 +354,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/ThreeColor.cpp
         ../../src/three_color/generators.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/pcp/BitPCP.cpp
@@ -353,6 +381,7 @@ if(BUILD_E2E_TESTS)
         ../../src/three_color/generators.cpp
         ../../src/three_csp/ThreeCSP.cpp
         ../../src/pcpp/TesterFactory.cpp
+        ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/pcp/BitPCP.cpp
