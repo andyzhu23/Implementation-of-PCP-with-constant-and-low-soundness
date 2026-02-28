@@ -21,7 +21,12 @@ public:
 
     FiniteFieldElement evaluate(const std::vector<FiniteFieldElement> &variable_values) const;
 
+    size_t getNumVariables() const;
+
+    const std::vector<Monomial> &getTerms() const;
+
 private:
+    size_t num_variables;
     std::vector<Monomial> terms;
 };
 
