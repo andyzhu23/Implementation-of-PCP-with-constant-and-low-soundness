@@ -1,3 +1,5 @@
+#include <random>
+#include "constants.hpp"
 #include "finite_field/constant.hpp"
 #include "finite_field/FiniteFieldElement.hpp"
 
@@ -31,6 +33,23 @@ FiniteFieldElement FiniteFieldElement::operator+=(const FiniteFieldElement &othe
 FiniteFieldElement FiniteFieldElement::operator*=(const FiniteFieldElement &other) {
     value = (value * other.value) % FINITE_FIELD_SIZE;
     return *this;
+}
+
+FiniteFieldElement get_random_element() {
+    return FiniteFieldElement(constants::RANDOM_SEED() % FINITE_FIELD_SIZE);
+}
+
+FiniteFieldElement FiniteFieldElement::exp(size_t exponent) const {
+    FiniteFieldElement result(1);
+    FiniteFieldElement base(*this);
+    while (exponent > 0) {
+        if (exponent & 1) {
+            result *= base;
+        }
+        base *= base;
+        exponent >>= 1;
+    }
+    return result;
 }
 
 }

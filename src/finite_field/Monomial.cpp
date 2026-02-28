@@ -25,8 +25,8 @@ const size_t Monomial::getExp(size_t index) const {
 }
 
 FiniteFieldElement Monomial::evaluate(const std::vector<FiniteFieldElement> &variable_values) const {
-    if (variable_values.size() != variable_exp.size()) {
-        throw std::invalid_argument("Number of variable values must match the number of variable exponents.");
+    if (variable_values.size() < variable_exp.size()) {
+        throw std::invalid_argument("Number of variable values must be at least the number of variable exponents.");
     }
     FiniteFieldElement result = coefficient;
     for (size_t i = 0; i < variable_exp.size(); ++i) {

@@ -22,9 +22,14 @@ public:
 
     FiniteFieldElement operator*=(const FiniteFieldElement &other);
 
+    FiniteFieldElement exp(size_t exponent) const;
+
 private:
     int value;
 };
+
+// Utility function to get a random finite field element
+FiniteFieldElement get_random_element();
 
 }
 
