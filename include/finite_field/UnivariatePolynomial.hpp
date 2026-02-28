@@ -1,6 +1,7 @@
-#ifndef FINITE_FIELD_POLYNOMIAL_HPP
-#define FINITE_FIELD_POLYNOMIAL_HPP
+#ifndef FINITE_FIELD_UNIVARIATEPOLYNOMIAL_HPP
+#define FINITE_FIELD_UNIVARIATEPOLYNOMIAL_HPP
 
+#include <map>
 #include <vector>
 
 #include "finite_field/FiniteFieldElement.hpp"
@@ -15,7 +16,9 @@ public:
 
     UnivariatePolynomial(const std::vector<FiniteFieldElement> &coefficients);
 
-    UnivariatePolynomial(std::vector<FiniteFieldElement> &&coefficients);
+    UnivariatePolynomial(const std::map<size_t, FiniteFieldElement> &coefficients);
+
+    UnivariatePolynomial(std::map<size_t, FiniteFieldElement> &&coefficients);
 
     size_t getDegree() const;
 
@@ -25,7 +28,7 @@ public:
 
 private:
     size_t degree;
-    std::vector<FiniteFieldElement> coefficients;
+    std::map<size_t, FiniteFieldElement> coefficients;
 };
 
 }
