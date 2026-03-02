@@ -2,7 +2,7 @@
 
 namespace pcpp {
 
-SummationTest::SummationTest(finite_field::Polynomial p) {
+SummationTest::SummationTest(const finite_field::Polynomial &p) {
     int num_variables = p.getNumVariables();
     iterations.push_back(std::move(p));
     for (int i = 0; i < num_variables; ++i) {
