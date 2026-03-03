@@ -8,6 +8,7 @@ namespace pcpp {
 class SummationTest {
 public:
     // Initializes the summation test with the given polynomial and creates iterations by stripping variables
+    // The claim is that p sum up to 0 across all values in the finite field
     SummationTest(const finite_field::Polynomial &p);
 
     // Strips the last variable from the polynomial by substituting it with a random point
