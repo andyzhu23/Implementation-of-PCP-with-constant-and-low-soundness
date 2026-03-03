@@ -9,13 +9,13 @@ class ReedMullerTester : public Tester {
 public:
     ReedMullerTester();
 
-    ReedMullerTester(const pcp::BitPCP &powering_pcp);
+    ReedMullerTester(const pcp::BinaryCSP &powering_pcp);
 
-    pcp::BitPCP three_color_to_bitpcp(const three_color::ThreeColor &tc) override;
+    pcp::BinaryCSP three_color_to_BinaryCSP(const three_color::ThreeColor &tc) override;
 
-    void create_tester(const pcp::BitPCP &powering_pcp) override;
+    void create_tester(const pcp::BinaryCSP &powering_pcp) override;
 
-    pcp::BitPCP buildBitPCP() override;
+    pcp::BinaryCSP buildBinaryCSP() override;
 private:
 
 };

@@ -12,9 +12,9 @@
 
 void merge_variables(
     size_t original_size,
-    pcp::BitPCP &pcp, 
+    pcp::BinaryCSP &pcp, 
     const std::vector<std::vector<std::pair<pcp::Variable, size_t>>> &occuring_location,
-    const std::vector<pcp::BitPCP> &reduced_pcps
+    const std::vector<pcp::BinaryCSP> &reduced_pcps
 ) {
     
     std::vector<size_t> offsets(1, 0);
@@ -58,11 +58,11 @@ void merge_variables(
         }
     }
 
-    pcp::BitPCP new_bitpcp(new_size);
+    pcp::BinaryCSP new_BinaryCSP(new_size);
 
     for (pcp::Variable i = 0; i < offsets.back(); ++i) {
         if (dsu.find(i) == i) {
-            new_bitpcp.set_variable(
+            new_BinaryCSP.set_variable(
                 representative_map[i],
                 pcp.get_variable(i)
             );
@@ -72,16 +72,16 @@ void merge_variables(
     for (const auto &[u, v, c] : pcp.get_constraints_list()) {
         pcp::Variable new_u = representative_map[dsu.find(u)];
         pcp::Variable new_v = representative_map[dsu.find(v)];
-        new_bitpcp.add_constraint(new_u, new_v, c);
+        new_BinaryCSP.add_constraint(new_u, new_v, c);
     }
-    pcp = std::move(new_bitpcp);
+    pcp = std::move(new_BinaryCSP);
 }
 
 namespace core {
 
 #ifndef SINGLE_THREAD
 
-pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
+pcp::BinaryCSP gap_amplification(pcp::BinaryCSP pcp, pcpp::TesterType tester_type) {
     to_expander(pcp, constants::EXPANDING_COEFFICIENT);
     pcp = reduce_degree(pcp, constants::DEGREE);
 
@@ -90,7 +90,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
 
     size_t original_size = pcp.get_size();
 
-    std::vector<pcp::BitPCP> reduced_pcps(original_size);
+    std::vector<pcp::BinaryCSP> reduced_pcps(original_size);
 
     std::vector<std::future<void>> futures;
     size_t chunk_size = (original_size + num_threads - 1) / num_threads;
@@ -114,10 +114,10 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
                             occuring_location[neighbors[i]].emplace_back(u, i);
                         }
                     }
-                    pcp::BitPCP powering_u = pcp.build_sub_pcp(neighbors);
+                    pcp::BinaryCSP powering_u = pcp.build_sub_pcp(neighbors);
 
                     std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(tester_type); tester->create_tester(powering_u);
-                    pcp::BitPCP reduced_pcp = tester->buildBitPCP();
+                    pcp::BinaryCSP reduced_pcp = tester->buildBinaryCSP();
                     reduced_pcps[u] = std::move(reduced_pcp);
                 }
             }
@@ -126,7 +126,7 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
     for (auto &f : futures) {
         f.get();
     }
-    pcp = pcp::merge_BitPCPs(reduced_pcps);
+    pcp = pcp::merge_BinaryCSPs(reduced_pcps);
 
     if (tester_type == pcpp::TesterType::HADAMARD) {
         // for Hadamard tester, we can further merge variables that are not merged in the tester but are actually the same due to the structure of the powering PCPs
@@ -139,25 +139,25 @@ pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
 
 #else
 
-pcp::BitPCP gap_amplification(pcp::BitPCP pcp, pcpp::TesterType tester_type) {
+pcp::BinaryCSP gap_amplification(pcp::BinaryCSP pcp, pcpp::TesterType tester_type) {
     to_expander(pcp, constants::EXPANDING_COEFFICIENT);
     pcp = reduce_degree(pcp, constants::DEGREE);
     size_t original_size = pcp.get_size();
     std::vector<std::vector<std::pair<pcp::Variable, size_t>>> occuring_location(original_size);
 
-    std::vector<pcp::BitPCP> reduced_pcps;
+    std::vector<pcp::BinaryCSP> reduced_pcps;
 
     for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(pcp.get_size()); ++u) {
         std::vector<pcp::Variable> neighbors = pcp.get_neighbors(u, constants::POWERING_RADIUS);
         for (size_t i = 0; i < neighbors.size(); ++i) {
             occuring_location[neighbors[i]].emplace_back(u, i);
         }
-        pcp::BitPCP powering_u = pcp.build_sub_pcp(neighbors);
+        pcp::BinaryCSP powering_u = pcp.build_sub_pcp(neighbors);
         std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(tester_type); tester->create_tester(powering_u);
-        pcp::BitPCP reduced_pcp = tester->buildBitPCP();
+        pcp::BinaryCSP reduced_pcp = tester->buildBinaryCSP();
         reduced_pcps.push_back(reduced_pcp);
     }
-    pcp = pcp::merge_BitPCPs(reduced_pcps);
+    pcp = pcp::merge_BinaryCSPs(reduced_pcps);
 
     merge_variables(original_size, pcp, occuring_location, reduced_pcps);
     pcp.clean();

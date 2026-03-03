@@ -1,12 +1,12 @@
 #include <stdexcept>
 
 #include "core/core.hpp"
-#include "pcp/BitPCP.hpp"
+#include "pcp/BinaryCSP.hpp"
 #include "util/random_picker.hpp"
 
 namespace core {
 
-pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
+pcp::BinaryCSP reduce_degree(const pcp::BinaryCSP &pcp, int degree) {
     if (degree < 3) {
         throw std::invalid_argument("degree must be at least 3");
     }
@@ -19,13 +19,13 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         new_size += sizes.back();
         offsets.push_back(new_size - sizes.back());
     }
-    pcp::BitPCP reduced_pcp(new_size);
+    pcp::BinaryCSP reduced_pcp(new_size);
     for (size_t i = 0; i < original_size; ++i) {
         // Connect in a cycle
         for (size_t j = 0; j < sizes[i]; ++j) {
             size_t curr = offsets[i] + j;
             size_t next = offsets[i] + (j + 1) % sizes[i];
-            reduced_pcp.add_constraint(curr, next, constraint::BitConstraint::EQUAL);
+            reduced_pcp.add_constraint(curr, next, constraint::BinaryConstraint::EQUAL);
             // Set bits to match original variable
             reduced_pcp.set_variable(curr, pcp.get_variable(i));
             reduced_pcp.set_variable(next, pcp.get_variable(i));
@@ -36,7 +36,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
             size_t curr = offsets[i] + j;
             pcp::Variable adj = constraints[j].first; // original neighbor index
             if (adj <= i) continue; // to avoid double adding
-            constraint::BitConstraint con = constraints[j].second;
+            constraint::BinaryConstraint con = constraints[j].second;
             int constraint_pos = pcp.get_constraints_indices(i)[j].second;
             size_t adj_new_index = offsets[adj] + constraint_pos;
             reduced_pcp.add_constraint(curr, adj_new_index, con);
@@ -49,7 +49,7 @@ pcp::BitPCP reduce_degree(const pcp::BitPCP &pcp, int degree) {
         }
         while (rp.size() > 1) {
             auto [u, v] = rp.pick_two();
-            reduced_pcp.add_constraint(u, v, constraint::BitConstraint::ANY);
+            reduced_pcp.add_constraint(u, v, constraint::BinaryConstraint::ANY);
         }
     }
     return reduced_pcp;

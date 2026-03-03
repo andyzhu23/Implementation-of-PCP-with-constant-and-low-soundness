@@ -4,7 +4,7 @@
 #include <vector>
 #include <bitset>
 
-#include "pcp/BitPCP.hpp"
+#include "pcp/BinaryCSP.hpp"
 
 namespace pcpp {
     enum class TesterType;
@@ -37,7 +37,7 @@ public:
 
     size_t get_edge_size() const;
 
-    pcp::BitPCP to_BitPCP(pcpp::TesterType tester_type) const;
+    pcp::BinaryCSP to_BinaryCSP(pcpp::TesterType tester_type) const;
 private:
     size_t num_edges;
     std::vector<Color> colors;

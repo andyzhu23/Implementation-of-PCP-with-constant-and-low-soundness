@@ -6,7 +6,7 @@
 
 namespace analyzer {
 
-PCPAnalyzer::PCPAnalyzer(const std::vector<std::pair<pcp::BitPCP, Satisfiability>> &samples, const int num_trial)
+PCPAnalyzer::PCPAnalyzer(const std::vector<std::pair<pcp::BinaryCSP, Satisfiability>> &samples, const int num_trial)
  : samples(samples), 
    num_trial(num_trial),
    soundness(0),
@@ -50,7 +50,7 @@ double PCPAnalyzer::getGap() { return gap; };
 double PCPAnalyzer::getCompleteness() { return completeness; };
 
 // perform a single uniformly random query on sample
-bool query(const pcp::BitPCP &sample) {
+bool query(const pcp::BinaryCSP &sample) {
     const auto &constraints_list = sample.get_constraints_list();
     if (constraints_list.size() == 0) {
         return true; // no constraints, always satisfied
@@ -58,7 +58,7 @@ bool query(const pcp::BitPCP &sample) {
     std::uniform_int_distribution<int> dist(0, constraints_list.size() - 1);
     int r = dist(constants::RANDOM_SEED);
     const auto &[v1, v2, constraint] = constraints_list[r];
-    return constraint::evaluateBitConstraint(constraint, sample.get_variable(v1), sample.get_variable(v2));
+    return constraint::evaluateBinaryConstraint(constraint, sample.get_variable(v1), sample.get_variable(v2));
 }
 
 }

@@ -4,79 +4,79 @@
 #include <unordered_set>
 #include <string>
 
-#include "pcp/BitPCP.hpp"
-#include "pcp/BitDomain.hpp"
+#include "pcp/BinaryCSP.hpp"
+#include "pcp/BinaryDomain.hpp"
 
 namespace pcp {
 
-// BitPCP class implementation
+// BinaryCSP class implementation
 // Constructors
-BitPCP::BitPCP() : BitPCP(0) {}
+BinaryCSP::BinaryCSP() : BinaryCSP(0) {}
 
-BitPCP::BitPCP(size_t size)
+BinaryCSP::BinaryCSP(size_t size)
  : size(size), 
    variables(size, false), 
    constraints(size), 
    constraint_indices(size) {}
 
-BitPCP::BitPCP(const std::vector<BitDomain> &variables)
+BinaryCSP::BinaryCSP(const std::vector<BinaryDomain> &variables)
  : size(variables.size()), 
    variables(variables), 
    constraints(variables.size()), 
    constraint_indices(variables.size()) {}
 
-BitPCP::BitPCP(std::vector<BitDomain> &&variables)
+BinaryCSP::BinaryCSP(std::vector<BinaryDomain> &&variables)
  : size(variables.size()), 
    variables(std::move(variables)), 
    constraints(size), 
    constraint_indices(size) {}
 
-BitPCP::BitPCP(std::vector<BitDomain> &&variables,
-    const std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>> &constraints_list)
- : BitPCP(std::move(variables)) {
+BinaryCSP::BinaryCSP(std::vector<BinaryDomain> &&variables,
+    const std::vector<std::tuple<Variable, Variable, constraint::BinaryConstraint>> &constraints_list)
+ : BinaryCSP(std::move(variables)) {
     for (const auto& [u, v, c] : constraints_list) {
         add_constraint(u, v, c);
     }
 }
 
-BitPCP::BitPCP(std::vector<BitDomain> &&variables,
-    std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>> &&constraints_list)
- : BitPCP(std::move(variables)) {
+BinaryCSP::BinaryCSP(std::vector<BinaryDomain> &&variables,
+    std::vector<std::tuple<Variable, Variable, constraint::BinaryConstraint>> &&constraints_list)
+ : BinaryCSP(std::move(variables)) {
     for (const auto& [u, v, c] : constraints_list) {
         add_constraint(u, v, c);
     }
 }
 
 // Member functions
-size_t BitPCP::get_size() const { return size; }
+size_t BinaryCSP::get_size() const { return size; }
 
-BitDomain BitPCP::get_variable(Variable var) const { return variables[var]; }
+BinaryDomain BinaryCSP::get_variable(Variable var) const { return variables[var]; }
 
-void BitPCP::set_variable(Variable var, BitDomain value) { variables[var] = value; }
+void BinaryCSP::set_variable(Variable var, BinaryDomain value) { variables[var] = value; }
 
-void BitPCP::add_variable(BitDomain value) {
+void BinaryCSP::add_variable(BinaryDomain value) {
     variables.push_back(value);
     constraints.emplace_back();
     constraint_indices.emplace_back();
     ++size;
 }
 
-const std::vector<std::pair<Variable, constraint::BitConstraint>>& BitPCP::get_constraints(Variable var) const { 
+const std::vector<std::pair<Variable, constraint::BinaryConstraint>>& BinaryCSP::get_constraints(Variable var) const { 
     return constraints[var]; 
 }
 
-const std::vector<std::pair<Variable, Index>>& BitPCP::get_constraints_indices(Variable var) const { 
+const std::vector<std::pair<Variable, Index>>& BinaryCSP::get_constraints_indices(Variable var) const { 
     return constraint_indices[var]; 
 }
 
-const std::vector<std::tuple<Variable, Variable, constraint::BitConstraint>>& BitPCP::get_constraints_list() const {
+const std::vector<std::tuple<Variable, Variable, constraint::BinaryConstraint>>& BinaryCSP::get_constraints_list() const {
     return constraints_list;
 }
 
-void BitPCP::add_constraint(Variable var, Variable other_var, constraint::BitConstraint constraint) {
+void BinaryCSP::add_constraint(Variable var, Variable other_var, constraint::BinaryConstraint constraint) {
     if (var < 0 || var >= static_cast<Variable>(size) 
         || other_var < 0 || other_var >= static_cast<Variable>(size)) {
-        throw std::out_of_range("BitPCP::add_constraint: index out of range");
+        throw std::out_of_range("BinaryCSP::add_constraint: index out of range");
     }
     constraints[var].emplace_back(other_var, constraint);
     constraints[other_var].emplace_back(var, constraint);
@@ -85,7 +85,7 @@ void BitPCP::add_constraint(Variable var, Variable other_var, constraint::BitCon
     constraints_list.emplace_back(var, other_var, constraint);
 }
 
-std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
+std::vector<Variable> BinaryCSP::get_neighbors(Variable var, int radius) const {
     std::vector<Variable> neighbors;
     std::unordered_set<Variable> visited;
     std::queue<std::pair<Variable, int>> q; // pair of (node, current_depth)
@@ -109,15 +109,15 @@ std::vector<Variable> BitPCP::get_neighbors(Variable var, int radius) const {
     return neighbors;
 }
 
-BitPCP BitPCP::get_neighboring_pcp(Variable var, int radius) const {
+BinaryCSP BinaryCSP::get_neighboring_pcp(Variable var, int radius) const {
     std::vector<Variable> neighbors = get_neighbors(var, radius);
     return build_sub_pcp(neighbors);
 }
 
-BitPCP BitPCP::build_sub_pcp(const std::vector<Variable> &neighbors) const  {
+BinaryCSP BinaryCSP::build_sub_pcp(const std::vector<Variable> &neighbors) const  {
     std::unordered_map<Variable, Variable> index_map; // original index to new index
 
-    BitPCP neighboring_pcp(neighbors.size());
+    BinaryCSP neighboring_pcp(neighbors.size());
     // Copy variables
     for (size_t i = 0; i < neighbors.size(); ++i) {
         neighboring_pcp.set_variable(static_cast<Variable>(i), get_variable(neighbors[i]));
@@ -128,7 +128,7 @@ BitPCP BitPCP::build_sub_pcp(const std::vector<Variable> &neighbors) const  {
         Variable u = neighbors[i];
         for (const auto &[v, constraint] : constraints[u]) {
             if (index_map.find(v) != index_map.end()) {
-                if (constraint != constraint::BitConstraint::ANY) {
+                if (constraint != constraint::BinaryConstraint::ANY) {
                     neighboring_pcp.add_constraint(
                         static_cast<Variable>(i), 
                         index_map[v], 
@@ -142,10 +142,10 @@ BitPCP BitPCP::build_sub_pcp(const std::vector<Variable> &neighbors) const  {
     return neighboring_pcp;
 }
 
-void BitPCP::clean() {
+void BinaryCSP::clean() {
     // do coordinate compression on variables
     std::vector<Variable> map(size, -1);
-    std::vector<BitDomain> new_variables;
+    std::vector<BinaryDomain> new_variables;
     Variable new_size = 0;
     for (Variable i = 0; i < size; ++i) {
         if (!constraints[i].empty()) {
@@ -153,23 +153,23 @@ void BitPCP::clean() {
             new_variables.push_back(variables[i]);
         }
     }
-    BitPCP new_bitpcp = std::move(new_variables);
+    BinaryCSP new_BinaryCSP = std::move(new_variables);
 
-    // rebuild all constraints to new_bitpcp
+    // rebuild all constraints to new_BinaryCSP
     for (const auto &[u, v, c] : constraints_list) {
-        new_bitpcp.add_constraint(map[u], map[v], c);
+        new_BinaryCSP.add_constraint(map[u], map[v], c);
     }
 
     // reset current object
-    *this = std::move(new_bitpcp);
+    *this = std::move(new_BinaryCSP);
 }
 
-std::ostream& operator<<(std::ostream &os, const BitPCP &bitpcp) {
-    os << "BitPCP with " << bitpcp.get_size() << " variables and " << bitpcp.get_constraints_list().size() << " constraints.\n";
+std::ostream& operator<<(std::ostream &os, const BinaryCSP &BinaryCSP) {
+    os << "BinaryCSP with " << BinaryCSP.get_size() << " variables and " << BinaryCSP.get_constraints_list().size() << " constraints.\n";
     os << "Variables:\n";
-    for (pcp::Variable i = 0; i < bitpcp.get_size(); ++i) {
+    for (pcp::Variable i = 0; i < BinaryCSP.get_size(); ++i) {
         os << "Variable " << (int)i << ": ";
-        const BitDomain &bd = bitpcp.get_variable(i);
+        const BinaryDomain &bd = BinaryCSP.get_variable(i);
         os << "[";
         for (size_t bit_idx = 0; bit_idx < 3; ++bit_idx) {
             os << bd[bit_idx];
@@ -199,25 +199,25 @@ std::ostream& operator<<(std::ostream &os, const BitPCP &bitpcp) {
         os << "], Domain Type: " << domain_type_str << "\n";
     }
     os << "Constraints:\n";
-    for (const auto& [u, v, c] : bitpcp.get_constraints_list()) {
+    for (const auto& [u, v, c] : BinaryCSP.get_constraints_list()) {
         std::string constraint_type_string;
         switch (c) {
-            case constraint::BitConstraint::ANY:
+            case constraint::BinaryConstraint::ANY:
                 constraint_type_string = "ANY";
                 break;
-            case constraint::BitConstraint::EQUAL:
+            case constraint::BinaryConstraint::EQUAL:
                 constraint_type_string = "EQUAL";
                 break;
-            case constraint::BitConstraint::NOTEQUAL:
+            case constraint::BinaryConstraint::NOTEQUAL:
                 constraint_type_string = "NOTEQUAL";
                 break;
-            case constraint::BitConstraint::FIRST_BIT_EQUAL:
+            case constraint::BinaryConstraint::FIRST_BIT_EQUAL:
                 constraint_type_string = "FIRST_BIT_EQUAL";
                 break;
-            case constraint::BitConstraint::SECOND_BIT_EQUAL:
+            case constraint::BinaryConstraint::SECOND_BIT_EQUAL:
                 constraint_type_string = "SECOND_BIT_EQUAL";
                 break;
-            case constraint::BitConstraint::THIRD_BIT_EQUAL:
+            case constraint::BinaryConstraint::THIRD_BIT_EQUAL:
                 constraint_type_string = "THIRD_BIT_EQUAL";
                 break;
             default:
@@ -230,8 +230,8 @@ std::ostream& operator<<(std::ostream &os, const BitPCP &bitpcp) {
     return os;
 }
 
-BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps) {
-    std::vector<BitDomain> merged_variables;
+BinaryCSP merge_BinaryCSPs(const std::vector<BinaryCSP> &pcps) {
+    std::vector<BinaryDomain> merged_variables;
     size_t total_size = 0;
     for (const auto& pcp : pcps) {
         total_size += pcp.get_size();
@@ -242,7 +242,7 @@ BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps) {
             merged_variables.push_back(pcp.get_variable(i));
         }
     }
-    BitPCP result = std::move(merged_variables);
+    BinaryCSP result = std::move(merged_variables);
     size_t offset = 0;
     for (const auto& pcp : pcps) {
         for (const auto& [u, v, c] : pcp.get_constraints_list()) {
@@ -254,8 +254,8 @@ BitPCP merge_BitPCPs(const std::vector<BitPCP> &pcps) {
     return result;
 }
 
-BitPCP merge_BitPCPs(std::vector<BitPCP> &&pcps) {
-    std::vector<BitDomain> merged_variables;
+BinaryCSP merge_BinaryCSPs(std::vector<BinaryCSP> &&pcps) {
+    std::vector<BinaryDomain> merged_variables;
     size_t total_size = 0;
     for (const auto& pcp : pcps) {
         total_size += pcp.get_size();
@@ -266,11 +266,11 @@ BitPCP merge_BitPCPs(std::vector<BitPCP> &&pcps) {
             merged_variables.push_back(pcp.get_variable(i));
         }
     }
-    BitPCP result = std::move(merged_variables);
+    BinaryCSP result = std::move(merged_variables);
     size_t offset = 0;
     for (const auto& pcp : pcps) {
         for (const auto& [u, v, c] : pcp.get_constraints_list()) {
-            if (c != constraint::BitConstraint::ANY) {
+            if (c != constraint::BinaryConstraint::ANY) {
                 result.add_constraint(u + offset, v + offset, c);
             }
         }

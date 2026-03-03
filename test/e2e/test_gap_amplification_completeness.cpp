@@ -13,13 +13,13 @@ std::vector<std::function<void()>> test_cases = {
     // Test 1: Small valid three-coloring graph
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(5, 8, 2, 2, 1);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::HADAMARD);
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp, pcpp::TesterType::HADAMARD);
-        analyzer::PCPAnalyzer analyzer_original({{bitpcp, true}}, 100);
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::HADAMARD);
+        pcp::BinaryCSP amplified_pcp = core::gap_amplification(BinaryCSP, pcpp::TesterType::HADAMARD);
+        analyzer::PCPAnalyzer analyzer_original({{BinaryCSP, true}}, 100);
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, true}}, 100);
     
         std::cout << "\n=== Test 1: Small Graph ===" << std::endl;
-        std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
+        std::cout << "Original PCP size: " << BinaryCSP.get_size() << std::endl;
         std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
         std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
         std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
@@ -35,13 +35,13 @@ std::vector<std::function<void()>> test_cases = {
     // Test 2: Medium valid three-coloring graph
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(10, 15, 4, 3, 3);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::HADAMARD);
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp, pcpp::TesterType::HADAMARD);
-        analyzer::PCPAnalyzer analyzer_original({{bitpcp, true}}, 100);
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::HADAMARD);
+        pcp::BinaryCSP amplified_pcp = core::gap_amplification(BinaryCSP, pcpp::TesterType::HADAMARD);
+        analyzer::PCPAnalyzer analyzer_original({{BinaryCSP, true}}, 100);
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, true}}, 100);
     
         std::cout << "\n=== Test 2: Medium Graph ===" << std::endl;
-        std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
+        std::cout << "Original PCP size: " << BinaryCSP.get_size() << std::endl;
         std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
         std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
         std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
@@ -58,13 +58,13 @@ std::vector<std::function<void()>> test_cases = {
     // Test 3: Larger valid three-coloring graph
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(15, 25, 5, 5, 5);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::HADAMARD);
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp, pcpp::TesterType::HADAMARD);
-        analyzer::PCPAnalyzer analyzer_original({{bitpcp, true}}, 100);
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::HADAMARD);
+        pcp::BinaryCSP amplified_pcp = core::gap_amplification(BinaryCSP, pcpp::TesterType::HADAMARD);
+        analyzer::PCPAnalyzer analyzer_original({{BinaryCSP, true}}, 100);
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, true}}, 100);
     
         std::cout << "\n=== Test 3: Larger Graph ===" << std::endl;
-        std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
+        std::cout << "Original PCP size: " << BinaryCSP.get_size() << std::endl;
         std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
         std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
         std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
@@ -81,13 +81,13 @@ std::vector<std::function<void()>> test_cases = {
     // Test 4: Dense graph with higher degree
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(8, 20, 2, 3, 3);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::HADAMARD);
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp, pcpp::TesterType::HADAMARD);
-        analyzer::PCPAnalyzer analyzer_original({{bitpcp, true}}, 100);
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::HADAMARD);
+        pcp::BinaryCSP amplified_pcp = core::gap_amplification(BinaryCSP, pcpp::TesterType::HADAMARD);
+        analyzer::PCPAnalyzer analyzer_original({{BinaryCSP, true}}, 100);
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, true}}, 100);
     
         std::cout << "\n=== Test 4: Dense Graph ===" << std::endl;
-        std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
+        std::cout << "Original PCP size: " << BinaryCSP.get_size() << std::endl;
         std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
         std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
         std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;
@@ -103,13 +103,13 @@ std::vector<std::function<void()>> test_cases = {
     // Test 5: Sparse graph with lower degree
     []() -> void {
         three_color::ThreeColor input = three_color::generate_valid_three_coloring_graph(12, 12, 4, 4, 4);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::HADAMARD);
-        pcp::BitPCP amplified_pcp = core::gap_amplification(bitpcp, pcpp::TesterType::HADAMARD);
-        analyzer::PCPAnalyzer analyzer_original({{bitpcp, true}}, 100);
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::HADAMARD);
+        pcp::BinaryCSP amplified_pcp = core::gap_amplification(BinaryCSP, pcpp::TesterType::HADAMARD);
+        analyzer::PCPAnalyzer analyzer_original({{BinaryCSP, true}}, 100);
         analyzer::PCPAnalyzer analyzer_amplified({{amplified_pcp, true}}, 100);
     
         std::cout << "\n=== Test 5: Sparse Graph ===" << std::endl;
-        std::cout << "Original PCP size: " << bitpcp.get_size() << std::endl;
+        std::cout << "Original PCP size: " << BinaryCSP.get_size() << std::endl;
         std::cout << "Original PCP completeness: " << analyzer_original.getCompleteness() << std::endl;
         std::cout << "Original PCP soundness: " << analyzer_original.getSoundness() << std::endl;
         std::cout << "Original PCP gap: " << analyzer_original.getGap() << std::endl;

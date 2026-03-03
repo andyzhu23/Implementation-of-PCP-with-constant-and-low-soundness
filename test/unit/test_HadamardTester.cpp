@@ -7,29 +7,29 @@
 
 #include "pcpp/HadamardPCPP/HadamardTester.hpp"
 #include "three_color/ThreeColor.hpp"
-#include "pcp/BitPCP.hpp"
-#include "pcp/BitDomain.hpp"
-#include "constraint/BitConstraint.hpp"
+#include "pcp/BinaryCSP.hpp"
+#include "pcp/BinaryDomain.hpp"
+#include "constraint/BinaryConstraint.hpp"
 
-// Helper function to check completeness of a BitPCP
+// Helper function to check completeness of a BinaryCSP
 // Returns true if all constraints are satisfied, false otherwise
-bool checkBitPCPCompleteness(const pcp::BitPCP &bitpcp) {
-    for (const auto &[u, v, c] : bitpcp.get_constraints_list()) {
+bool checkBinaryCSPCompleteness(const pcp::BinaryCSP &BinaryCSP) {
+    for (const auto &[u, v, c] : BinaryCSP.get_constraints_list()) {
         switch (c) {
-            case constraint::BitConstraint::NOTEQUAL:
-                if (bitpcp.get_variable(u) == bitpcp.get_variable(v)) return false;
+            case constraint::BinaryConstraint::NOTEQUAL:
+                if (BinaryCSP.get_variable(u) == BinaryCSP.get_variable(v)) return false;
                 break;
-            case constraint::BitConstraint::EQUAL:
-                if (bitpcp.get_variable(u) != bitpcp.get_variable(v)) return false;
+            case constraint::BinaryConstraint::EQUAL:
+                if (BinaryCSP.get_variable(u) != BinaryCSP.get_variable(v)) return false;
                 break;
-            case constraint::BitConstraint::FIRST_BIT_EQUAL:
-                if (bitpcp.get_variable(u)[0] != bitpcp.get_variable(v)[0]) return false;
+            case constraint::BinaryConstraint::FIRST_BIT_EQUAL:
+                if (BinaryCSP.get_variable(u)[0] != BinaryCSP.get_variable(v)[0]) return false;
                 break;
-            case constraint::BitConstraint::SECOND_BIT_EQUAL:
-                if (bitpcp.get_variable(u)[1] != bitpcp.get_variable(v)[1]) return false;
+            case constraint::BinaryConstraint::SECOND_BIT_EQUAL:
+                if (BinaryCSP.get_variable(u)[1] != BinaryCSP.get_variable(v)[1]) return false;
                 break;
-            case constraint::BitConstraint::THIRD_BIT_EQUAL:
-                if (bitpcp.get_variable(u)[2] != bitpcp.get_variable(v)[2]) return false;
+            case constraint::BinaryConstraint::THIRD_BIT_EQUAL:
+                if (BinaryCSP.get_variable(u)[2] != BinaryCSP.get_variable(v)[2]) return false;
                 break;
             default:
                 break;
@@ -42,112 +42,112 @@ std::vector<std::function<void()>> test_cases = {
     // Test 1: Simple case with two different colors
     []() -> void {
         pcpp::HadamardTester tester(three_color::Color::RED, three_color::Color::GREEN);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is satisfiable
-        assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
+        pcp::BinaryCSP BinaryCSP = tester.buildBinaryCSP();
+        // Check that the BinaryCSP is satisfiable
+        assert(checkBinaryCSPCompleteness(BinaryCSP) && "Expected BinaryCSP to be satisfiable for different colors");
     },
     // Test 2: Simple case with two different colors
     []() -> void {
         pcpp::HadamardTester tester(three_color::Color::GREEN, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is satisfiable
-        assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
+        pcp::BinaryCSP BinaryCSP = tester.buildBinaryCSP();
+        // Check that the BinaryCSP is satisfiable
+        assert(checkBinaryCSPCompleteness(BinaryCSP) && "Expected BinaryCSP to be satisfiable for different colors");
     },
     // Test 3: Simple case with two different colors
     []() -> void {
         pcpp::HadamardTester tester(three_color::Color::RED, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is satisfiable
-        assert(checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be satisfiable for different colors");
+        pcp::BinaryCSP BinaryCSP = tester.buildBinaryCSP();
+        // Check that the BinaryCSP is satisfiable
+        assert(checkBinaryCSPCompleteness(BinaryCSP) && "Expected BinaryCSP to be satisfiable for different colors");
     },
     // Test 4: Simple case with two same colors
     []() -> void {
         pcpp::HadamardTester tester(three_color::Color::RED, three_color::Color::RED);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is not satisfiable
-        assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
+        pcp::BinaryCSP BinaryCSP = tester.buildBinaryCSP();
+        // Check that the BinaryCSP is not satisfiable
+        assert(!checkBinaryCSPCompleteness(BinaryCSP) && "Expected BinaryCSP to be unsatisfiable for same colors");
     },
     // Test 5: Simple case with two same colors
     []() -> void {
         pcpp::HadamardTester tester(three_color::Color::GREEN, three_color::Color::GREEN);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is not satisfiable
-        assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
+        pcp::BinaryCSP BinaryCSP = tester.buildBinaryCSP();
+        // Check that the BinaryCSP is not satisfiable
+        assert(!checkBinaryCSPCompleteness(BinaryCSP) && "Expected BinaryCSP to be unsatisfiable for same colors");
     },
     // Test 6: Simple case with two same colors
     []() -> void {
         pcpp::HadamardTester tester(three_color::Color::BLUE, three_color::Color::BLUE);
-        pcp::BitPCP bitpcp = tester.buildBitPCP();
-        // Check that the BitPCP is not satisfiable
-        assert(!checkBitPCPCompleteness(bitpcp) && "Expected BitPCP to be unsatisfiable for same colors");
+        pcp::BinaryCSP BinaryCSP = tester.buildBinaryCSP();
+        // Check that the BinaryCSP is not satisfiable
+        assert(!checkBinaryCSPCompleteness(BinaryCSP) && "Expected BinaryCSP to be unsatisfiable for same colors");
     },
-    // Test 7: Test BitPCP completeness with a satisfiable BitPCP
+    // Test 7: Test BinaryCSP completeness with a satisfiable BinaryCSP
     []() -> void {
-        // Create a simple satisfiable BitPCP: two variables with NOTEQUAL constraint
-        pcp::BitPCP bitpcp(2);
-        bitpcp.set_variable(0, pcp::BitDomain(0b001)); // variable 0 = 001
-        bitpcp.set_variable(1, pcp::BitDomain(0b010)); // variable 1 = 010
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
-        // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
-        assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
+        // Create a simple satisfiable BinaryCSP: two variables with NOTEQUAL constraint
+        pcp::BinaryCSP BinaryCSP(2);
+        BinaryCSP.set_variable(0, pcp::BinaryDomain(0b001)); // variable 0 = 001
+        BinaryCSP.set_variable(1, pcp::BinaryDomain(0b010)); // variable 1 = 010
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::NOTEQUAL);
+        // Check completeness of the BinaryCSP
+        bool is_complete = checkBinaryCSPCompleteness(BinaryCSP);
+        assert(is_complete && "Expected BinaryCSP to be complete (satisfiable)");
     },
-    // Test 8: Test BitPCP completeness with a satisfiable BitPCP
+    // Test 8: Test BinaryCSP completeness with a satisfiable BinaryCSP
     []() -> void {
-        // Create a BitPCP with EQUAL constraint that is satisfied
-        pcp::BitPCP bitpcp(2);
-        bitpcp.set_variable(0, pcp::BitDomain(0b101)); // variable 0 = 101
-        bitpcp.set_variable(1, pcp::BitDomain(0b101)); // variable 1 = 101
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
-        // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
-        assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
+        // Create a BinaryCSP with EQUAL constraint that is satisfied
+        pcp::BinaryCSP BinaryCSP(2);
+        BinaryCSP.set_variable(0, pcp::BinaryDomain(0b101)); // variable 0 = 101
+        BinaryCSP.set_variable(1, pcp::BinaryDomain(0b101)); // variable 1 = 101
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
+        // Check completeness of the BinaryCSP
+        bool is_complete = checkBinaryCSPCompleteness(BinaryCSP);
+        assert(is_complete && "Expected BinaryCSP to be complete (satisfiable)");
     },
-    // Test 9: Test BitPCP completeness with a satisfiable BitPCP with bit-specific constraints
+    // Test 9: Test BinaryCSP completeness with a satisfiable BinaryCSP with bit-specific constraints
     []() -> void {
-        // Create a BitPCP with FIRST_BIT_EQUAL constraint that is satisfied
-        pcp::BitPCP bitpcp(3);
-        bitpcp.set_variable(0, pcp::BitDomain(0b001)); // variable 0 = 001
-        bitpcp.set_variable(1, pcp::BitDomain(0b011)); // variable 1 = 011
-        bitpcp.set_variable(2, pcp::BitDomain(0b101)); // variable 2 = 101
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL); // both have bit 0 = 1
-        bitpcp.add_constraint(0, 2, constraint::BitConstraint::FIRST_BIT_EQUAL); // both have bit 0 = 1
-        // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
-        assert(is_complete && "Expected BitPCP to be complete (satisfiable)");
+        // Create a BinaryCSP with FIRST_BIT_EQUAL constraint that is satisfied
+        pcp::BinaryCSP BinaryCSP(3);
+        BinaryCSP.set_variable(0, pcp::BinaryDomain(0b001)); // variable 0 = 001
+        BinaryCSP.set_variable(1, pcp::BinaryDomain(0b011)); // variable 1 = 011
+        BinaryCSP.set_variable(2, pcp::BinaryDomain(0b101)); // variable 2 = 101
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::FIRST_BIT_EQUAL); // both have bit 0 = 1
+        BinaryCSP.add_constraint(0, 2, constraint::BinaryConstraint::FIRST_BIT_EQUAL); // both have bit 0 = 1
+        // Check completeness of the BinaryCSP
+        bool is_complete = checkBinaryCSPCompleteness(BinaryCSP);
+        assert(is_complete && "Expected BinaryCSP to be complete (satisfiable)");
     },
-    // Test 10: Test BitPCP completeness with an unsatisfiable BitPCP
+    // Test 10: Test BinaryCSP completeness with an unsatisfiable BinaryCSP
     []() -> void {
-        // Create an unsatisfiable BitPCP: two equal variables with NOTEQUAL constraint
-        pcp::BitPCP bitpcp(2);
-        bitpcp.set_variable(0, pcp::BitDomain(0b110)); // variable 0 = 110
-        bitpcp.set_variable(1, pcp::BitDomain(0b110)); // variable 1 = 110
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
-        // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
-        assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
+        // Create an unsatisfiable BinaryCSP: two equal variables with NOTEQUAL constraint
+        pcp::BinaryCSP BinaryCSP(2);
+        BinaryCSP.set_variable(0, pcp::BinaryDomain(0b110)); // variable 0 = 110
+        BinaryCSP.set_variable(1, pcp::BinaryDomain(0b110)); // variable 1 = 110
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::NOTEQUAL);
+        // Check completeness of the BinaryCSP
+        bool is_complete = checkBinaryCSPCompleteness(BinaryCSP);
+        assert(!is_complete && "Expected BinaryCSP to be incomplete (unsatisfiable)");
     },
-    // Test 11: Test BitPCP completeness with an unsatisfiable BitPCP
+    // Test 11: Test BinaryCSP completeness with an unsatisfiable BinaryCSP
     []() -> void {
-        // Create an unsatisfiable BitPCP: two different variables with EQUAL constraint
-        pcp::BitPCP bitpcp(2);
-        bitpcp.set_variable(0, pcp::BitDomain(0b111)); // variable 0 = 111
-        bitpcp.set_variable(1, pcp::BitDomain(0b000)); // variable 1 = 000
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
-        // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
-        assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
+        // Create an unsatisfiable BinaryCSP: two different variables with EQUAL constraint
+        pcp::BinaryCSP BinaryCSP(2);
+        BinaryCSP.set_variable(0, pcp::BinaryDomain(0b111)); // variable 0 = 111
+        BinaryCSP.set_variable(1, pcp::BinaryDomain(0b000)); // variable 1 = 000
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
+        // Check completeness of the BinaryCSP
+        bool is_complete = checkBinaryCSPCompleteness(BinaryCSP);
+        assert(!is_complete && "Expected BinaryCSP to be incomplete (unsatisfiable)");
     },
-    // Test 12: Test BitPCP completeness with an unsatisfiable BitPCP with bit-specific constraints
+    // Test 12: Test BinaryCSP completeness with an unsatisfiable BinaryCSP with bit-specific constraints
     []() -> void {
-        // Create an unsatisfiable BitPCP: FIRST_BIT_EQUAL constraint violated
-        pcp::BitPCP bitpcp(2);
-        bitpcp.set_variable(0, pcp::BitDomain(0b001)); // variable 0 = 001 (first bit = 1)
-        bitpcp.set_variable(1, pcp::BitDomain(0b010)); // variable 1 = 010 (first bit = 0)
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::FIRST_BIT_EQUAL);
-        // Check completeness of the BitPCP
-        bool is_complete = checkBitPCPCompleteness(bitpcp);
-        assert(!is_complete && "Expected BitPCP to be incomplete (unsatisfiable)");
+        // Create an unsatisfiable BinaryCSP: FIRST_BIT_EQUAL constraint violated
+        pcp::BinaryCSP BinaryCSP(2);
+        BinaryCSP.set_variable(0, pcp::BinaryDomain(0b001)); // variable 0 = 001 (first bit = 1)
+        BinaryCSP.set_variable(1, pcp::BinaryDomain(0b010)); // variable 1 = 010 (first bit = 0)
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::FIRST_BIT_EQUAL);
+        // Check completeness of the BinaryCSP
+        bool is_complete = checkBinaryCSPCompleteness(BinaryCSP);
+        assert(!is_complete && "Expected BinaryCSP to be incomplete (unsatisfiable)");
     },
 
 };

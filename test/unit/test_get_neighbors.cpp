@@ -3,16 +3,16 @@
 #include <iostream>
 #include <vector>
 
-#include "pcp/BitPCP.hpp"
-#include "pcp/BitDomain.hpp"
+#include "pcp/BinaryCSP.hpp"
+#include "pcp/BinaryDomain.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 5-node cycle, alternating constraints
     []() -> void {
-        std::vector<pcp::BitDomain> bits = {1, 0, 1, 0, 1};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::BinaryDomain> bits = {1, 0, 1, 0, 1};
+        pcp::BinaryCSP pcp(bits);
         for (int i = 0; i < 5; ++i) {
-            pcp.add_constraint(i, (i + 1) % 5, constraint::BitConstraint::EQUAL);
+            pcp.add_constraint(i, (i + 1) % 5, constraint::BinaryConstraint::EQUAL);
         }
         // Radius 1 from node 0
         auto neighbors1 = pcp.get_neighbors(0, 1);
@@ -28,10 +28,10 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Star graph, center 0, leaves 1-4
     []() -> void {
-        std::vector<pcp::BitDomain> bits = {1, 0, 1, 0, 1};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::BinaryDomain> bits = {1, 0, 1, 0, 1};
+        pcp::BinaryCSP pcp(bits);
         for (int i = 1; i < 5; ++i) {
-            pcp.add_constraint(0, i, constraint::BitConstraint::EQUAL);
+            pcp.add_constraint(0, i, constraint::BinaryConstraint::EQUAL);
         }
         // Center node, radius 1
         auto neighbors = pcp.get_neighbors(0, 1);
@@ -47,10 +47,10 @@ std::vector<std::function<void()>> test_cases = {
     }, 
     // Test 3: 6-node chain, alternating constraints
     []() -> void {
-        std::vector<pcp::BitDomain> bits = {1, 0, 1, 0, 1, 0};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::BinaryDomain> bits = {1, 0, 1, 0, 1, 0};
+        pcp::BinaryCSP pcp(bits);
         for (int i = 0; i < 5; ++i) {
-            pcp.add_constraint(i, i+1, constraint::BitConstraint::EQUAL);
+            pcp.add_constraint(i, i+1, constraint::BinaryConstraint::EQUAL);
         }
         // Middle node, radius 2
         auto neighbors = pcp.get_neighbors(3, 2);
@@ -62,11 +62,11 @@ std::vector<std::function<void()>> test_cases = {
     }, 
     // Test 4: 4-node complete graph
     []() -> void {
-        std::vector<pcp::BitDomain> bits = {1, 0, 1, 0};
-        pcp::BitPCP pcp(bits);
+        std::vector<pcp::BinaryDomain> bits = {1, 0, 1, 0};
+        pcp::BinaryCSP pcp(bits);
         for (int i = 0; i < 4; ++i) {
             for (int j = i+1; j < 4; ++j) {
-                pcp.add_constraint(i, j, constraint::BitConstraint::EQUAL);
+                pcp.add_constraint(i, j, constraint::BinaryConstraint::EQUAL);
             }
         }
         // Any node, radius 1

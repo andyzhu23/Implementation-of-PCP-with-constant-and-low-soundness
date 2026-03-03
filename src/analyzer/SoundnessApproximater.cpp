@@ -6,11 +6,11 @@
 
 #include "constants.hpp"
 #include "analyzer/SoundnessApproximater.hpp"
-#include "constraint/BitConstraint.hpp"
+#include "constraint/BinaryConstraint.hpp"
 
 namespace analyzer {
 
-double approximate_soundness(pcp::BitPCP &pcp, size_t iter_per_temp) {
+double approximate_soundness(pcp::BinaryCSP &pcp, size_t iter_per_temp) {
     // Gather constraints list
     const auto &constraints_list = pcp.get_constraints_list();
     size_t m = constraints_list.size();
@@ -21,9 +21,9 @@ double approximate_soundness(pcp::BitPCP &pcp, size_t iter_per_temp) {
     auto count_satisfied = [&]() {
         int count = 0;
         for (const auto &[var1, var2, constraint] : constraints_list) {
-            pcp::BitDomain val1 = pcp.get_variable(var1);
-            pcp::BitDomain val2 = pcp.get_variable(var2);
-            count += constraint::evaluateBitConstraint(constraint, val1, val2) ? 1 : 0;
+            pcp::BinaryDomain val1 = pcp.get_variable(var1);
+            pcp::BinaryDomain val2 = pcp.get_variable(var2);
+            count += constraint::evaluateBinaryConstraint(constraint, val1, val2) ? 1 : 0;
         }
         return count;
     };
@@ -32,9 +32,9 @@ double approximate_soundness(pcp::BitPCP &pcp, size_t iter_per_temp) {
     auto count_local_satisfied = [&](pcp::Variable changed_var) {
         int count = 0;
         for (const auto &[other_var, constraint] : pcp.get_constraints(changed_var)) {
-            pcp::BitDomain val1 = pcp.get_variable(changed_var);
-            pcp::BitDomain val2 = pcp.get_variable(other_var);
-            count += constraint::evaluateBitConstraint(constraint, val1, val2) ? 1 : 0;
+            pcp::BinaryDomain val1 = pcp.get_variable(changed_var);
+            pcp::BinaryDomain val2 = pcp.get_variable(other_var);
+            count += constraint::evaluateBinaryConstraint(constraint, val1, val2) ? 1 : 0;
         }
         return count;
     };
@@ -66,8 +66,8 @@ double approximate_soundness(pcp::BitPCP &pcp, size_t iter_per_temp) {
 
             // pick a new random value different from current
             std::uniform_int_distribution<size_t> opt_dist(0, opts.size() - 1);
-            pcp::BitDomain old = pcp.get_variable(v);
-            pcp::BitDomain cand;
+            pcp::BinaryDomain old = pcp.get_variable(v);
+            pcp::BinaryDomain cand;
             // ensure different
             for (int tries = 0; tries < 10; ++tries) {
                 cand = opts[opt_dist(constants::RANDOM_SEED)];
@@ -102,26 +102,26 @@ double approximate_soundness(pcp::BitPCP &pcp, size_t iter_per_temp) {
     return static_cast<double>(best_satisfied) / static_cast<double>(m);
 }
 
-double approximate_soundness_via_random_subset(pcp::BitPCP &pcp) {
+double approximate_soundness_via_random_subset(pcp::BinaryCSP &pcp) {
     auto constraint_list = pcp.get_constraints_list();
 
     double accumulated_soundness = 0.0;
 
     for (int _ = 0; _ < constants::QUERY_SAMPLING_REPETITION; ++_) {
         std::shuffle(constraint_list.begin(), constraint_list.end(), constants::RANDOM_SEED);
-        pcp::BitPCP sub_pcp;
+        pcp::BinaryCSP sub_pcp;
         std::map<pcp::Variable, pcp::Variable> var_mapping;
         size_t subset_size = std::min<size_t>(constants::SUBSET_SIZE, constraint_list.size());
         for (size_t i = 0; i < subset_size; ++i) {
             auto [old_var1, old_var2, old_constraint] = constraint_list[i];
             if (var_mapping.find(old_var1) == var_mapping.end()) {
-                pcp::BitDomain val = pcp.get_variable(old_var1);
+                pcp::BinaryDomain val = pcp.get_variable(old_var1);
                 pcp::Variable new_var = static_cast<pcp::Variable>(sub_pcp.get_size());
                 sub_pcp.add_variable(val);
                 var_mapping[old_var1] = new_var;
             }
             if (var_mapping.find(old_var2) == var_mapping.end()) {
-                pcp::BitDomain val = pcp.get_variable(old_var2);
+                pcp::BinaryDomain val = pcp.get_variable(old_var2);
                 pcp::Variable new_var = static_cast<pcp::Variable>(sub_pcp.get_size());
                 sub_pcp.add_variable(val);
                 var_mapping[old_var2] = new_var;

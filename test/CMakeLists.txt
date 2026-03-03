@@ -3,10 +3,10 @@ option(BUILD_E2E_TESTS "Build end-to-end tests (may be slow)" ON)
 add_executable(
     test_get_neighbors 
     ./unit/test_get_neighbors.cpp 
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
 
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
  
 )
 add_test(NAME Test_Get_Neighbors COMMAND test_get_neighbors)
@@ -15,10 +15,10 @@ target_include_directories(test_get_neighbors PRIVATE ${CMAKE_SOURCE_DIR}/includ
 add_executable(
     test_PCPAnalyzer 
     ./unit/test_PCPAnalyzer.cpp 
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
 
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
     ../../src/analyzer/PCPAnalyzer.cpp
 )
 add_test(NAME Test_PCPAnalyzer COMMAND test_PCPAnalyzer)
@@ -28,9 +28,9 @@ add_executable(
     test_SoundnessApproximater
     ./unit/test_SoundnessApproximater.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
+    ../../src/constraint/BinaryConstraint.cpp
 )
 add_test(NAME Test_SoundnessApproximater COMMAND test_SoundnessApproximater)
 target_include_directories(test_SoundnessApproximater PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -41,9 +41,9 @@ add_executable(
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
+    ../../src/constraint/BinaryConstraint.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
 )
@@ -54,9 +54,9 @@ add_executable(
     test_CSPSolver
     ./unit/test_CSPSolver.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
+    ../../src/constraint/BinaryConstraint.cpp
     ../../src/util/disjoint_set_union.cpp
 )
 add_test(NAME Test_CSPSolver COMMAND test_CSPSolver)
@@ -85,8 +85,8 @@ add_executable(
     test_to_expander 
     ./unit/test_to_expander.cpp 
     ../../src/core/to_expander.cpp 
-    ../../src/pcp/BitPCP.cpp 
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp 
+    ../../src/pcp/BinaryDomain.cpp
     ../../src/three_color/ThreeColor.cpp
     ../../src/three_csp/ThreeCSP.cpp
     ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
@@ -98,7 +98,7 @@ add_executable(
     ../../src/analyzer/SoundnessApproximater.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
  
 )
 add_test(NAME Test_To_Expander COMMAND test_to_expander)
@@ -108,12 +108,12 @@ add_executable(
     test_reduce_degree 
     ./unit/test_reduce_degree.cpp 
     ../../src/core/reduce_degree.cpp 
-    ../../src/pcp/BitPCP.cpp 
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp 
+    ../../src/pcp/BinaryDomain.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
 
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
  
 )
 add_test(NAME Test_Reduce_Degree COMMAND test_reduce_degree)
@@ -140,11 +140,11 @@ add_executable(
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
 )
 add_test(NAME Test_HadamardTester COMMAND test_HadamardTester)
 target_include_directories(test_HadamardTester PRIVATE ${CMAKE_SOURCE_DIR}/include)
@@ -153,9 +153,9 @@ add_executable(
     test_ThreeCSP
     ./unit/test_ThreeCSP.cpp
     ../../src/three_csp/ThreeCSP.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
+    ../../src/constraint/BinaryConstraint.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
 )
@@ -165,8 +165,8 @@ target_include_directories(test_ThreeCSP PRIVATE ${CMAKE_SOURCE_DIR}/include)
 add_executable(
     test_three_color_generators
     ./unit/test_three_color_generators.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
     ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
@@ -180,15 +180,15 @@ add_executable(
     ../../src/three_color/generators.cpp
  
     ../../src/three_color/ThreeColor.cpp
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
 )
 add_test(NAME Test_Three_Color_Generators COMMAND test_three_color_generators)
 target_include_directories(test_three_color_generators PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 
 add_executable(
-    test_three_color_to_bitpcp
-    ./unit/test_three_color_to_bitpcp.cpp
+    test_three_color_to_BinaryCSP
+    ./unit/test_three_color_to_BinaryCSP.cpp
     ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/three_csp/ThreeCSP.cpp
@@ -197,16 +197,16 @@ add_executable(
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/three_color/ThreeColor.cpp
  
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
 )
-add_test(NAME Test_Three_Color_To_BitPCP COMMAND test_three_color_to_bitpcp)
-target_include_directories(test_three_color_to_bitpcp PRIVATE ${CMAKE_SOURCE_DIR}/include)
+add_test(NAME Test_Three_Color_To_BinaryCSP COMMAND test_three_color_to_BinaryCSP)
+target_include_directories(test_three_color_to_BinaryCSP PRIVATE ${CMAKE_SOURCE_DIR}/include)
     
 add_executable(
     test_random_picker
@@ -231,15 +231,15 @@ add_executable(
     ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
     ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
     ../../src/analyzer/SoundnessApproximater.cpp
-    ../../src/pcp/BitPCP.cpp
-    ../../src/pcp/BitDomain.cpp
+    ../../src/pcp/BinaryCSP.cpp
+    ../../src/pcp/BinaryDomain.cpp
     ../../src/pcpp/HadamardPCPP/Hadamard.cpp
     ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
     ../../src/util/disjoint_set_union.cpp
     ../../src/util/visit_guard.cpp
     ../../src/analyzer/PCPAnalyzer.cpp
 
-    ../../src/constraint/BitConstraint.cpp
+    ../../src/constraint/BinaryConstraint.cpp
  
 )
 add_test(NAME Test_Gap_Amplification COMMAND test_gap_amplification)
@@ -262,15 +262,15 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
-        ../../src/pcp/BitPCP.cpp
-        ../../src/pcp/BitDomain.cpp
+        ../../src/pcp/BinaryCSP.cpp
+        ../../src/pcp/BinaryDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
         ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/util/disjoint_set_union.cpp
         ../../src/util/visit_guard.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
 
-        ../../src/constraint/BitConstraint.cpp
+        ../../src/constraint/BinaryConstraint.cpp
     
     )
     add_test(NAME Test_Gap_Amplification_Completeness COMMAND test_gap_amplification_completeness)
@@ -295,14 +295,14 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
-        ../../src/pcp/BitPCP.cpp
-        ../../src/pcp/BitDomain.cpp
+        ../../src/pcp/BinaryCSP.cpp
+        ../../src/pcp/BinaryDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
         ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/util/disjoint_set_union.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
     
-        ../../src/constraint/BitConstraint.cpp
+        ../../src/constraint/BinaryConstraint.cpp
      
     )
     add_test(NAME Test_Three_Color_Gap_Amplification_Hadamard COMMAND test_three_color_gap_amplification_hadamard   )
@@ -329,12 +329,12 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
         ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
-        ../../src/pcp/BitPCP.cpp
-        ../../src/pcp/BitDomain.cpp
+        ../../src/pcp/BinaryCSP.cpp
+        ../../src/pcp/BinaryDomain.cpp
         ../../src/util/disjoint_set_union.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
     
-        ../../src/constraint/BitConstraint.cpp
+        ../../src/constraint/BinaryConstraint.cpp
      
     )
     add_test(NAME Test_Three_Color_Gap_Amplification_Pseudo COMMAND test_three_color_gap_amplification_pseudo   )
@@ -357,8 +357,8 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
-        ../../src/pcp/BitPCP.cpp
-        ../../src/pcp/BitDomain.cpp
+        ../../src/pcp/BinaryCSP.cpp
+        ../../src/pcp/BinaryDomain.cpp
         ../../src/pcpp/HadamardPCPP/Hadamard.cpp
         ../../src/pcpp/HadamardPCPP/HadamardTester.cpp
         ../../src/three_csp/ThreeCSP.cpp
@@ -366,7 +366,7 @@ if(BUILD_E2E_TESTS)
         ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
     
-        ../../src/constraint/BitConstraint.cpp
+        ../../src/constraint/BinaryConstraint.cpp
      
     )
     add_test(NAME Test_Three_Color_Gap_Amplification_Completeness COMMAND test_three_color_gap_amplification_completeness)
@@ -384,8 +384,8 @@ if(BUILD_E2E_TESTS)
         ../../src/pcpp/ReedMullerPCPP/ReedMullerPCPP.cpp
         ../../src/pcpp/PseudoPCPP/PseudoTester.cpp
         ../../src/pcpp/PseudoPCPP/CSPSolver.cpp
-        ../../src/pcp/BitPCP.cpp
-        ../../src/pcp/BitDomain.cpp
+        ../../src/pcp/BinaryCSP.cpp
+        ../../src/pcp/BinaryDomain.cpp
         ../../src/core/gap_amplification.cpp
         ../../src/core/reduce_degree.cpp
         ../../src/core/to_expander.cpp
@@ -396,7 +396,7 @@ if(BUILD_E2E_TESTS)
         ../../src/util/visit_guard.cpp
         ../../src/analyzer/SoundnessApproximater.cpp
         ../../src/analyzer/PCPAnalyzer.cpp
-        ../../src/constraint/BitConstraint.cpp
+        ../../src/constraint/BinaryConstraint.cpp
     )
     add_test(NAME Test_HadamardPCPP_Soundness COMMAND test_HadamardPCPP_soundness)
     target_include_directories(test_HadamardPCPP_soundness PRIVATE ${CMAKE_SOURCE_DIR}/include)

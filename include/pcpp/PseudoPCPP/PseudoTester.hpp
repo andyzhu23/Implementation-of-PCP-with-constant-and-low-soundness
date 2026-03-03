@@ -10,18 +10,18 @@ public:
 
     PseudoTester();
 
-    PseudoTester(const pcp::BitPCP &powering_pcp);
+    PseudoTester(const pcp::BinaryCSP &powering_pcp);
 
     PseudoTester(const three_color::ThreeColor &tc);
 
-    pcp::BitPCP three_color_to_bitpcp(const three_color::ThreeColor &tc) override;
+    pcp::BinaryCSP three_color_to_BinaryCSP(const three_color::ThreeColor &tc) override;
 
-    void create_tester(const pcp::BitPCP &powering_pcp) override;
+    void create_tester(const pcp::BinaryCSP &powering_pcp) override;
 
-    pcp::BitPCP buildBitPCP() override;
+    pcp::BinaryCSP buildBinaryCSP() override;
 
 private:
-    pcp::BitPCP pcp;
+    pcp::BinaryCSP pcp;
     bool satisfiable;
 };
 

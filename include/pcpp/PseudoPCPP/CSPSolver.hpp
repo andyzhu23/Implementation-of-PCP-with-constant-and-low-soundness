@@ -1,11 +1,11 @@
 #ifndef CSPSOLVER_HPP
 #define CSPSOLVER_HPP
 
-#include "pcp/BitPCP.hpp"
+#include "pcp/BinaryCSP.hpp"
 
 namespace pcpp {
 
-bool check_bitPCP_satisfiability(const pcp::BitPCP &bitpcp);
+bool check_BinaryCSP_satisfiability(const pcp::BinaryCSP &BinaryCSP);
 
 }
 
