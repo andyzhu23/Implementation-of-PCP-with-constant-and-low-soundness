@@ -40,3 +40,5 @@ The prover now sends $d + 1$ values $a_0, a_1,...,a_d$ denoting the polynomial $
 
 
 Then the verifier verfies the claim by evaluating $h$ at exactly one point $l(t_0)$ for some random $t_0$. Checks $h(l(t_0)) = g(t_0)$.
+
+It seems like the evaluation can be done more efficiently by 

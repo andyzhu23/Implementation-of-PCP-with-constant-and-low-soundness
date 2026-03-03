@@ -4,16 +4,16 @@
 #include <vector>
 
 #include "core/core.hpp"
-#include "pcp/BitPCP.hpp"
-#include "pcp/BitDomain.hpp"
+#include "pcp/BinaryCSP.hpp"
+#include "pcp/BinaryDomain.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: 3-node cycle, degree 3
     []() -> void {
-        std::vector<pcp::BitDomain> bits = {1, 0, 1};
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<pcp::BinaryDomain> bits = {1, 0, 1};
+        pcp::BinaryCSP orig_pcp(bits);
         for (int i = 0; i < 3; ++i) {
-            orig_pcp.add_constraint(i, (i + 1) % 3, constraint::BitConstraint::EQUAL);
+            orig_pcp.add_constraint(i, (i + 1) % 3, constraint::BinaryConstraint::EQUAL);
         }
         int degree = 3;
         auto reduced = core::reduce_degree(orig_pcp, degree);
@@ -32,7 +32,7 @@ std::vector<std::function<void()>> test_cases = {
             if (next >= 6) next -= 2;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
+                if (adj == next && c == (constraint::BinaryConstraint::EQUAL)) found = true;
             }
             assert(found);
         }
@@ -41,7 +41,7 @@ std::vector<std::function<void()>> test_cases = {
             auto orig_constraints = orig_pcp.get_constraints(i);
             for (size_t j = 0; j < orig_constraints.size(); ++j) {
                 int adj = orig_constraints[j].first;
-                constraint::BitConstraint c = orig_constraints[j].second;
+                constraint::BinaryConstraint c = orig_constraints[j].second;
                 int reduced_idx = i * 2 + j;
                 int adj_reduced_idx_offset = adj * 2;
                 bool found = false;
@@ -54,10 +54,10 @@ std::vector<std::function<void()>> test_cases = {
     },
     // Test 2: Star graph, degree 4
     []() -> void {
-        std::vector<pcp::BitDomain> bits = {1, 0, 1, 0, 1};
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<pcp::BinaryDomain> bits = {1, 0, 1, 0, 1};
+        pcp::BinaryCSP orig_pcp(bits);
         for (int i = 1; i < 5; ++i) {
-            orig_pcp.add_constraint(0, i, constraint::BitConstraint::NOTEQUAL);
+            orig_pcp.add_constraint(0, i, constraint::BinaryConstraint::NOTEQUAL);
         }
         int degree = 4;
         auto reduced = core::reduce_degree(orig_pcp, degree);
@@ -75,7 +75,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % 4;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
+                if (adj == next && c == (constraint::BinaryConstraint::EQUAL)) found = true;
             }
             assert(found);
         }
@@ -84,15 +84,15 @@ std::vector<std::function<void()>> test_cases = {
             int idx = 4 + (i - 1);
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(idx)) {
-                if (adj < 4 && c == constraint::BitConstraint::NOTEQUAL) found = true;
+                if (adj < 4 && c == constraint::BinaryConstraint::NOTEQUAL) found = true;
             }
             assert(found);
         }
     },
     // Test 3: Throws on degree < 3
     []() -> void {
-        std::vector<pcp::BitDomain> bits = {1, 0};
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<pcp::BinaryDomain> bits = {1, 0};
+        pcp::BinaryCSP orig_pcp(bits);
         bool thrown = false;
         try {
             core::reduce_degree(orig_pcp, 2);
@@ -105,12 +105,12 @@ std::vector<std::function<void()>> test_cases = {
     // Test 4: Large complete graph, degree 4
     []() -> void {
         const int N = 10;
-        std::vector<pcp::BitDomain> bits(N, 1);
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<pcp::BinaryDomain> bits(N, 1);
+        pcp::BinaryCSP orig_pcp(bits);
         // Complete graph: every node connected to every other
         for (int i = 0; i < N; ++i) {
             for (int j = i + 1; j < N; ++j) {
-                orig_pcp.add_constraint(i, j, constraint::BitConstraint::NOTEQUAL);
+                orig_pcp.add_constraint(i, j, constraint::BinaryConstraint::NOTEQUAL);
             }
         }
         int degree = 4;
@@ -128,7 +128,7 @@ std::vector<std::function<void()>> test_cases = {
                 int next = offset + (j + 1) % sz;
                 bool found = false;
                 for (const auto &[adj, c] : reduced.get_constraints(curr)) {
-                    if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
+                    if (adj == next && c == (constraint::BinaryConstraint::EQUAL)) found = true;
                 }
                 assert(found);
             }
@@ -140,7 +140,7 @@ std::vector<std::function<void()>> test_cases = {
             auto orig_constraints = orig_pcp.get_constraints(i);
             for (size_t j = 0; j < orig_constraints.size(); ++j) {
                 int adj = orig_constraints[j].first;
-                constraint::BitConstraint c = orig_constraints[j].second;
+                constraint::BinaryConstraint c = orig_constraints[j].second;
                 int constraint_pos = orig_pcp.get_constraints_indices(i)[j].second;
                 int adj_new_index = 0;
                 for (int k = 0; k < adj; ++k) adj_new_index += orig_pcp.get_constraints(k).size();
@@ -158,10 +158,10 @@ std::vector<std::function<void()>> test_cases = {
     // Test 5: Large star graph, degree 4
     []() -> void {
         const int N = 20;
-        std::vector<pcp::BitDomain> bits(N, 0);
-        pcp::BitPCP orig_pcp(bits);
+        std::vector<pcp::BinaryDomain> bits(N, 0);
+        pcp::BinaryCSP orig_pcp(bits);
         for (int i = 1; i < N; ++i) {
-            orig_pcp.add_constraint(0, i, constraint::BitConstraint::NOTEQUAL);
+            orig_pcp.add_constraint(0, i, constraint::BinaryConstraint::NOTEQUAL);
         }
         int degree = 4;
         auto reduced = core::reduce_degree(orig_pcp, degree);
@@ -175,7 +175,7 @@ std::vector<std::function<void()>> test_cases = {
             int next = (i + 1) % center_sz;
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(i)) {
-                if (adj == next && c == (constraint::BitConstraint::EQUAL)) found = true;
+                if (adj == next && c == (constraint::BinaryConstraint::EQUAL)) found = true;
             }
             assert(found);
         }
@@ -184,7 +184,7 @@ std::vector<std::function<void()>> test_cases = {
         for (int i = 1; i < N; ++i) {
             bool found = false;
             for (const auto &[adj, c] : reduced.get_constraints(offset + (i - 1))) {
-                if (adj < center_sz && c == constraint::BitConstraint::NOTEQUAL) found = true;
+                if (adj < center_sz && c == constraint::BinaryConstraint::NOTEQUAL) found = true;
             }
             assert(found);
         }

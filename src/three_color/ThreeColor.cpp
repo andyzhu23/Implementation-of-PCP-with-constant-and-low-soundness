@@ -46,9 +46,9 @@ void ThreeColor::add_edge(Node u, Node v) {
 
 size_t ThreeColor::get_edge_size() const { return num_edges; }
 
-pcp::BitPCP ThreeColor::to_BitPCP(pcpp::TesterType tester_type) const {
+pcp::BinaryCSP ThreeColor::to_BinaryCSP(pcpp::TesterType tester_type) const {
     std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(tester_type);
-    return tester->three_color_to_bitpcp(*this);
+    return tester->three_color_to_BinaryCSP(*this);
 }
 
 }

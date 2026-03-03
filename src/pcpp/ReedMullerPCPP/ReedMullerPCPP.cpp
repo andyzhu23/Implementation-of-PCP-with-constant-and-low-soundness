@@ -4,23 +4,23 @@ namespace pcpp {
 
 ReedMullerTester::ReedMullerTester() {}
 
-ReedMullerTester::ReedMullerTester(const pcp::BitPCP &powering_pcp) {
+ReedMullerTester::ReedMullerTester(const pcp::BinaryCSP &powering_pcp) {
         
 }
 
-pcp::BitPCP ReedMullerTester::three_color_to_bitpcp(const three_color::ThreeColor &tc) {
-    // Implementation of converting a three-coloring problem to a BitPCP
-    return pcp::BitPCP();
+pcp::BinaryCSP ReedMullerTester::three_color_to_BinaryCSP(const three_color::ThreeColor &tc) {
+    // Implementation of converting a three-coloring problem to a BinaryCSP
+    return pcp::BinaryCSP();
 }
 
-void ReedMullerTester::create_tester(const pcp::BitPCP &powering_pcp) {
+void ReedMullerTester::create_tester(const pcp::BinaryCSP &powering_pcp) {
     ReedMullerTester tester(powering_pcp);
     *this = std::move(tester);
 }
 
-pcp::BitPCP ReedMullerTester::buildBitPCP() {
-    // Implementation of building the BitPCP for the Reed-Muller tester
-    return pcp::BitPCP();
+pcp::BinaryCSP ReedMullerTester::buildBinaryCSP() {
+    // Implementation of building the BinaryCSP for the Reed-Muller tester
+    return pcp::BinaryCSP();
 }
 
 }

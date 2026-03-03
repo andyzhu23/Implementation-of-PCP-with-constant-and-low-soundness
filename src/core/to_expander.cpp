@@ -3,13 +3,13 @@
 #include <vector>
 
 #include "util/disjoint_set_union.hpp"
-#include "pcp/BitPCP.hpp"
+#include "pcp/BinaryCSP.hpp"
 #include "core/core.hpp"
 #include "constants.hpp"
 
 namespace core {
 
-pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient) {
+pcp::BinaryCSP& to_expander(pcp::BinaryCSP &pcp, int expanding_coefficient) {
     // generate random seed
     if (pcp.get_size() <= 1) {
         return pcp; // cannot expand
@@ -24,7 +24,7 @@ pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient) {
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
         pcp::Variable j = (i + 1) % pcp.get_size();
         if (!dsu.same_set(i, j)) {
-            pcp.add_constraint(i, j, constraint::BitConstraint::ANY);
+            pcp.add_constraint(i, j, constraint::BinaryConstraint::ANY);
             dsu.merge(i, j);
         }
     }
@@ -38,7 +38,7 @@ pcp::BitPCP& to_expander(pcp::BitPCP &pcp, int expanding_coefficient) {
     for (size_t i = 0; i < pcp.get_size(); ++i) {
         for (int j = 0; j < expanding_coefficient; ++j) {
             int target = dist(constants::RANDOM_SEED);
-            pcp.add_constraint(i, target, constraint::BitConstraint::ANY);
+            pcp.add_constraint(i, target, constraint::BinaryConstraint::ANY);
         }
         // swap current node to front to avoid self-loop
         std::swap(options[0], options[i]);

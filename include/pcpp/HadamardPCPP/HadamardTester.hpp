@@ -12,8 +12,8 @@
 #include <random>
 #include <unordered_map>
 
-#include "pcp/BitPCP.hpp"
-#include "constraint/BitConstraint.hpp"
+#include "pcp/BinaryCSP.hpp"
+#include "constraint/BinaryConstraint.hpp"
 #include "pcpp/HadamardPCPP/Hadamard.hpp"
 #include "pcpp/Tester.hpp"
 #include "three_color/ThreeColor.hpp"
@@ -28,16 +28,16 @@ public:
 
     HadamardTester(three_color::Color u, three_color::Color v);
 
-    HadamardTester(const pcp::BitPCP &powering_pcp);
+    HadamardTester(const pcp::BinaryCSP &powering_pcp);
 
-    pcp::BitPCP three_color_to_bitpcp(const three_color::ThreeColor &tc) override; 
+    pcp::BinaryCSP three_color_to_BinaryCSP(const three_color::ThreeColor &tc) override; 
     
-    void create_tester(const pcp::BitPCP &powering_pcp) override;
+    void create_tester(const pcp::BinaryCSP &powering_pcp) override;
 
-    // Build a BitPCP from the constraint matrix and hadamard code
-    pcp::BitPCP buildBitPCP() override;
+    // Build a BinaryCSP from the constraint matrix and hadamard code
+    pcp::BinaryCSP buildBinaryCSP() override;
 
-    pcp::BitPCP buildBitPCP(
+    pcp::BinaryCSP buildBinaryCSP(
         int constraint_combination_repetition,
         int consistency_test_repetition,
         int linearity_test_repetition

@@ -8,8 +8,8 @@
 
 namespace core {
 
-pcp::BitPCP three_color_gap_amplification(const three_color::ThreeColor &tc, pcpp::TesterType tester_type, const std::function<int(size_t)>& iterations_func) {
-    pcp::BitPCP pcp = tc.to_BitPCP(tester_type);
+pcp::BinaryCSP three_color_gap_amplification(const three_color::ThreeColor &tc, pcpp::TesterType tester_type, const std::function<int(size_t)>& iterations_func) {
+    pcp::BinaryCSP pcp = tc.to_BinaryCSP(tester_type);
     int iterations = iterations_func(tc.get_edge_size());
     iterations = std::max(iterations, 0);
     for (int i = 0; i < iterations; ++i) {

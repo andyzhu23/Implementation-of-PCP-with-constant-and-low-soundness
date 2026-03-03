@@ -5,9 +5,9 @@
 #include <cassert>
 
 #include "three_color/ThreeColor.hpp"
-#include "pcp/BitPCP.hpp"
+#include "pcp/BinaryCSP.hpp"
 #include "pcpp/TesterFactory.hpp"
-#include "constraint/BitConstraint.hpp"
+#include "constraint/BinaryConstraint.hpp"
 
 std::vector<std::function<void()>> test_cases = {
     // Test 1: verify color_to_bits mapping
@@ -26,7 +26,7 @@ std::vector<std::function<void()>> test_cases = {
         assert(b_blue[0] == 1);
         assert(b_blue[1] == 0);
     },
-    // Test 2: two nodes one edge converts to a non-empty BitPCP
+    // Test 2: two nodes one edge converts to a non-empty BinaryCSP
     []() -> void {
         using three_color::ThreeColor;
         using three_color::Color;
@@ -35,11 +35,11 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::GREEN };
         std::vector<Edge> edges = { {0,1} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
-        // The resulting BitPCP should satisfy the constraints
+        auto pcp = tc.to_BinaryCSP(pcpp::TesterType::HADAMARD);
+        // The resulting BinaryCSP should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                assert(constraint::evaluateBitConstraint(
+                assert(constraint::evaluateBinaryConstraint(
                     constraint,
                     pcp.get_variable(var), 
                     pcp.get_variable(other_var)
@@ -47,7 +47,7 @@ std::vector<std::function<void()>> test_cases = {
             }
         }
     },
-    // Test 3: invalid coloring two nodes one edge converts to a non-empty BitPCP
+    // Test 3: invalid coloring two nodes one edge converts to a non-empty BinaryCSP
     []() -> void {
         using three_color::ThreeColor;
         using three_color::Color;
@@ -56,12 +56,12 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::RED };
         std::vector<Edge> edges = { {0,1} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
+        auto pcp = tc.to_BinaryCSP(pcpp::TesterType::HADAMARD);
         int invalid_count = 0;
-        // The resulting BitPCP should not satisfy the constraints
+        // The resulting BinaryCSP should not satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                invalid_count += !constraint::evaluateBitConstraint(
+                invalid_count += !constraint::evaluateBinaryConstraint(
                     constraint,
                     pcp.get_variable(var), 
                     pcp.get_variable(other_var)
@@ -70,7 +70,7 @@ std::vector<std::function<void()>> test_cases = {
         }
         assert(invalid_count > 0);
     },
-    // Test 4: small triangle graph converts to a non-empty BitPCP
+    // Test 4: small triangle graph converts to a non-empty BinaryCSP
     []() -> void {
         using three_color::ThreeColor;
         using three_color::Color;
@@ -79,11 +79,11 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::GREEN, Color::BLUE };
         std::vector<Edge> edges = { {0,1}, {1,2}, {2,0} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
-        // The resulting BitPCP should satisfy the constraints
+        auto pcp = tc.to_BinaryCSP(pcpp::TesterType::HADAMARD);
+        // The resulting BinaryCSP should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                assert(constraint::evaluateBitConstraint(
+                assert(constraint::evaluateBinaryConstraint(
                     constraint,
                     pcp.get_variable(var), 
                     pcp.get_variable(other_var)
@@ -91,7 +91,7 @@ std::vector<std::function<void()>> test_cases = {
             }
         }
     },
-    // Test 5: an invalid coloring small triangle graph converts to a non-empty BitPCP
+    // Test 5: an invalid coloring small triangle graph converts to a non-empty BinaryCSP
     []() -> void {
         using three_color::ThreeColor;
         using three_color::Color;
@@ -100,12 +100,12 @@ std::vector<std::function<void()>> test_cases = {
         std::vector<Color> colors = { Color::RED, Color::RED, Color::BLUE };
         std::vector<Edge> edges = { {0,1}, {1,2}, {2,0} };
         ThreeColor tc(colors, edges);
-        auto pcp = tc.to_BitPCP(pcpp::TesterType::HADAMARD);
+        auto pcp = tc.to_BinaryCSP(pcpp::TesterType::HADAMARD);
         int invalid_count = 0;
-        // The resulting BitPCP not should satisfy the constraints
+        // The resulting BinaryCSP not should satisfy the constraints
         for (pcp::Variable var = 0; var < pcp.get_size(); ++var) {
             for (const auto& [other_var, constraint] : pcp.get_constraints(var)) {
-                invalid_count += !constraint::evaluateBitConstraint(
+                invalid_count += !constraint::evaluateBinaryConstraint(
                     constraint,
                     pcp.get_variable(var), 
                     pcp.get_variable(other_var)

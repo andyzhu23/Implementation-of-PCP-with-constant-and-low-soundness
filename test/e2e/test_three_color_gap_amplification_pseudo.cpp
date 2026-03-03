@@ -17,25 +17,25 @@ std::function<int(size_t)> test_iteration_func = [](size_t edge_size) {
 std::vector<std::function<void(std::ofstream&)>> test_cases = {
     [](std::ofstream &fout) -> void {
         three_color::ThreeColor input = three_color::generate_non_three_colorable_graph(30, 32, 10, 10, 10);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::PSEUDO);
-        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, pcpp::TesterType::PSEUDO, test_iteration_func);
-        double original_soundness = analyzer::approximate_soundness(bitpcp, std::min(bitpcp.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::PSEUDO);
+        pcp::BinaryCSP amplified_pcp = core::three_color_gap_amplification(input, pcpp::TesterType::PSEUDO, test_iteration_func);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP, std::min(BinaryCSP.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
         double amplified_soundness = analyzer::approximate_soundness(amplified_pcp, std::min(amplified_pcp.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
         fout << "original gap: " << 1 - original_soundness << ", amplified gap: " << 1 - amplified_soundness << std::endl;
     },
     [](std::ofstream &fout) -> void {
         three_color::ThreeColor input = three_color::generate_non_three_colorable_graph(30, 64, 10, 10, 10);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::PSEUDO);
-        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, pcpp::TesterType::PSEUDO, test_iteration_func);
-        double original_soundness = analyzer::approximate_soundness(bitpcp, std::min(bitpcp.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::PSEUDO);
+        pcp::BinaryCSP amplified_pcp = core::three_color_gap_amplification(input, pcpp::TesterType::PSEUDO, test_iteration_func);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP, std::min(BinaryCSP.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
         double amplified_soundness = analyzer::approximate_soundness(amplified_pcp, std::min(amplified_pcp.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
         fout << "original gap: " << 1 - original_soundness << ", amplified gap: " << 1 - amplified_soundness << std::endl;
     },
     [](std::ofstream &fout) -> void {
         three_color::ThreeColor input = three_color::generate_non_three_colorable_graph(30, 128, 10, 10, 10);
-        pcp::BitPCP bitpcp = input.to_BitPCP(pcpp::TesterType::PSEUDO);
-        pcp::BitPCP amplified_pcp = core::three_color_gap_amplification(input, pcpp::TesterType::PSEUDO, test_iteration_func);
-        double original_soundness = analyzer::approximate_soundness(bitpcp, std::min(bitpcp.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
+        pcp::BinaryCSP BinaryCSP = input.to_BinaryCSP(pcpp::TesterType::PSEUDO);
+        pcp::BinaryCSP amplified_pcp = core::three_color_gap_amplification(input, pcpp::TesterType::PSEUDO, test_iteration_func);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP, std::min(BinaryCSP.get_constraints_list().size() * 10, static_cast<size_t>(100000)));
         double amplified_soundness = analyzer::approximate_soundness(amplified_pcp, std::min(amplified_pcp.get_constraints_list().size() * 10, static_cast<size_t>(1000000)));
         fout << "original gap: " << 1 - original_soundness << ", amplified gap: " << 1 - amplified_soundness << std::endl;
     },

@@ -10,9 +10,9 @@
 
 void merge_variables(
     std::vector<three_color::Color> colors,
-    pcp::BitPCP &pcp, 
+    pcp::BinaryCSP &pcp, 
     const std::vector<std::vector<std::pair<size_t, int>>> &occuring_location,
-    const std::vector<pcp::BitPCP> &reduced_pcps
+    const std::vector<pcp::BinaryCSP> &reduced_pcps
 ) {
 
     util::disjoint_set_union dsu(pcp.get_size());
@@ -59,11 +59,11 @@ void merge_variables(
         }
     }
 
-    pcp::BitPCP new_bitpcp(new_size);
+    pcp::BinaryCSP new_BinaryCSP(new_size);
 
     for (pcp::Variable i = 0; i < pcp.get_size(); ++i) {
         if (dsu.find(i) == i) {
-            new_bitpcp.set_variable(
+            new_BinaryCSP.set_variable(
                 representative_map[i],
                 pcp.get_variable(i)
             );
@@ -73,9 +73,9 @@ void merge_variables(
     for (const auto &[u, v, c] : pcp.get_constraints_list()) {
         pcp::Variable new_u = representative_map[dsu.find(u)];
         pcp::Variable new_v = representative_map[dsu.find(v)];
-        new_bitpcp.add_constraint(new_u, new_v, c);
+        new_BinaryCSP.add_constraint(new_u, new_v, c);
     }
-    pcp = std::move(new_bitpcp);
+    pcp = std::move(new_BinaryCSP);
 }
 
 namespace pcpp {
@@ -112,7 +112,7 @@ HadamardTester::HadamardTester(three_color::Color u, three_color::Color v) {
     three_csp.add_ternary_constraint(0, 3, 5, three_csp::Constraint::PRODUCT);
     three_csp.add_ternary_constraint(1, 2, 6, three_csp::Constraint::PRODUCT);
     three_csp.add_ternary_constraint(1, 3, 7, three_csp::Constraint::PRODUCT);
-    three_csp.add_binary_constraint(0, 8, constraint::BitConstraint::NOTEQUAL);
+    three_csp.add_binary_constraint(0, 8, constraint::BinaryConstraint::NOTEQUAL);
 #endif
     hadamard = Hadamard(three_csp.get_assignment());
 
@@ -122,8 +122,8 @@ HadamardTester::HadamardTester(three_color::Color u, three_color::Color v) {
     };
 }
 
-// Construct HadamardTester from a BitPCP
-HadamardTester::HadamardTester(const pcp::BitPCP &pcp) {
+// Construct HadamardTester from a BinaryCSP
+HadamardTester::HadamardTester(const pcp::BinaryCSP &pcp) {
     for (pcp::Variable i = 0; i < static_cast<pcp::Variable>(pcp.get_size()); ++i) {
         three_csp.add_variable(pcp.get_variable(i)[0]);
         three_csp.add_variable(pcp.get_variable(i)[1]);
@@ -148,14 +148,14 @@ HadamardTester::HadamardTester(const pcp::BitPCP &pcp) {
 
     three_csp.add_variable(!three_csp.get_variable(0)); // negation bit for first variable
 
-    three_csp.add_binary_constraint(0, three_csp.size() - 1, constraint::BitConstraint::NOTEQUAL);
+    three_csp.add_binary_constraint(0, three_csp.size() - 1, constraint::BinaryConstraint::NOTEQUAL);
     hadamard = Hadamard(three_csp.get_assignment());
-    // Build constraint matrix from BitPCP constraints
+    // Build constraint matrix from BinaryCSP constraints
     for (const auto &[var1, var2, bit_constraint] : pcp.get_constraints_list()) {
-        if (bit_constraint != constraint::BitConstraint::ANY) {
+        if (bit_constraint != constraint::BinaryConstraint::ANY) {
             std::vector<bool> row(three_csp.size());
             switch (bit_constraint) {
-                case constraint::BitConstraint::EQUAL:
+                case constraint::BinaryConstraint::EQUAL:
                     row[var1 * 3] = 1;
                     row[var1 * 3 + 1] = 1;
                     row[var1 * 3 + 2] = 1;
@@ -163,20 +163,20 @@ HadamardTester::HadamardTester(const pcp::BitPCP &pcp) {
                     row[var2 * 3 + 1] = 1;
                     row[var2 * 3 + 2] = 1;
                     break;
-                case constraint::BitConstraint::FIRST_BIT_EQUAL:
+                case constraint::BinaryConstraint::FIRST_BIT_EQUAL:
                     row[var1 * 3] = 1;
                     row[var2 * 3] = 1;
                     break;
-                case constraint::BitConstraint::SECOND_BIT_EQUAL:
+                case constraint::BinaryConstraint::SECOND_BIT_EQUAL:
                     row[var1 * 3 + 1] = 1;
                     row[var2 * 3 + 1] = 1;
                     break;
-                case constraint::BitConstraint::THIRD_BIT_EQUAL:
+                case constraint::BinaryConstraint::THIRD_BIT_EQUAL:
                     row[var1 * 3 + 2] = 1;
                     row[var2 * 3 + 2] = 1;
                     break;
                 // Note that NOTEQUAL constraint is only added between three bit encoded of 0 and 1, meaning all three bits must be different to qualify as NOTEQUAL
-                case constraint::BitConstraint::NOTEQUAL:
+                case constraint::BinaryConstraint::NOTEQUAL:
                     row[var1 * 3] = 1;
                     row[var1 * 3 + 1] = 1;
                     row[var1 * 3 + 2] = 1;
@@ -186,7 +186,7 @@ HadamardTester::HadamardTester(const pcp::BitPCP &pcp) {
                     row[0] = !row[0]; 
                     row.back() = 1; // negation bit
                     break;
-                case constraint::BitConstraint::ANY:
+                case constraint::BinaryConstraint::ANY:
                     // impossible case
                     break;
             }
@@ -195,14 +195,14 @@ HadamardTester::HadamardTester(const pcp::BitPCP &pcp) {
     }
 }
 
-pcp::BitPCP HadamardTester::three_color_to_bitpcp(const three_color::ThreeColor &tc) { 
-    std::vector<pcp::BitPCP> edge_pcps;
+pcp::BinaryCSP HadamardTester::three_color_to_BinaryCSP(const three_color::ThreeColor &tc) { 
+    std::vector<pcp::BinaryCSP> edge_pcps;
     size_t variable_count = 0;
     std::vector<std::vector<std::pair<size_t, int>>> occuring_locations(tc.get_colors().size());
     for (three_color::Node u = 0; u < tc.get_colors().size(); ++u) {
         for (three_color::Node v : tc.get_adj_list()[u]) if (v > u) {
             HadamardTester tester(tc.get_colors()[u], tc.get_colors()[v]);
-            pcp::BitPCP tmp = tester.buildBitPCP();
+            pcp::BinaryCSP tmp = tester.buildBinaryCSP();
             // reduce unnecessary variables
             edge_pcps.push_back(std::move(tmp));
             occuring_locations[u].emplace_back(variable_count, 0);
@@ -210,25 +210,25 @@ pcp::BitPCP HadamardTester::three_color_to_bitpcp(const three_color::ThreeColor 
             variable_count += edge_pcps.back().get_size();
         }
     }
-    auto result = pcp::merge_BitPCPs(edge_pcps);
+    auto result = pcp::merge_BinaryCSPs(edge_pcps);
     merge_variables(tc.get_colors(), result, occuring_locations, edge_pcps);
     result.clean();
     return result;
 }
 
-void HadamardTester::create_tester(const pcp::BitPCP &powering_pcp) { 
+void HadamardTester::create_tester(const pcp::BinaryCSP &powering_pcp) { 
     *this = std::move(HadamardTester(powering_pcp));
 }
 
-pcp::BitPCP HadamardTester::buildBitPCP() {
-    return buildBitPCP(
+pcp::BinaryCSP HadamardTester::buildBinaryCSP() {
+    return buildBinaryCSP(
         constants::CONSTRAINT_COMBINATION_REPETITION,
         constants::CONSISTENCY_TEST_REPETITION,
         constants::LINEARITY_TEST_REPETITION
     );
 }
 
-pcp::BitPCP HadamardTester::buildBitPCP(
+pcp::BinaryCSP HadamardTester::buildBinaryCSP(
     int constraint_combination_repetition,
     int consistency_test_repetition,
     int linearity_test_repetition
@@ -275,7 +275,7 @@ pcp::BitPCP HadamardTester::buildBitPCP(
 
     size_t zero_pos = used_positions[std::vector<bool>(original_size, 0)];
     for (const auto &[pos, idx] : used_positions) {
-        three_csp.add_binary_constraint(zero_pos, idx, constraint::BitConstraint::EQUAL);
+        three_csp.add_binary_constraint(zero_pos, idx, constraint::BinaryConstraint::EQUAL);
     }
 
     std::uniform_int_distribution<size_t> dist(0, original_size - 1);
@@ -332,7 +332,7 @@ pcp::BitPCP HadamardTester::buildBitPCP(
         );
     }
 
-    return three_csp.toBitPCP();
+    return three_csp.toBinaryCSP();
 }
 
 }

@@ -14,18 +14,18 @@
 std::vector<std::function<void(std::ofstream&)>> test_cases = {
     // Cycle graph, satisfiable
     [](std::ofstream& fout) -> void {
-        pcp::BitPCP bitpcp(10);
+        pcp::BinaryCSP BinaryCSP(10);
         for (pcp::Variable i = 0; i < 10; ++i) {
-            bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
+            BinaryCSP.set_variable(i, pcp::BinaryDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
         for (pcp::Variable i = 1; i < 10; ++i) {
-            bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
+            BinaryCSP.add_constraint(i - 1, i, constraint::BinaryConstraint::EQUAL);
         }
-        bitpcp.add_constraint(9, 0, constraint::BitConstraint::EQUAL); // cycle, satisfiable
-        pcpp::HadamardTester hadamard_tester(bitpcp);
-        hadamard_tester.create_tester(bitpcp);
-        pcp::BitPCP pcpp = hadamard_tester.buildBitPCP(100, 100, 100);
-        double original_soundness = analyzer::approximate_soundness(bitpcp);
+        BinaryCSP.add_constraint(9, 0, constraint::BinaryConstraint::EQUAL); // cycle, satisfiable
+        pcpp::HadamardTester hadamard_tester(BinaryCSP);
+        hadamard_tester.create_tester(BinaryCSP);
+        pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Cycle graph (satisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
         fout << "Cycle graph (satisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
@@ -33,18 +33,18 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
     },
     // Cycle graph, unsatisfiable
     [](std::ofstream& fout) -> void {
-        pcp::BitPCP bitpcp(10);
+        pcp::BinaryCSP BinaryCSP(10);
         for (pcp::Variable i = 0; i < 10; ++i) {
-            bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
+            BinaryCSP.set_variable(i, pcp::BinaryDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
         for (pcp::Variable i = 1; i < 10; ++i) {
-            bitpcp.add_constraint(i - 1, i, constraint::BitConstraint::EQUAL);
+            BinaryCSP.add_constraint(i - 1, i, constraint::BinaryConstraint::EQUAL);
         }
-        bitpcp.add_constraint(9, 0, constraint::BitConstraint::NOTEQUAL); // cycle, unsatisfiable
-        pcpp::HadamardTester hadamard_tester(bitpcp);
-        hadamard_tester.create_tester(bitpcp);
-        pcp::BitPCP pcpp = hadamard_tester.buildBitPCP(100, 100, 100);
-        double original_soundness = analyzer::approximate_soundness(bitpcp);
+        BinaryCSP.add_constraint(9, 0, constraint::BinaryConstraint::NOTEQUAL); // cycle, unsatisfiable
+        pcpp::HadamardTester hadamard_tester(BinaryCSP);
+        hadamard_tester.create_tester(BinaryCSP);
+        pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Cycle graph (unsatisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
         fout << "Cycle graph (unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
@@ -52,17 +52,17 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
     },
     // Star graph (center 0)
     [](std::ofstream& fout) -> void {
-        pcp::BitPCP bitpcp(10);
+        pcp::BinaryCSP BinaryCSP(10);
         for (pcp::Variable i = 0; i < 10; ++i) {
-            bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
+            BinaryCSP.set_variable(i, pcp::BinaryDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
         for (pcp::Variable i = 1; i < 10; ++i) {
-            bitpcp.add_constraint(0, i, constraint::BitConstraint::EQUAL);
+            BinaryCSP.add_constraint(0, i, constraint::BinaryConstraint::EQUAL);
         }
-        pcpp::HadamardTester hadamard_tester(bitpcp);
-        hadamard_tester.create_tester(bitpcp);
-        pcp::BitPCP pcpp = hadamard_tester.buildBitPCP(100, 100, 100);
-        double original_soundness = analyzer::approximate_soundness(bitpcp);
+        pcpp::HadamardTester hadamard_tester(BinaryCSP);
+        hadamard_tester.create_tester(BinaryCSP);
+        pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Star graph: Approximated original gap: " << 1 - original_soundness << std::endl;
         fout << "Star graph: Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
@@ -70,23 +70,23 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
     },
     // Star graph, unsatisfiable with SECOND_BIT_EQUAL and NOTEQUAL constraints
     [](std::ofstream& fout) -> void {
-        pcp::BitPCP bitpcp(6);
+        pcp::BinaryCSP BinaryCSP(6);
         for (pcp::Variable i = 0; i < 6; ++i) {
-            bitpcp.set_variable(i, pcp::BitDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
+            BinaryCSP.set_variable(i, pcp::BinaryDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
         }
         // Center 0: alternate constraints
         for (pcp::Variable i = 1; i < 6; ++i) {
             if (i % 2 == 0)
-                bitpcp.add_constraint(0, i, constraint::BitConstraint::SECOND_BIT_EQUAL);
+                BinaryCSP.add_constraint(0, i, constraint::BinaryConstraint::SECOND_BIT_EQUAL);
             else
-                bitpcp.add_constraint(0, i, constraint::BitConstraint::NOTEQUAL);
+                BinaryCSP.add_constraint(0, i, constraint::BinaryConstraint::NOTEQUAL);
         }
         // Add a constraint that contradicts the above
-        bitpcp.add_constraint(0, 1, constraint::BitConstraint::SECOND_BIT_EQUAL);
-        pcpp::HadamardTester hadamard_tester(bitpcp);
-        hadamard_tester.create_tester(bitpcp);
-        pcp::BitPCP pcpp = hadamard_tester.buildBitPCP(100, 100, 100);
-        double original_soundness = analyzer::approximate_soundness(bitpcp);
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::SECOND_BIT_EQUAL);
+        pcpp::HadamardTester hadamard_tester(BinaryCSP);
+        hadamard_tester.create_tester(BinaryCSP);
+        pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
         fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
         fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
@@ -95,30 +95,30 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
     // Ring graph with four nodes multiple local views encoded into pcpp, globally satisfiable, check that satisfiability is preserved
     [](std::ofstream& fout) -> void {
         // variables 0, 1
-        pcp::BitPCP bitpcp1(2);
-        bitpcp1.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp::BinaryCSP BinaryCSP1(2);
+        BinaryCSP1.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
         // variables 1, 2
-        pcp::BitPCP bitpcp2(2);
-        bitpcp2.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp::BinaryCSP BinaryCSP2(2);
+        BinaryCSP2.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
         // variables 2, 3
-        pcp::BitPCP bitpcp3(2);
-        bitpcp3.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp::BinaryCSP BinaryCSP3(2);
+        BinaryCSP3.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
         // variables 3, 0
-        pcp::BitPCP bitpcp4(2);
-        bitpcp4.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp::BinaryCSP BinaryCSP4(2);
+        BinaryCSP4.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
 
-        pcpp::HadamardTester hadamard_tester(bitpcp1);
-        hadamard_tester.create_tester(bitpcp1);
-        pcp::BitPCP pcpp1 = hadamard_tester.buildBitPCP(30, 30, 30);
-        hadamard_tester = pcpp::HadamardTester(bitpcp2);
-        hadamard_tester.create_tester(bitpcp2);
-        pcp::BitPCP pcpp2 = hadamard_tester.buildBitPCP(30, 30, 30);
-        hadamard_tester = pcpp::HadamardTester(bitpcp3);
-        hadamard_tester.create_tester(bitpcp3);
-        pcp::BitPCP pcpp3 = hadamard_tester.buildBitPCP(30, 30, 30);
-        hadamard_tester = pcpp::HadamardTester(bitpcp4);
-        hadamard_tester.create_tester(bitpcp4);
-        pcp::BitPCP pcpp4 = hadamard_tester.buildBitPCP(30, 30, 30);
+        pcpp::HadamardTester hadamard_tester(BinaryCSP1);
+        hadamard_tester.create_tester(BinaryCSP1);
+        pcp::BinaryCSP pcpp1 = hadamard_tester.buildBinaryCSP(30, 30, 30);
+        hadamard_tester = pcpp::HadamardTester(BinaryCSP2);
+        hadamard_tester.create_tester(BinaryCSP2);
+        pcp::BinaryCSP pcpp2 = hadamard_tester.buildBinaryCSP(30, 30, 30);
+        hadamard_tester = pcpp::HadamardTester(BinaryCSP3);
+        hadamard_tester.create_tester(BinaryCSP3);
+        pcp::BinaryCSP pcpp3 = hadamard_tester.buildBinaryCSP(30, 30, 30);
+        hadamard_tester = pcpp::HadamardTester(BinaryCSP4);
+        hadamard_tester.create_tester(BinaryCSP4);
+        pcp::BinaryCSP pcpp4 = hadamard_tester.buildBinaryCSP(30, 30, 30);
         std::vector<size_t> offsets = {
             0, 
             pcpp1.get_size(), pcpp1.get_size() + pcpp2.get_size(), 
@@ -126,7 +126,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
             pcpp1.get_size() + pcpp2.get_size() + pcpp3.get_size() + pcpp4.get_size()
         };
 
-        pcp::BitPCP combined_bitpcp = pcp::merge_BitPCPs(std::vector<pcp::BitPCP>{pcpp1, pcpp2, pcpp3, pcpp4});
+        pcp::BinaryCSP combined_BinaryCSP = pcp::merge_BinaryCSPs(std::vector<pcp::BinaryCSP>{pcpp1, pcpp2, pcpp3, pcpp4});
 
         util::disjoint_set_union dsu(offsets.back());
 
@@ -159,54 +159,54 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
             }
         }
 
-        pcp::BitPCP new_bitpcp(new_size);
+        pcp::BinaryCSP new_BinaryCSP(new_size);
 
         for (pcp::Variable i = 0; i < offsets.back(); ++i) {
             if (dsu.find(i) == i) {
-                new_bitpcp.set_variable(
+                new_BinaryCSP.set_variable(
                     representative_map[i],
-                    combined_bitpcp.get_variable(i)
+                    combined_BinaryCSP.get_variable(i)
                 );
             }
         }
 
-        for (const auto &[u, v, c] : combined_bitpcp.get_constraints_list()) {
+        for (const auto &[u, v, c] : combined_BinaryCSP.get_constraints_list()) {
             pcp::Variable new_u = representative_map[dsu.find(u)];
             pcp::Variable new_v = representative_map[dsu.find(v)];
-            new_bitpcp.add_constraint(new_u, new_v, c);
+            new_BinaryCSP.add_constraint(new_u, new_v, c);
         }
 
-        double merged_gap = 1 - analyzer::approximate_soundness(new_bitpcp, 3000000);
+        double merged_gap = 1 - analyzer::approximate_soundness(new_BinaryCSP, 3000000);
         fout << "Alphabet reduced PCP(Satisfiable) gap: " << merged_gap << std::endl;
         assert(merged_gap == 0);
     },
     // Ring graph with four nodes, multiple local views encoded into pcpp, globally unsatisfiable, check that unsatisfiability is preserved
     [](std::ofstream& fout) -> void {
         // variables 0, 1
-        pcp::BitPCP bitpcp1(2);
-        bitpcp1.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp::BinaryCSP BinaryCSP1(2);
+        BinaryCSP1.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
         // variables 1, 2
-        pcp::BitPCP bitpcp2(2);
-        bitpcp2.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp::BinaryCSP BinaryCSP2(2);
+        BinaryCSP2.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
         // variables 2, 3
-        pcp::BitPCP bitpcp3(2);
-        bitpcp3.add_constraint(0, 1, constraint::BitConstraint::EQUAL);
+        pcp::BinaryCSP BinaryCSP3(2);
+        BinaryCSP3.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
         // variables 3, 1
-        pcp::BitPCP bitpcp4(2);
-        bitpcp4.add_constraint(0, 1, constraint::BitConstraint::NOTEQUAL);
+        pcp::BinaryCSP BinaryCSP4(2);
+        BinaryCSP4.add_constraint(0, 1, constraint::BinaryConstraint::NOTEQUAL);
 
-        pcpp::HadamardTester hadamard_tester(bitpcp1);
-        hadamard_tester.create_tester(bitpcp1);
-        pcp::BitPCP pcpp1 = hadamard_tester.buildBitPCP(30, 30, 30);
-        hadamard_tester = pcpp::HadamardTester(bitpcp2);
-        hadamard_tester.create_tester(bitpcp2);
-        pcp::BitPCP pcpp2 = hadamard_tester.buildBitPCP(30, 30, 30);
-        hadamard_tester = pcpp::HadamardTester(bitpcp3);
-        hadamard_tester.create_tester(bitpcp3);
-        pcp::BitPCP pcpp3 = hadamard_tester.buildBitPCP(30, 30, 30);
-        hadamard_tester = pcpp::HadamardTester(bitpcp4);
-        hadamard_tester.create_tester(bitpcp4);
-        pcp::BitPCP pcpp4 = hadamard_tester.buildBitPCP(30, 30, 30);
+        pcpp::HadamardTester hadamard_tester(BinaryCSP1);
+        hadamard_tester.create_tester(BinaryCSP1);
+        pcp::BinaryCSP pcpp1 = hadamard_tester.buildBinaryCSP(30, 30, 30);
+        hadamard_tester = pcpp::HadamardTester(BinaryCSP2);
+        hadamard_tester.create_tester(BinaryCSP2);
+        pcp::BinaryCSP pcpp2 = hadamard_tester.buildBinaryCSP(30, 30, 30);
+        hadamard_tester = pcpp::HadamardTester(BinaryCSP3);
+        hadamard_tester.create_tester(BinaryCSP3);
+        pcp::BinaryCSP pcpp3 = hadamard_tester.buildBinaryCSP(30, 30, 30);
+        hadamard_tester = pcpp::HadamardTester(BinaryCSP4);
+        hadamard_tester.create_tester(BinaryCSP4);
+        pcp::BinaryCSP pcpp4 = hadamard_tester.buildBinaryCSP(30, 30, 30);
 
         std::vector<size_t> offsets = {
             0, 
@@ -215,7 +215,7 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
             pcpp1.get_size() + pcpp2.get_size() + pcpp3.get_size() + pcpp4.get_size()
         };
 
-        pcp::BitPCP combined_bitpcp = pcp::merge_BitPCPs(std::vector<pcp::BitPCP>{pcpp1, pcpp2, pcpp3, pcpp4});
+        pcp::BinaryCSP combined_BinaryCSP = pcp::merge_BinaryCSPs(std::vector<pcp::BinaryCSP>{pcpp1, pcpp2, pcpp3, pcpp4});
 
         util::disjoint_set_union dsu(offsets.back());
 
@@ -247,24 +247,24 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
             }
         }
 
-        pcp::BitPCP new_bitpcp(new_size);
+        pcp::BinaryCSP new_BinaryCSP(new_size);
 
         for (pcp::Variable i = 0; i < offsets.back(); ++i) {
             if (dsu.find(i) == i) {
-                new_bitpcp.set_variable(
+                new_BinaryCSP.set_variable(
                     representative_map[i],
-                    combined_bitpcp.get_variable(i)
+                    combined_BinaryCSP.get_variable(i)
                 );
             }
         }
 
-        for (const auto &[u, v, c] : combined_bitpcp.get_constraints_list()) {
+        for (const auto &[u, v, c] : combined_BinaryCSP.get_constraints_list()) {
             pcp::Variable new_u = representative_map[dsu.find(u)];
             pcp::Variable new_v = representative_map[dsu.find(v)];
-            new_bitpcp.add_constraint(new_u, new_v, c);
+            new_BinaryCSP.add_constraint(new_u, new_v, c);
         }
 
-        double merged_gap = 1 - analyzer::approximate_soundness(new_bitpcp, 3000000);
+        double merged_gap = 1 - analyzer::approximate_soundness(new_BinaryCSP, 3000000);
         fout << "Alphabet reduced PCP(UnSatisfiable) gap: " << merged_gap << std::endl;
         assert(merged_gap > 0);
     }

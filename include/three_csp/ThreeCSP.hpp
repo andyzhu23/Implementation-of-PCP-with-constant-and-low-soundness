@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "pcp/BitPCP.hpp"
-#include "constraint/BitConstraint.hpp"
+#include "pcp/BinaryCSP.hpp"
+#include "constraint/BinaryConstraint.hpp"
 
 namespace three_csp {
 
@@ -15,7 +15,7 @@ class ThreeCSP {
 public:
     void add_ternary_constraint(size_t var1, size_t var2, size_t var3, Constraint constraint);
 
-    void add_binary_constraint(size_t var1, size_t var2, constraint::BitConstraint constraint);
+    void add_binary_constraint(size_t var1, size_t var2, constraint::BinaryConstraint constraint);
 
     void add_variable(Domain value);
 
@@ -25,12 +25,12 @@ public:
 
     size_t size() const;
 
-    pcp::BitPCP toBitPCP() const;
+    pcp::BinaryCSP toBinaryCSP() const;
 
 private:
     std::vector<Domain> assignment;
     std::vector<std::tuple<size_t, size_t, size_t, Constraint>> ternary_constraints;
-    std::vector<std::tuple<size_t, size_t, constraint::BitConstraint>> binary_constraints;
+    std::vector<std::tuple<size_t, size_t, constraint::BinaryConstraint>> binary_constraints;
 };
 
 }
