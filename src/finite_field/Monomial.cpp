@@ -39,4 +39,8 @@ FiniteFieldElement Monomial::evaluate(const std::vector<FiniteFieldElement> &var
     return result;
 }
 
+FiniteFieldElement Monomial::operator()(const std::vector<FiniteFieldElement> &variable_values) const {
+    return evaluate(variable_values);
+}
+
 }

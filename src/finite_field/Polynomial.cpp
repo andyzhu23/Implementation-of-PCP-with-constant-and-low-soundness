@@ -34,6 +34,10 @@ FiniteFieldElement Polynomial::evaluate(const std::vector<FiniteFieldElement> &v
     return result;
 }
 
+FiniteFieldElement Polynomial::operator()(const std::vector<FiniteFieldElement> &variable_values) const {
+    return evaluate(variable_values);
+}
+
 size_t Polynomial::getNumVariables() const {
     return num_variables;
 }

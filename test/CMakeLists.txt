@@ -82,6 +82,15 @@ add_test(NAME Test_Polynomial COMMAND test_Polynomial)
 target_include_directories(test_Polynomial PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
+    test_NumberTheoreticTransform
+    ./unit/test_NumberTheoreticTransform.cpp
+    ../../src/finite_field/NumberTheoreticTransform.cpp
+    ../../src/finite_field/FiniteFieldElement.cpp
+)
+add_test(NAME Test_NumberTheoreticTransform COMMAND test_NumberTheoreticTransform)
+target_include_directories(test_NumberTheoreticTransform PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
     test_to_expander 
     ./unit/test_to_expander.cpp 
     ../../src/core/to_expander.cpp 

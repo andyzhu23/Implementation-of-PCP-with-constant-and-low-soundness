@@ -5,7 +5,7 @@ namespace pcpp {
 ReedMullerTester::ReedMullerTester() {}
 
 ReedMullerTester::ReedMullerTester(const pcp::BinaryCSP &powering_pcp) {
-        
+    
 }
 
 pcp::BinaryCSP ReedMullerTester::three_color_to_BinaryCSP(const three_color::ThreeColor &tc) {
