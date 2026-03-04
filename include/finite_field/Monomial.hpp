@@ -28,7 +28,9 @@ public:
     const size_t getExp(size_t index) const;
 
     // Evaluate the monomial at the given variable values
-    FiniteFieldElement evaluate(const std::vector<FiniteFieldElement> &variable_values) const ;
+    FiniteFieldElement evaluate(const std::vector<FiniteFieldElement> &variable_values) const;
+
+    FiniteFieldElement operator()(const std::vector<FiniteFieldElement> &variable_values) const;
 
 private:
     // Coefficient of the monomial

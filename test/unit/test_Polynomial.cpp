@@ -29,13 +29,13 @@ std::vector<std::function<void()>> test_cases = {
         assert(p.evaluate({}).getValue() == 5 && "Constant polynomial should evaluate to its coefficient");
     },
 
-    // Test 3: Single univariate monomial 3*x^2 at x=2 => 3*4=12 % 8 = 4
+    // Test 3: Single univariate monomial 3*x^2 at x=2 => 3*4=12
     []() -> void {
         Monomial m(FiniteFieldElement(3), std::vector<size_t>{2});
         Polynomial p(std::vector<Monomial>{m});
-        // 3 * 2^2 = 12 % 8 = 4
-        assert(p.evaluate({FiniteFieldElement(2)}).getValue() == 4
-            && "3*x^2 at x=2 should be 4 (mod 8)");
+        // 3 * 2^2 = 12
+        assert(p.evaluate({FiniteFieldElement(2)}).getValue() == 12
+            && "3*x^2 at x=2 should be 12");
     },
 
     // Test 4: Lvalue vector constructor sets terms correctly
@@ -55,9 +55,9 @@ std::vector<std::function<void()>> test_cases = {
         Polynomial p(std::vector<Monomial>{
             Monomial(FiniteFieldElement(4), std::vector<size_t>{1})   // 4*x
         });
-        // p(2) = 4*2 = 8 % 8 = 0
-        assert(p.evaluate({FiniteFieldElement(2)}).getValue() == 0
-            && "4*x at x=2 should be 0 (mod 8)");
+        // p(2) = 4*2 = 8
+        assert(p.evaluate({FiniteFieldElement(2)}).getValue() == 8
+            && "4*x at x=2 should be 8");
     },
 
     // Test 6: addTerm (lvalue) adds a term and it contributes to evaluation
@@ -78,23 +78,23 @@ std::vector<std::function<void()>> test_cases = {
             && "addTerm (rvalue): constant term should evaluate to 5");
     },
 
-    // Test 8: Multiple terms sum correctly - p(x) = x + x^2 at x=3 => 3+9=12 % 8=4
+    // Test 8: Multiple terms sum correctly - p(x) = x + x^2 at x=3 => 3+9=12
     []() -> void {
         Polynomial p(std::vector<Monomial>{
             Monomial(FiniteFieldElement(1), std::vector<size_t>{1}),  // x
             Monomial(FiniteFieldElement(1), std::vector<size_t>{2})   // x^2
         });
-        // 3 + 9 = 12 % 8 = 4
-        assert(p.evaluate({FiniteFieldElement(3)}).getValue() == 4
-            && "x + x^2 at x=3 should be 4 (mod 8)");
+        // 3 + 9 = 12
+        assert(p.evaluate({FiniteFieldElement(3)}).getValue() == 12
+            && "x + x^2 at x=3 should be 12");
     },
 
-    // Test 9: Multivariate monomial 2*x*y at x=3, y=2 => 2*3*2=12 % 8=4
+    // Test 9: Multivariate monomial 2*x*y at x=3, y=2 => 2*3*2=12
     []() -> void {
         Monomial m(FiniteFieldElement(2), std::vector<size_t>{1, 1});  // 2*x^1*y^1
         Polynomial p(std::vector<Monomial>{m});
-        assert(p.evaluate({FiniteFieldElement(3), FiniteFieldElement(2)}).getValue() == 4
-            && "2*x*y at x=3, y=2 should be 4 (mod 8)");
+        assert(p.evaluate({FiniteFieldElement(3), FiniteFieldElement(2)}).getValue() == 12
+            && "2*x*y at x=3, y=2 should be 12");
     },
 
     // Test 10: Multivariate polynomial p(x,y) = x^2 + y at (2,3) => 4+3=7
@@ -128,14 +128,15 @@ std::vector<std::function<void()>> test_cases = {
             && "At x=0 only the constant term survives");
     },
 
-    // Test 13: Modular wrap-around in result - p(x)=5+5 at x=1 => 10 % 8 = 2
+    // Test 13: Modular wrap-around in result - use large coefficients
     []() -> void {
+        // Use coefficients that will cause wrapping: 998244353 wraps to 0
         Polynomial p(std::vector<Monomial>{
-            Monomial(FiniteFieldElement(5), std::vector<size_t>{1}),  // 5
-            Monomial(FiniteFieldElement(5), std::vector<size_t>{1})   // 5
+            Monomial(FiniteFieldElement(998244353), std::vector<size_t>{0}),  // constant term that wraps to 0
+            Monomial(FiniteFieldElement(1), std::vector<size_t>{0})   // constant 1
         });
-        assert(p.evaluate({1}).getValue() == 2
-            && "5+5=10, 10 % 8 = 2");
+        assert(p.evaluate({FiniteFieldElement(0)}).getValue() == 1
+            && "998244353 + 1 should wrap to 1");
     },
 
     // Test 14: evaluate throws for mismatched variable count
@@ -157,9 +158,9 @@ std::vector<std::function<void()>> test_cases = {
         p.addTerm(Monomial(FiniteFieldElement(1), std::vector<size_t>{0}));  // 1
         p.addTerm(Monomial(FiniteFieldElement(2), std::vector<size_t>{1}));  // 2x
         p.addTerm(Monomial(FiniteFieldElement(3), std::vector<size_t>{2}));  // 3x^2
-        // p(2) = 1 + 4 + 12 = 17 % 8 = 1
-        assert(p.evaluate({FiniteFieldElement(2)}).getValue() == 1
-            && "1 + 2*2 + 3*4 = 17, 17 % 8 = 1");
+        // p(2) = 1 + 4 + 12 = 17
+        assert(p.evaluate({FiniteFieldElement(2)}).getValue() == 17
+            && "1 + 2*2 + 3*4 = 17");
         // p(1) = 1 + 2 + 3 = 6
         assert(p.evaluate({FiniteFieldElement(1)}).getValue() == 6
             && "p(1) = 1+2+3 = 6");
@@ -175,21 +176,21 @@ std::vector<std::function<void()>> test_cases = {
         // 1+2+3 = 6
         assert(p.evaluate({FiniteFieldElement(1), FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 6
             && "x+y+z at (1,2,3) should be 6");
-        // (3+5+6) = 14 % 8 = 6
-        assert(p.evaluate({FiniteFieldElement(3), FiniteFieldElement(5), FiniteFieldElement(6)}).getValue() == 6
-            && "x+y+z at (3,5,6) should be 6 (mod 8)");
+        // (3+5+6) = 14
+        assert(p.evaluate({FiniteFieldElement(3), FiniteFieldElement(5), FiniteFieldElement(6)}).getValue() == 14
+            && "x+y+z at (3,5,6) should be 14");
     },
 
-    // Test 17: Mixed-degree bivariate monomial x^2*y at (2,3) => 4*3=12 % 8=4; at (3,2) => 1*2=2
+    // Test 17: Mixed-degree bivariate monomial x^2*y at (2,3) => 4*3=12; at (3,2) => 9*2=18
     []() -> void {
         Monomial m(FiniteFieldElement(1), std::vector<size_t>{2, 1});  // x^2 * y
         Polynomial p(std::vector<Monomial>{m});
-        // 2^2 * 3 = 4*3 = 12 % 8 = 4
-        assert(p.evaluate({FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 4
-            && "x^2*y at (2,3) should be 4 (mod 8)");
-        // 3^2 * 2 = 9%8*2 = 1*2 = 2
-        assert(p.evaluate({FiniteFieldElement(3), FiniteFieldElement(2)}).getValue() == 2
-            && "x^2*y at (3,2) should be 2 (mod 8)");
+        // 2^2 * 3 = 4*3 = 12
+        assert(p.evaluate({FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 12
+            && "x^2*y at (2,3) should be 12");
+        // 3^2 * 2 = 9*2 = 18
+        assert(p.evaluate({FiniteFieldElement(3), FiniteFieldElement(2)}).getValue() == 18
+            && "x^2*y at (3,2) should be 18");
     },
 
     // Test 18: Three-variable monomial x*y*z at various points
@@ -199,21 +200,21 @@ std::vector<std::function<void()>> test_cases = {
         // 1*2*3 = 6
         assert(p.evaluate({FiniteFieldElement(1), FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 6
             && "x*y*z at (1,2,3) should be 6");
-        // 2*3*4 = 24 % 8 = 0
-        assert(p.evaluate({FiniteFieldElement(2), FiniteFieldElement(3), FiniteFieldElement(4)}).getValue() == 0
-            && "x*y*z at (2,3,4) should be 0 (mod 8)");
+        // 2*3*4 = 24
+        assert(p.evaluate({FiniteFieldElement(2), FiniteFieldElement(3), FiniteFieldElement(4)}).getValue() == 24
+            && "x*y*z at (2,3,4) should be 24");
     },
 
-    // Test 19: Three-variable polynomial xy + yz + xz at (1,2,3) => 2+6+3=11 % 8=3
+    // Test 19: Three-variable polynomial xy + yz + xz at (1,2,3) => 2+6+3=11
     []() -> void {
         Polynomial p(std::vector<Monomial>{
             Monomial(FiniteFieldElement(1), std::vector<size_t>{1, 1, 0}),  // x*y
             Monomial(FiniteFieldElement(1), std::vector<size_t>{0, 1, 1}),  // y*z
             Monomial(FiniteFieldElement(1), std::vector<size_t>{1, 0, 1})   // x*z
         });
-        // xy=2, yz=6, xz=3 => 11 % 8 = 3
-        assert(p.evaluate({FiniteFieldElement(1), FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 3
-            && "xy+yz+xz at (1,2,3) should be 3 (mod 8)");
+        // xy=2, yz=6, xz=3 => 11
+        assert(p.evaluate({FiniteFieldElement(1), FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 11
+            && "xy+yz+xz at (1,2,3) should be 11");
     },
 
     // Test 20: Bivariate polynomial with coefficient: 2*x*y^2 + 3*x^2*y at (2,3)
@@ -222,11 +223,11 @@ std::vector<std::function<void()>> test_cases = {
             Monomial(FiniteFieldElement(2), std::vector<size_t>{1, 2}),  // 2*x*y^2
             Monomial(FiniteFieldElement(3), std::vector<size_t>{2, 1})   // 3*x^2*y
         });
-        // 2*x*y^2 at (2,3): 2*2*(3*3%8) = 2*2*1 = 4
-        // 3*x^2*y at (2,3): 3*(2*2)*3 = 3*4*3 = 36%8 = 4
-        // total: 4+4 = 8 % 8 = 0
-        assert(p.evaluate({FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 0
-            && "2*x*y^2 + 3*x^2*y at (2,3) should be 0 (mod 8)");
+        // 2*x*y^2 at (2,3): 2*2*9 = 36
+        // 3*x^2*y at (2,3): 3*4*3 = 36
+        // total: 36+36 = 72
+        assert(p.evaluate({FiniteFieldElement(2), FiniteFieldElement(3)}).getValue() == 72
+            && "2*x*y^2 + 3*x^2*y at (2,3) should be 72");
         // at (1,1): 2*1*1 + 3*1*1 = 5
         assert(p.evaluate({FiniteFieldElement(1), FiniteFieldElement(1)}).getValue() == 5
             && "2*x*y^2 + 3*x^2*y at (1,1) should be 5");

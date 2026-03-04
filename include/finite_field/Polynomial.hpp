@@ -21,6 +21,8 @@ public:
 
     FiniteFieldElement evaluate(const std::vector<FiniteFieldElement> &variable_values) const;
 
+    FiniteFieldElement operator()(const std::vector<FiniteFieldElement> &variable_values) const;
+
     size_t getNumVariables() const;
 
     const std::vector<Monomial> &getTerms() const;

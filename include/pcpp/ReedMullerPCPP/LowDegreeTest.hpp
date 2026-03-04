@@ -3,15 +3,16 @@
 
 #include "finite_field/Polynomial.hpp"
 #include "finite_field/UnivariatePolynomial.hpp"
+#include "pcpp/ReedMullerPCPP/ReedMuller.hpp"
 
 namespace pcpp {
 
 class LowDegreeTest {
 public:
-    LowDegreeTest(finite_field::Polynomial p);
+    LowDegreeTest(ReedMuller code);
 
 private:
-    finite_field::UnivariatePolynomial h;
+    ReedMuller code;
     std::vector<finite_field::FiniteFieldElement> slope;
     std::vector<finite_field::FiniteFieldElement> intercept;
 };

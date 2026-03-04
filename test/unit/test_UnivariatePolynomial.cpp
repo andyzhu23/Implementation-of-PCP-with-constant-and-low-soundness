@@ -61,51 +61,53 @@ std::vector<std::function<void()>> test_cases = {
         assert(p.evaluate(FiniteFieldElement(0)).getValue() == 5 && "p(0) should equal the constant term");
     },
 
-    // Test 7: evaluate at x=1 returns sum of all coefficients (mod field size)
+    // Test 7: evaluate at x=1 returns sum of all coefficients
     []() -> void {
-        // p(x) = 1 + 2x + 3x^2;  p(1) = (1+2+3) mod 8 = 6
+        // p(x) = 1 + 2x + 3x^2;  p(1) = 1+2+3 = 6
         UnivariatePolynomial p(std::vector<FiniteFieldElement>{
             FiniteFieldElement(1), FiniteFieldElement(2), FiniteFieldElement(3)
         });
-        int expected = (1 + 2 + 3) % finite_field::FINITE_FIELD_SIZE;
-        assert(p.evaluate(FiniteFieldElement(1)).getValue() == expected && "p(1) should be sum of coefficients mod field size");
+        int expected = 6;  // 1+2+3 = 6 (no wrapping with large field)
+        assert(p.evaluate(FiniteFieldElement(1)).getValue() == expected && "p(1) should be sum of coefficients");
     },
 
     // Test 8: evaluate constant polynomial at several points
     []() -> void {
         // p(x) = 7  (constant)
         UnivariatePolynomial p(std::vector<FiniteFieldElement>{FiniteFieldElement(7)});
-        for (int x = 0; x < finite_field::FINITE_FIELD_SIZE; ++x) {
+        // Test a few representative values instead of all field elements
+        for (int x : {0, 1, 2, 10, 100, 1000}) {
             assert(p.evaluate(FiniteFieldElement(x)).getValue() == 7 && "Constant polynomial should evaluate to constant everywhere");
         }
     },
 
     // Test 9: evaluate linear polynomial p(x) = 2 + 3x at several points
     []() -> void {
-        // p(0)=2, p(1)=5, p(2)=(2+6)%8=0, p(3)=(2+9)%8=3
+        // p(0)=2, p(1)=5, p(2)=8, p(3)=11
         UnivariatePolynomial p(std::vector<FiniteFieldElement>{FiniteFieldElement(2), FiniteFieldElement(3)});
         assert(p.evaluate(FiniteFieldElement(0)).getValue() == 2 && "p(0) should be 2");
         assert(p.evaluate(FiniteFieldElement(1)).getValue() == 5 && "p(1) should be 5");
-        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 0 && "p(2) should be 0 (mod 8)");
-        assert(p.evaluate(FiniteFieldElement(3)).getValue() == 3 && "p(3) should be 3 (mod 8)");
+        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 8 && "p(2) should be 8");
+        assert(p.evaluate(FiniteFieldElement(3)).getValue() == 11 && "p(3) should be 11");
     },
 
     // Test 10: evaluate quadratic polynomial p(x) = 1 + 2x + 3x^2
     []() -> void {
-        // p(0)=1, p(1)=6, p(2)=(1+4+12)%8=1, p(3)=(1+6+27)%8=2
+        // p(0)=1, p(1)=6, p(2)=1+4+12=17, p(3)=1+6+27=34
         UnivariatePolynomial p(std::vector<FiniteFieldElement>{
             FiniteFieldElement(1), FiniteFieldElement(2), FiniteFieldElement(3)
         });
         assert(p.evaluate(FiniteFieldElement(0)).getValue() == 1  && "p(0) should be 1");
         assert(p.evaluate(FiniteFieldElement(1)).getValue() == 6  && "p(1) should be 6");
-        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 1  && "p(2) should be 1 (mod 8)");
-        assert(p.evaluate(FiniteFieldElement(3)).getValue() == 2  && "p(3) should be 2 (mod 8)");
+        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 17  && "p(2) should be 17");
+        assert(p.evaluate(FiniteFieldElement(3)).getValue() == 34  && "p(3) should be 34");
     },
 
     // Test 11: evaluate zero polynomial returns 0 at all points
     []() -> void {
         UnivariatePolynomial p(3); // degree 3, all zero coefficients
-        for (int x = 0; x < finite_field::FINITE_FIELD_SIZE; ++x) {
+        // Test representative values instead of all field elements
+        for (int x : {0, 1, 2, 10, 100, 1000}) {
             assert(p.evaluate(FiniteFieldElement(x)).getValue() == 0 && "Zero polynomial should evaluate to 0 everywhere");
         }
     },
@@ -118,34 +120,34 @@ std::vector<std::function<void()>> test_cases = {
 
     // Test 13: evaluate with field-size wrapping in coefficients
     []() -> void {
-        // FiniteFieldElement wraps on construction: value 9 -> 1 (9 % 8)
-        UnivariatePolynomial p(std::vector<FiniteFieldElement>{FiniteFieldElement(9), FiniteFieldElement(0)});
-        assert(p[0].getValue() == 1 && "Coefficient 9 should wrap to 1 mod 8");
-        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 1 && "p(2) = 1 + 0*2 = 1");
+        // Use field size to demonstrate wrapping: 998244353 wraps to 0
+        UnivariatePolynomial p(std::vector<FiniteFieldElement>{FiniteFieldElement(998244353), FiniteFieldElement(1)});
+        assert(p[0].getValue() == 0 && "Coefficient 998244353 should wrap to 0");
+        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 2 && "p(2) = 0 + 1*2 = 2");
     },
 
     // Test 14: evaluate high-degree polynomial p(x) = x^4 at x=2
     []() -> void {
         // coeffs: [0, 0, 0, 0, 1]  => p(x) = x^4
-        // p(2) = 16 % 8 = 0
         UnivariatePolynomial p(std::vector<FiniteFieldElement>{
             FiniteFieldElement(0), FiniteFieldElement(0), FiniteFieldElement(0),
             FiniteFieldElement(0), FiniteFieldElement(1)
         });
         assert(p.getDegree() == 4 && "Degree should be 4");
-        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 0 && "2^4=16, 16%8=0");
-        assert(p.evaluate(FiniteFieldElement(3)).getValue() == 1 && "3^4=81, 81%8=1");
+        assert(p.evaluate(FiniteFieldElement(2)).getValue() == 16 && "2^4=16");
+        assert(p.evaluate(FiniteFieldElement(3)).getValue() == 81 && "3^4=81");
     },
 
-    // Test 15: operator[] returns the correct coefficient at every valid index
+    // Test 15: operator[] returns the correct coefficient at every valid index (test with smaller range)
     []() -> void {
+        // Use a smaller range for testing since field size is very large
         std::vector<FiniteFieldElement> coeffs;
-        for (int i = 0; i < (int)finite_field::FINITE_FIELD_SIZE; ++i) {
+        for (int i = 0; i < 20; ++i) {
             coeffs.push_back(FiniteFieldElement(i));
         }
         UnivariatePolynomial p(coeffs);
-        assert(p.getDegree() == finite_field::FINITE_FIELD_SIZE - 1 && "Degree should be FINITE_FIELD_SIZE - 1");
-        for (size_t i = 0; i < finite_field::FINITE_FIELD_SIZE; ++i) {
+        assert(p.getDegree() == 19 && "Degree should be 19");
+        for (size_t i = 0; i < 20; ++i) {
             assert(p[i].getValue() == (int)i && "operator[] should return correct coefficient at each index");
         }
     }
