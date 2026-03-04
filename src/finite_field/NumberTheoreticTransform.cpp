@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "finite_field/constant.hpp"
 #include "finite_field/FiniteFieldElement.hpp"
 #include "finite_field/NumberTheoreticTransform.hpp"

@@ -11,6 +11,9 @@ LowDegreeTest::LowDegreeTest(ReedMuller code) : code(code), slope(code.NUM_VARIA
     }
 
     // evaluate the line at roots of unity and use NTT to get univariate polynomial coefficients
+
+    std::vector<finite_field::FiniteFieldElement> evaluations();
+
     finite_field::FiniteFieldElement omega = finite_field::get_primitive_root_of_unity(num_variables);
     
 }
