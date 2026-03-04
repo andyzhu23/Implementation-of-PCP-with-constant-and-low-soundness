@@ -1,7 +1,7 @@
 #ifndef FINITE_FIELD_CONSTANT_HPP
 #define FINITE_FIELD_CONSTANT_HPP
 
-#include <utility>
+#include <vector>
 
 #include "finite_field/FiniteFieldElement.hpp"
 
