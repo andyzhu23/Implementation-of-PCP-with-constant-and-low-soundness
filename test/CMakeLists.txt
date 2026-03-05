@@ -412,18 +412,16 @@ if(BUILD_E2E_TESTS)
     target_compile_definitions(test_HadamardPCPP_soundness PRIVATE ENFORCE_CONSISTENCY)
 endif()
 
-if(BUILD_E2E_TESTS)
-    add_executable(
-        test_LowDegreeTest
-        ./e2e/test_LowDegreeTest.cpp
-        ../../src/pcpp/ReedMullerPCPP/LowDegreeTest.cpp
-        ../../src/pcpp/ReedMullerPCPP/ReedMuller.cpp
-        ../../src/finite_field/NumberTheoreticTransform.cpp
-        ../../src/finite_field/UnivariatePolynomial.cpp
-        ../../src/finite_field/Polynomial.cpp
-        ../../src/finite_field/Monomial.cpp
-        ../../src/finite_field/FiniteFieldElement.cpp
-    )
-    add_test(NAME Test_LowDegreeTest COMMAND test_LowDegreeTest)
-    target_include_directories(test_LowDegreeTest PRIVATE ${CMAKE_SOURCE_DIR}/include)
-endif()
+add_executable(
+    test_LowDegreeTest
+    ./e2e/test_LowDegreeTest.cpp
+    ../../src/pcpp/ReedMullerPCPP/LowDegreeTest.cpp
+    ../../src/pcpp/ReedMullerPCPP/ReedMuller.cpp
+    ../../src/finite_field/NumberTheoreticTransform.cpp
+    ../../src/finite_field/UnivariatePolynomial.cpp
+    ../../src/finite_field/Polynomial.cpp
+    ../../src/finite_field/Monomial.cpp
+    ../../src/finite_field/FiniteFieldElement.cpp
+)
+add_test(NAME Test_LowDegreeTest COMMAND test_LowDegreeTest)
+target_include_directories(test_LowDegreeTest PRIVATE ${CMAKE_SOURCE_DIR}/include)
