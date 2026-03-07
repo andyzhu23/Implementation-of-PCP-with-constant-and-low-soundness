@@ -65,10 +65,11 @@ std::vector<FiniteFieldElement> ntt_helper(std::vector<FiniteFieldElement> input
     auto even_transformed = ntt_helper(even, omega_squared);
     auto odd_transformed = ntt_helper(odd, omega_squared);
 
+    FiniteFieldElement omega_i = 1; // omega^i
     for (size_t i = 0; i < mid; ++i) {
-        FiniteFieldElement omega_i = omega.exp(i); // omega^i
         input[i] = even_transformed[i] + omega_i * odd_transformed[i];
         input[i + mid] = even_transformed[i] - omega_i * odd_transformed[i];
+        omega_i *= omega; // Update omega^i for the next iteration
     }
 
     return input;
