@@ -80,10 +80,6 @@ std::vector<FiniteFieldElement> convolution(std::vector<FiniteFieldElement> a, s
     a.resize(a.size() + b.size() - 1); // Resize to hold the full convolution result
     b.resize(a.size()); // Resize b to match the new size of a
 
-    // Pad both vectors to the next power of 2 for NTT
-    padding(a);
-    padding(b);
-
     std::vector<FiniteFieldElement> a_ntt = ntt(a);
     std::vector<FiniteFieldElement> b_ntt = ntt(b);
 
