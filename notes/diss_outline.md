@@ -4,11 +4,18 @@
   * work completed
 * preparation
   * preliminaries
-  * known results
-* technical decisions
-  * development methodologies
-  * testing strategies
-  * starting point
+  * gap amplification
+    * degree reduction
+    * expanderize
+    * powering operation
+    * alphabet reduction
+  * PCPP
+    * Hadamard PCPP
+    * Low Degree Test
+  * technical decisions
+    * development methodologies
+    * testing strategies
+    * starting point
 * implementation
   * code structure
   * object representations
@@ -18,6 +25,7 @@
   * hadamard pcpp
   * three_coloring to linear 2-CSP
   * reed muller pcp
+    * Low Degree Test
 * evaluation
   * Setup
   * completeness test
@@ -26,4 +34,4 @@
   * results
 * conclusion
   * achievements
-  * 
+  * Future works

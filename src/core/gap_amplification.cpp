@@ -1,14 +1,14 @@
 #include <cmath>
 #include <future>
+#include <thread>
+#include <unordered_map>
 #include <vector>
-#include <mutex>
 
 #include "core/core.hpp"
 #include "constants.hpp"
 #include "pcpp/TesterFactory.hpp"
 #include "util/disjoint_set_union.hpp"
-
-#include <cassert>
+#include "util/thread_pool.hpp"
 
 void merge_variables(
     size_t original_size,
@@ -81,6 +81,15 @@ namespace core {
 
 #ifndef SINGLE_THREAD
 
+namespace {
+
+struct gap_amplification_task_result {
+    std::vector<pcp::Variable> neighbors;
+    pcp::BinaryCSP reduced_pcp;
+};
+
+}
+
 pcp::BinaryCSP gap_amplification(pcp::BinaryCSP pcp, pcpp::TesterType tester_type) {
     to_expander(pcp, constants::EXPANDING_COEFFICIENT);
     pcp = reduce_degree(pcp, constants::DEGREE);
@@ -92,40 +101,36 @@ pcp::BinaryCSP gap_amplification(pcp::BinaryCSP pcp, pcpp::TesterType tester_typ
 
     std::vector<pcp::BinaryCSP> reduced_pcps(original_size);
 
-    std::vector<std::future<void>> futures;
-    size_t chunk_size = (original_size + num_threads - 1) / num_threads;
+    std::vector<std::future<gap_amplification_task_result>> futures;
+    futures.reserve(original_size);
 
     std::vector<std::vector<std::pair<pcp::Variable, size_t>>> occuring_location(original_size);
-    std::mutex mtx;
 
-    for (unsigned int t = 0; t < num_threads; ++t) {
-        size_t start = t * chunk_size;
-        size_t end = std::min(start + chunk_size, original_size);
+    util::thread_pool pool(num_threads);
 
-        if (start >= original_size) break;
+    for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(original_size); ++u) {
+        futures.push_back(pool.enqueue([&pcp, tester_type, u]() {
+            std::vector<pcp::Variable> neighbors = pcp.get_neighbors(u, constants::POWERING_RADIUS);
+            pcp::BinaryCSP powering_u = pcp.build_sub_pcp(neighbors);
 
-        futures.push_back(std::async(std::launch::async,
-            [&reduced_pcps, start, end, &pcp, &occuring_location, &mtx, tester_type]() {
-                for (size_t u = start; u < end; ++u) {
-                    std::vector<pcp::Variable> neighbors = pcp.get_neighbors(u, constants::POWERING_RADIUS);
-                    {
-                        std::lock_guard<std::mutex> lock(mtx);
-                        for (size_t i = 0; i < neighbors.size(); ++i) {
-                            occuring_location[neighbors[i]].emplace_back(u, i);
-                        }
-                    }
-                    pcp::BinaryCSP powering_u = pcp.build_sub_pcp(neighbors);
+            std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(tester_type);
+            tester->create_tester(powering_u);
 
-                    std::unique_ptr<pcpp::Tester> tester = pcpp::get_tester(tester_type); tester->create_tester(powering_u);
-                    pcp::BinaryCSP reduced_pcp = tester->buildBinaryCSP();
-                    reduced_pcps[u] = std::move(reduced_pcp);
-                }
-            }
-        ));
+            return gap_amplification_task_result{
+                std::move(neighbors),
+                tester->buildBinaryCSP()
+            };
+        }));
     }
-    for (auto &f : futures) {
-        f.get();
+
+    for (pcp::Variable u = 0; u < static_cast<pcp::Variable>(futures.size()); ++u) {
+        gap_amplification_task_result task_result = futures[u].get();
+        for (size_t i = 0; i < task_result.neighbors.size(); ++i) {
+            occuring_location[task_result.neighbors[i]].emplace_back(u, i);
+        }
+        reduced_pcps[u] = std::move(task_result.reduced_pcp);
     }
+
     pcp = pcp::merge_BinaryCSPs(reduced_pcps);
 
     if (tester_type == pcpp::TesterType::HADAMARD) {
