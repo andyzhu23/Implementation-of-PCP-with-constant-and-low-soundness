@@ -120,9 +120,9 @@ std::vector<std::function<void()>> test_cases = {
 
     // Test 13: evaluate with field-size wrapping in coefficients
     []() -> void {
-        // Use field size to demonstrate wrapping: 998244353 wraps to 0
-        UnivariatePolynomial p(std::vector<FiniteFieldElement>{FiniteFieldElement(998244353), FiniteFieldElement(1)});
-        assert(p[0].getValue() == 0 && "Coefficient 998244353 should wrap to 0");
+        // Use field size to demonstrate wrapping: 65537 wraps to 0
+        UnivariatePolynomial p(std::vector<FiniteFieldElement>{FiniteFieldElement(65537), FiniteFieldElement(1)});
+        assert(p[0].getValue() == 0 && "Coefficient 65537 should wrap to 0");
         assert(p.evaluate(FiniteFieldElement(2)).getValue() == 2 && "p(2) = 0 + 1*2 = 2");
     },
 

@@ -130,13 +130,13 @@ std::vector<std::function<void()>> test_cases = {
 
     // Test 13: Modular wrap-around in result - use large coefficients
     []() -> void {
-        // Use coefficients that will cause wrapping: 998244353 wraps to 0
+        // Use coefficients that will cause wrapping: 65537 wraps to 0
         Polynomial p(std::vector<Monomial>{
-            Monomial(FiniteFieldElement(998244353), std::vector<size_t>{0}),  // constant term that wraps to 0
+            Monomial(FiniteFieldElement(65537), std::vector<size_t>{0}),  // constant term that wraps to 0
             Monomial(FiniteFieldElement(1), std::vector<size_t>{0})   // constant 1
         });
         assert(p.evaluate({FiniteFieldElement(0)}).getValue() == 1
-            && "998244353 + 1 should wrap to 1");
+            && "65537 + 1 should wrap to 1");
     },
 
     // Test 14: evaluate throws for mismatched variable count
