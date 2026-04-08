@@ -22,8 +22,9 @@ public:
         }
 
         workers.reserve(thread_count);
+
         for (size_t i = 0; i < thread_count; ++i) {
-            workers.emplace_back([this]() {
+            workers.emplace_back([this]() -> void {
                 while (true) {
                     std::function<void()> task;
                     {
@@ -31,7 +32,7 @@ public:
                         condition.wait(lock, [this]() -> bool {
                             return stop || !tasks.empty();
                         });
-
+                        
                         if (stop && tasks.empty()) {
                             return;
                         }
@@ -39,7 +40,6 @@ public:
                         task = std::move(tasks.front());
                         tasks.pop();
                     }
-
                     task();
                 }
             });
@@ -52,7 +52,6 @@ public:
             stop = true;
         }
         condition.notify_all();
-
         for (std::thread &worker : workers) {
             if (worker.joinable()) {
                 worker.join();
@@ -64,7 +63,7 @@ public:
     auto enqueue(Function &&function, Args &&...args)
         -> std::future<std::invoke_result_t<Function, Args...>> {
         using result_type = std::invoke_result_t<Function, Args...>;
-
+        
         auto task = std::make_shared<std::packaged_task<result_type()>>(
             std::bind(std::forward<Function>(function), std::forward<Args>(args)...)
         );
@@ -72,11 +71,10 @@ public:
         std::future<result_type> future = task->get_future();
         {
             std::lock_guard<std::mutex> lock(queue_mutex);
-            tasks.emplace([task]() {
-                (*task)();
-            });
+            tasks.emplace([task]() -> void { (*task)(); });
         }
         condition.notify_one();
+
         return future;
     }
 

@@ -90,7 +90,7 @@ def plot_and_save(original_gaps, amplified_gaps, outdir):
     bars2 = ax.bar(right_positions, ampl_bar_vals, width, yerr=ampl_err, capsize=5, label='Amplified')
 
     ax.set_xticks(indices)
-    ax.set_xticklabels([f"Test {i+1}" for i in indices], rotation=45)
+    ax.set_xticklabels([f"{30 + i * 10} Constraints" for i in indices], rotation=45)
     ax.set_ylabel('Mean Gap')
     ax.set_title('Means and standard deviations per test (Original vs Amplified)')
     ax.legend()
@@ -113,9 +113,9 @@ def plot_and_save(original_gaps, amplified_gaps, outdir):
     annotate_bars(bars1, orig_vars)
     annotate_bars(bars2, ampl_vars)
 
-    fname = os.path.join(outdir, f"gap_means_variances_bar.png")
+    fname = os.path.join(outdir, f"gap_means_variances_bar.pdf")
     fig.tight_layout()
-    fig.savefig(fname)
+    fig.savefig(fname, format='pdf')
     plt.close(fig)
     saved_files.append(fname)
 

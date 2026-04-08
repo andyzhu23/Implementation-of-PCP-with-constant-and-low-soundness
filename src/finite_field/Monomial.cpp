@@ -30,11 +30,7 @@ FiniteFieldElement Monomial::evaluate(const std::vector<FiniteFieldElement> &var
     }
     FiniteFieldElement result = coefficient;
     for (size_t i = 0; i < variable_exp.size(); ++i) {
-        FiniteFieldElement term = 1;
-        for (size_t j = 0; j < variable_exp[i]; ++j) {
-            term *= variable_values[i];
-        }
-        result *= term;
+        result *= variable_values[i].exp(variable_exp[i]);
     }
     return result;
 }

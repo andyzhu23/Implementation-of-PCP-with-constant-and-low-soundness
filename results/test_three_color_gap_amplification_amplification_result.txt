@@ -93,140 +93,140 @@ Test case 4 finished
 
 Running test case: 5
  Trial 1 ...
-original gap: 0.00683, amplified gap: 0.04225
+original gap: 0.00683, amplified gap: 0.04251
  Trial 2 ...
-original gap: 0.00734, amplified gap: 0.03524
+original gap: 0.0069, amplified gap: 0.02041
  Trial 3 ...
-original gap: 0.00654, amplified gap: 0.02178
+original gap: 0.00726, amplified gap: 0.02991
  Trial 4 ...
-original gap: 0.00701, amplified gap: 0.02522
+original gap: 0.00697, amplified gap: 0.02926
  Trial 5 ...
-original gap: 0.00698, amplified gap: 0.03311
+original gap: 0.0072, amplified gap: 0.0258
  Trial 6 ...
-original gap: 0.00672, amplified gap: 0.04035
+original gap: 0.007, amplified gap: 0.02844
  Trial 7 ...
-original gap: 0.00679, amplified gap: 0.02405
+original gap: 0.00714, amplified gap: 0.02043
  Trial 8 ...
-original gap: 0.00681, amplified gap: 0.02345
+original gap: 0.00727, amplified gap: 0.02684
  Trial 9 ...
-original gap: 0.00699, amplified gap: 0.02573
+original gap: 0.0073, amplified gap: 0.02353
  Trial 10 ...
-original gap: 0.00748, amplified gap: 0.02298
+original gap: 0.00739, amplified gap: 0.02299
 Test case 5 finished
 
 Running test case: 6
  Trial 1 ...
-original gap: 0.00637, amplified gap: 0.02259
+original gap: 0.00598, amplified gap: 0.0233
  Trial 2 ...
-original gap: 0.00673, amplified gap: 0.01708
+original gap: 0.00632, amplified gap: 0.02016
  Trial 3 ...
-original gap: 0.00627, amplified gap: 0.03385
+original gap: 0.00641, amplified gap: 0.02393
  Trial 4 ...
-original gap: 0.00652, amplified gap: 0.02692
+original gap: 0.0061, amplified gap: 0.02065
  Trial 5 ...
-original gap: 0.00637, amplified gap: 0.02676
+original gap: 0.00667, amplified gap: 0.02534
  Trial 6 ...
-original gap: 0.00666, amplified gap: 0.01856
+original gap: 0.0059, amplified gap: 0.03671
  Trial 7 ...
-original gap: 0.00556, amplified gap: 0.02268
+original gap: 0.00627, amplified gap: 0.02143
  Trial 8 ...
-original gap: 0.00586, amplified gap: 0.02664
+original gap: 0.00631, amplified gap: 0.02182
  Trial 9 ...
-original gap: 0.0059, amplified gap: 0.02692
+original gap: 0.00609, amplified gap: 0.02852
  Trial 10 ...
-original gap: 0.00608, amplified gap: 0.02414
+original gap: 0.00629, amplified gap: 0.01951
 Test case 6 finished
 
 Running test case: 7
  Trial 1 ...
-original gap: 0.00556, amplified gap: 0.02051
+original gap: 0.00529, amplified gap: 0.02446
  Trial 2 ...
-original gap: 0.0056, amplified gap: 0.02282
+original gap: 0.00543, amplified gap: 0.02228
  Trial 3 ...
-original gap: 0.00558, amplified gap: 0.02544
+original gap: 0.00589, amplified gap: 0.0305
  Trial 4 ...
-original gap: 0.0053, amplified gap: 0.02586
+original gap: 0.00558, amplified gap: 0.01449
  Trial 5 ...
-original gap: 0.00573, amplified gap: 0.01809
+original gap: 0.00578, amplified gap: 0.01753
  Trial 6 ...
-original gap: 0.00538, amplified gap: 0.01841
+original gap: 0.00564, amplified gap: 0.02142
  Trial 7 ...
-original gap: 0.00591, amplified gap: 0.02681
+original gap: 0.00592, amplified gap: 0.0206
  Trial 8 ...
-original gap: 0.00593, amplified gap: 0.01867
+original gap: 0.00537, amplified gap: 0.02985
  Trial 9 ...
-original gap: 0.00567, amplified gap: 0.03059
+original gap: 0.00555, amplified gap: 0.01785
  Trial 10 ...
-original gap: 0.00539, amplified gap: 0.01463
+original gap: 0.00533, amplified gap: 0.02275
 Test case 7 finished
 
 Running test case: 8
  Trial 1 ...
-original gap: 0.00491, amplified gap: 0.01871
+original gap: 0.00493, amplified gap: 0.02274
  Trial 2 ...
-original gap: 0.00488, amplified gap: 0.01917
+original gap: 0.00497, amplified gap: 0.01608
  Trial 3 ...
-original gap: 0.00509, amplified gap: 0.02081
+original gap: 0.00442, amplified gap: 0.01604
  Trial 4 ...
-original gap: 0.00495, amplified gap: 0.01995
+original gap: 0.00503, amplified gap: 0.01459
  Trial 5 ...
-original gap: 0.00475, amplified gap: 0.0164
+original gap: 0.00459, amplified gap: 0.01702
  Trial 6 ...
-original gap: 0.00527, amplified gap: 0.01484
+original gap: 0.00511, amplified gap: 0.01668
  Trial 7 ...
-original gap: 0.00525, amplified gap: 0.01934
+original gap: 0.00506, amplified gap: 0.01494
  Trial 8 ...
-original gap: 0.0052, amplified gap: 0.02139
+original gap: 0.00507, amplified gap: 0.01643
  Trial 9 ...
-original gap: 0.00527, amplified gap: 0.01492
+original gap: 0.00518, amplified gap: 0.01693
  Trial 10 ...
-original gap: 0.00495, amplified gap: 0.01799
+original gap: 0.00497, amplified gap: 0.02221
 Test case 8 finished
 
 Running test case: 9
  Trial 1 ...
-original gap: 0.00434, amplified gap: 0.01522
+original gap: 0.0046, amplified gap: 0.0177
  Trial 2 ...
-original gap: 0.00474, amplified gap: 0.02146
+original gap: 0.00441, amplified gap: 0.02198
  Trial 3 ...
-original gap: 0.00451, amplified gap: 0.01965
+original gap: 0.00456, amplified gap: 0.01663
  Trial 4 ...
-original gap: 0.00434, amplified gap: 0.01952
+original gap: 0.00439, amplified gap: 0.01435
  Trial 5 ...
-original gap: 0.00435, amplified gap: 0.01651
+original gap: 0.00455, amplified gap: 0.01274
  Trial 6 ...
-original gap: 0.00471, amplified gap: 0.01707
+original gap: 0.00437, amplified gap: 0.01716
  Trial 7 ...
-original gap: 0.00476, amplified gap: 0.01837
+original gap: 0.00443, amplified gap: 0.01572
  Trial 8 ...
-original gap: 0.00465, amplified gap: 0.01647
+original gap: 0.00465, amplified gap: 0.01264
  Trial 9 ...
-original gap: 0.00439, amplified gap: 0.02366
+original gap: 0.00457, amplified gap: 0.01613
  Trial 10 ...
-original gap: 0.00468, amplified gap: 0.01211
+original gap: 0.00488, amplified gap: 0.01745
 Test case 9 finished
 
 Running test case: 10
  Trial 1 ...
-original gap: 0.00417, amplified gap: 0.01105
+original gap: 0.00389, amplified gap: 0.01024
  Trial 2 ...
-original gap: 0.0041, amplified gap: 0.01409
+original gap: 0.00415, amplified gap: 0.01377
  Trial 3 ...
-original gap: 0.00398, amplified gap: 0.01708
+original gap: 0.00421, amplified gap: 0.01908
  Trial 4 ...
-original gap: 0.00412, amplified gap: 0.01487
+original gap: 0.00416, amplified gap: 0.01591
  Trial 5 ...
-original gap: 0.00423, amplified gap: 0.01847
+original gap: 0.00351, amplified gap: 0.01853
  Trial 6 ...
-original gap: 0.00437, amplified gap: 0.01733
+original gap: 0.00409, amplified gap: 0.02709
  Trial 7 ...
-original gap: 0.00408, amplified gap: 0.01649
+original gap: 0.00401, amplified gap: 0.01577
  Trial 8 ...
-original gap: 0.00418, amplified gap: 0.01879
+original gap: 0.0038, amplified gap: 0.01456
  Trial 9 ...
-original gap: 0.00431, amplified gap: 0.01962
+original gap: 0.00403, amplified gap: 0.01636
  Trial 10 ...
-original gap: 0.0042, amplified gap: 0.01343
+original gap: 0.00409, amplified gap: 0.01668
 Test case 10 finished
 
 All tests finished
