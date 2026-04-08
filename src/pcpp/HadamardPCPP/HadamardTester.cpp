@@ -2,6 +2,8 @@
 #include <random>
 #include <unordered_map>
 
+#include <cassert>
+
 #include "constants.hpp"
 #include "pcpp/HadamardPCPP/HadamardTester.hpp"
 #include "Aliases.hpp"
@@ -323,7 +325,6 @@ pcp::BinaryCSP HadamardTester::buildBinaryCSP(
         add_position(position1);
         add_position(position2);
         add_position(position3);
-
         three_csp.add_ternary_constraint(
             used_positions[position1],
             used_positions[position2],

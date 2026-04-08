@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include <functional>
 #include <iostream>
 #include <vector>
@@ -158,7 +159,141 @@ std::vector<std::function<void()>> test_cases = {
 
         pcpp::LowDegreeTest ldt_wrong_bound(pcpp::ReedMuller(12, oracle), 49);
         assert(!ldt_wrong_bound.verifyPolynomial() && "LowDegreeTest with wrong degree bound should fail verification");
-    }
+    }, 
+    []() -> void {
+        // Honest prover with very high degree (< 65537) in one variable.
+        // p(x) = 9*x^65000 + 4*x^32000 + 17
+        finite_field::Polynomial p(std::vector<finite_field::Monomial>{
+            finite_field::Monomial(9, {65000}),
+            finite_field::Monomial(4, {32000}),
+            finite_field::Monomial(17, {0})
+        });
+        std::function<finite_field::FiniteFieldElement(const std::vector<finite_field::FiniteFieldElement>&)> oracle = [&p](const std::vector<finite_field::FiniteFieldElement>& input) {
+            return p.evaluate(input);
+        };
+
+        pcpp::LowDegreeTest ldt(pcpp::ReedMuller(1, oracle), 65000);
+        assert(ldt.verifyPolynomial() && "LowDegreeTest should verify honest prover with degree 65000");
+    },
+    []() -> void {
+        // Honest prover with very high total degree (< 65537) in three variables.
+        // p(x,y,z) = 3*x^40000*y^25000 + 5*z^65000 + 11*x^15000*z^50000 + 1
+        finite_field::Polynomial p(std::vector<finite_field::Monomial>{
+            finite_field::Monomial(3, {40000, 25000, 0}),
+            finite_field::Monomial(5, {0, 0, 65000}),
+            finite_field::Monomial(11, {15000, 0, 50000}),
+            finite_field::Monomial(1, {0, 0, 0})
+        });
+        std::function<finite_field::FiniteFieldElement(const std::vector<finite_field::FiniteFieldElement>&)> oracle = [&p](const std::vector<finite_field::FiniteFieldElement>& input) {
+            return p.evaluate(input);
+        };
+
+        pcpp::LowDegreeTest ldt(pcpp::ReedMuller(3, oracle), 65000);
+        assert(ldt.verifyPolynomial() && "LowDegreeTest should verify honest prover with multivariate degree 65000");
+    },
+    []() -> void {
+        // Dishonest prover case 1:
+        // P(x,y,z) = x + y + z (low degree, honest target)
+        // C(x): all coordinates are even
+        // H(x): x^7 + y^7 + z^7 + 5 (high degree)
+        // Prover returns P(x) if C(x), otherwise H(x).
+        // This should be rejected with high probability.
+        finite_field::Polynomial p(std::vector<finite_field::Monomial>{
+            finite_field::Monomial(1, {1, 0, 0}),
+            finite_field::Monomial(1, {0, 1, 0}),
+            finite_field::Monomial(1, {0, 0, 1})
+        });
+
+        auto dishonest_oracle = [&p](const std::vector<finite_field::FiniteFieldElement>& input) {
+            bool condition_all_even = std::all_of(input.begin(), input.end(), [](const auto& v) {
+                return (v.getValue() % 2) == 0;
+            });
+
+            if (condition_all_even) {
+                return p.evaluate(input); // P(x)
+            }
+
+            // H(x) = x^7 + y^7 + z^7 + 5
+            return input[0].exp(7) + input[1].exp(7) + input[2].exp(7) + finite_field::FiniteFieldElement(5);
+        };
+
+        const int trials = 40;
+        int accepted = 0;
+        for (int i = 0; i < trials; ++i) {
+            pcpp::LowDegreeTest ldt(pcpp::ReedMuller(3, dishonest_oracle), 1);
+            if (ldt.verifyPolynomial()) {
+                ++accepted;
+            }
+        }
+
+        assert(accepted <= 10 && "Dishonest prover (piecewise P/H with parity condition) should be rejected in most trials");
+    },
+    []() -> void {
+        // Dishonest prover case 2:
+        // P(x,y,z) = x*y + z (degree 2)
+        // C(x): x == z (diagonal condition)
+        // H(x): P(x) + (x-z)^9
+        // Prover behaves honestly on a structured subset and deviates elsewhere.
+        finite_field::Polynomial p(std::vector<finite_field::Monomial>{
+            finite_field::Monomial(1, {1, 1, 0}), // x*y
+            finite_field::Monomial(1, {0, 0, 1})  // z
+        });
+
+        auto dishonest_oracle = [&p](const std::vector<finite_field::FiniteFieldElement>& input) {
+            finite_field::FiniteFieldElement px = p.evaluate(input);
+            bool on_diagonal = (input[0] == input[2]);
+            if (on_diagonal) {
+                return px; // P(x)
+            }
+
+            // H(x) = P(x) + (x-z)^9
+            return px + (input[0] - input[2]).exp(9);
+        };
+
+        const int trials = 40;
+        int accepted = 0;
+        for (int i = 0; i < trials; ++i) {
+            pcpp::LowDegreeTest ldt(pcpp::ReedMuller(3, dishonest_oracle), 2);
+            if (ldt.verifyPolynomial()) {
+                ++accepted;
+            }
+        }
+
+        assert(accepted <= 12 && "Dishonest prover (honest on diagonal, high-degree elsewhere) should be rejected in most trials");
+    },
+    []() -> void {
+        // Dishonest prover case 3:
+        // P(x0,...,x4) = x0 + x1 + x2 + x3 + x4 (degree 1)
+        // C(x): first coordinate is zero
+        // H(x): random value
+        // This models a prover that is honest on a tiny structured slice and adversarial otherwise.
+        finite_field::Polynomial p(std::vector<finite_field::Monomial>{
+            finite_field::Monomial(1, {1, 0, 0, 0, 0}),
+            finite_field::Monomial(1, {0, 1, 0, 0, 0}),
+            finite_field::Monomial(1, {0, 0, 1, 0, 0}),
+            finite_field::Monomial(1, {0, 0, 0, 1, 0}),
+            finite_field::Monomial(1, {0, 0, 0, 0, 1})
+        });
+
+        auto dishonest_oracle = [&p](const std::vector<finite_field::FiniteFieldElement>& input) {
+            if (input[0] == 0) {
+                return p.evaluate(input); // P(x)
+            }
+            return finite_field::get_random_element(); // H(x)
+        };
+
+        const int trials = 30;
+        int accepted = 0;
+        for (int i = 0; i < trials; ++i) {
+            pcpp::LowDegreeTest ldt(pcpp::ReedMuller(5, dishonest_oracle), 1);
+            if (ldt.verifyPolynomial()) {
+                ++accepted;
+            }
+        }
+
+        assert(accepted <= 5 && "Dishonest prover (honest only when x0=0, random otherwise) should rarely pass");
+    },
+    
 };
 
 int main() {

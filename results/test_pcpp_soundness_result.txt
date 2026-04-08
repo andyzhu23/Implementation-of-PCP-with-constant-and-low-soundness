@@ -1,17 +1,16 @@
 Running test_pcpp_soundness.cpp
 Running test case: 1
-Cycle graph (satisfiable): Approximated original gap: 0
-Cycle graph (satisfiable): Approximated pcpp gap: 0
+Cycle graph (satisfiable): Approximated original gap: 0, original number of variables: 10, original number of constraints: 10, new number of variables: 509, new number of constraints: 692
+Cycle graph (satisfiable): Approximated pcpp gap: 0, original number of variables: 10, original number of constraints: 10, new number of variables: 509, new number of constraints: 692
 Running test case: 2
-Cycle graph (unsatisfiable): Approximated original gap: 0.1
-Cycle graph (unsatisfiable): Approximated pcpp gap: 0.00288184
+Cycle graph (unsatisfiable): Approximated original gap: 0.1, original number of variables: 10, original number of constraints: 10, new number of variables: 516, new number of constraints: 694
+Cycle graph (unsatisfiable): Approximated pcpp gap: 0.00288184, original number of variables: 10, original number of constraints: 10, new number of variables: 516, new number of constraints: 694
 Running test case: 3
-Star graph: Approximated original gap: 0
-Star graph: Approximated pcpp gap: 0
+Star graph: Approximated original gap: 0, original number of variables: 10, original number of constraints: 9, new number of variables: 511, new number of constraints: 689
+Star graph: Approximated pcpp gap: 0, original number of variables: 10, original number of constraints: 9, new number of variables: 511, new number of constraints: 689
 Running test case: 4
-Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated original gap: 0.166667
-Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated pcpp gap: 0.0107692
+Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated original gap: 0.166667, original number of variables: 6, original number of constraints: 6, new number of variables: 444, new number of constraints: 650
+Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated pcpp gap: 0.0107692, original number of variables: 6, original number of constraints: 6, new number of variables: 444, new number of constraints: 650
 Running test case: 5
-Alphabet reduced PCP(Satisfiable) gap: 0
-Running test case: 6
-Alphabet reduced PCP(UnSatisfiable) gap: 0.00136612
+Random graph (n=10, m=10, satisfiable): Approximated original gap: 0, original number of variables: 10, original number of constraints: 10, new number of variables: 503, new number of constraints: 685
+Random graph (n=10, m=10, satisfiable): Approximated pcpp gap: 0.00875912, original number of variables: 10, original number of constraints: 10, new number of variables: 503, new number of constraints: 685

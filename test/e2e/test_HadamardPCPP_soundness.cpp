@@ -2,6 +2,7 @@
 #include <functional>
 #include <iostream>
 #include <fstream>
+#include <random>
 #include <vector>
 
 #include "core/core.hpp"
@@ -27,8 +28,18 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
         double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
-        fout << "Cycle graph (satisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
-        fout << "Cycle graph (satisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
+           fout << "Cycle graph (satisfiable): Approximated original gap: " << 1 - original_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
+           fout << "Cycle graph (satisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
         assert(1 - pcpp_soundness == 0);
     },
     // Cycle graph, unsatisfiable
@@ -46,8 +57,18 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
         double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
-        fout << "Cycle graph (unsatisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
-        fout << "Cycle graph (unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
+           fout << "Cycle graph (unsatisfiable): Approximated original gap: " << 1 - original_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
+           fout << "Cycle graph (unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
         assert(1 - pcpp_soundness > 0);
     },
     // Star graph (center 0)
@@ -64,8 +85,18 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
         double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
-        fout << "Star graph: Approximated original gap: " << 1 - original_soundness << std::endl;
-        fout << "Star graph: Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
+           fout << "Star graph: Approximated original gap: " << 1 - original_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
+           fout << "Star graph: Approximated pcpp gap: " << 1 - pcpp_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
         assert(1 - pcpp_soundness == 0);
     },
     // Star graph, unsatisfiable with SECOND_BIT_EQUAL and NOTEQUAL constraints
@@ -88,10 +119,125 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
         double original_soundness = analyzer::approximate_soundness(BinaryCSP);
         double pcpp_soundness = analyzer::approximate_soundness(pcpp);
-        fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated original gap: " << 1 - original_soundness << std::endl;
-        fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness << std::endl;
+           fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated original gap: " << 1 - original_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
+           fout << "Star graph (SECOND_BIT_EQUAL/NOTEQUAL, unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness
+               << ", original number of variables: " << BinaryCSP.get_size()
+               << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << pcpp.get_size()
+               << ", new number of constraints: " << pcpp.get_constraints_list().size()
+               << std::endl;
+        assert(1 - pcpp_soundness > 0);
+    },
+
+    // Random graph with 10 variables and 10 constraints, satisfiable by construction
+    [](std::ofstream& fout) -> void {
+        constexpr pcp::Variable n = 10;
+        constexpr int m = 10;
+        std::mt19937 rng(20260406);
+        std::uniform_int_distribution<int> bit_dist(0, 1);
+        std::uniform_int_distribution<int> var_dist(0, n - 1);
+
+        std::vector<int> assignment(n, 0);
+        for (pcp::Variable i = 0; i < n; ++i) {
+            assignment[i] = bit_dist(rng);
+        }
+
+        pcp::BinaryCSP BinaryCSP(n);
+        for (pcp::Variable i = 0; i < n; ++i) {
+            BinaryCSP.set_variable(i, pcp::BinaryDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
+        }
+
+        for (int e = 0; e < m; ++e) {
+            pcp::Variable u = var_dist(rng);
+            pcp::Variable v = var_dist(rng);
+            while (v == u) {
+                v = var_dist(rng);
+            }
+            auto c = (assignment[u] == assignment[v])
+                ? constraint::BinaryConstraint::EQUAL
+                : constraint::BinaryConstraint::NOTEQUAL;
+            BinaryCSP.add_constraint(u, v, c);
+        }
+
+        pcpp::HadamardTester hadamard_tester(BinaryCSP);
+        hadamard_tester.create_tester(BinaryCSP);
+        pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP);
+        double pcpp_soundness = analyzer::approximate_soundness(pcpp);
+        fout << "Random graph (n=10, m=10, satisfiable): Approximated original gap: " << 1 - original_soundness
+             << ", original number of variables: " << BinaryCSP.get_size()
+             << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+             << ", new number of variables: " << pcpp.get_size()
+             << ", new number of constraints: " << pcpp.get_constraints_list().size()
+             << std::endl;
+        fout << "Random graph (n=10, m=10, satisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness
+             << ", original number of variables: " << BinaryCSP.get_size()
+             << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+             << ", new number of variables: " << pcpp.get_size()
+             << ", new number of constraints: " << pcpp.get_constraints_list().size()
+             << std::endl;
+        assert(1 - pcpp_soundness == 0);
+    },
+
+    // Random graph with 10 variables and 10 constraints, unsatisfiable by construction
+    [](std::ofstream& fout) -> void {
+        constexpr pcp::Variable n = 10;
+        constexpr int m = 10;
+        std::mt19937 rng(20260407);
+        std::uniform_int_distribution<int> bit_dist(0, 1);
+        std::uniform_int_distribution<int> var_dist(0, n - 1);
+
+        std::vector<int> assignment(n, 0);
+        for (pcp::Variable i = 0; i < n; ++i) {
+            assignment[i] = bit_dist(rng);
+        }
+
+        pcp::BinaryCSP BinaryCSP(n);
+        for (pcp::Variable i = 0; i < n; ++i) {
+            BinaryCSP.set_variable(i, pcp::BinaryDomain(0, 0, 0, three_csp::Constraint::ENCODED_BINARY));
+        }
+
+        // Contradiction on the same pair guarantees unsatisfiability.
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::EQUAL);
+        BinaryCSP.add_constraint(0, 1, constraint::BinaryConstraint::NOTEQUAL);
+
+        for (int e = 2; e < m; ++e) {
+            pcp::Variable u = var_dist(rng);
+            pcp::Variable v = var_dist(rng);
+            while (v == u) {
+                v = var_dist(rng);
+            }
+            auto c = (assignment[u] == assignment[v])
+                ? constraint::BinaryConstraint::EQUAL
+                : constraint::BinaryConstraint::NOTEQUAL;
+            BinaryCSP.add_constraint(u, v, c);
+        }
+
+        pcpp::HadamardTester hadamard_tester(BinaryCSP);
+        hadamard_tester.create_tester(BinaryCSP);
+        pcp::BinaryCSP pcpp = hadamard_tester.buildBinaryCSP(100, 100, 100);
+        double original_soundness = analyzer::approximate_soundness(BinaryCSP);
+        double pcpp_soundness = analyzer::approximate_soundness(pcpp);
+        fout << "Random graph (n=10, m=10, unsatisfiable): Approximated original gap: " << 1 - original_soundness
+             << ", original number of variables: " << BinaryCSP.get_size()
+             << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+             << ", new number of variables: " << pcpp.get_size()
+             << ", new number of constraints: " << pcpp.get_constraints_list().size()
+             << std::endl;
+        fout << "Random graph (n=10, m=10, unsatisfiable): Approximated pcpp gap: " << 1 - pcpp_soundness
+             << ", original number of variables: " << BinaryCSP.get_size()
+             << ", original number of constraints: " << BinaryCSP.get_constraints_list().size()
+             << ", new number of variables: " << pcpp.get_size()
+             << ", new number of constraints: " << pcpp.get_constraints_list().size()
+             << std::endl;
         assert(1 - pcpp_soundness > 0);
     }, 
+    
     // Ring graph with four nodes multiple local views encoded into pcpp, globally satisfiable, check that satisfiability is preserved
     [](std::ofstream& fout) -> void {
         // variables 0, 1
@@ -177,7 +323,12 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         }
 
         double merged_gap = 1 - analyzer::approximate_soundness(new_BinaryCSP, 3000000);
-        fout << "Alphabet reduced PCP(Satisfiable) gap: " << merged_gap << std::endl;
+           fout << "Alphabet reduced PCP(Satisfiable) gap: " << merged_gap
+               << ", original number of variables: " << combined_BinaryCSP.get_size()
+               << ", original number of constraints: " << combined_BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << new_BinaryCSP.get_size()
+               << ", new number of constraints: " << new_BinaryCSP.get_constraints_list().size()
+               << std::endl;
         assert(merged_gap == 0);
     },
     // Ring graph with four nodes, multiple local views encoded into pcpp, globally unsatisfiable, check that unsatisfiability is preserved
@@ -265,7 +416,12 @@ std::vector<std::function<void(std::ofstream&)>> test_cases = {
         }
 
         double merged_gap = 1 - analyzer::approximate_soundness(new_BinaryCSP, 3000000);
-        fout << "Alphabet reduced PCP(UnSatisfiable) gap: " << merged_gap << std::endl;
+           fout << "Alphabet reduced PCP(UnSatisfiable) gap: " << merged_gap
+               << ", original number of variables: " << combined_BinaryCSP.get_size()
+               << ", original number of constraints: " << combined_BinaryCSP.get_constraints_list().size()
+               << ", new number of variables: " << new_BinaryCSP.get_size()
+               << ", new number of constraints: " << new_BinaryCSP.get_constraints_list().size()
+               << std::endl;
         assert(merged_gap > 0);
     }
 };

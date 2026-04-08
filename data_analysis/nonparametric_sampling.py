@@ -4,7 +4,7 @@ This module provides functions to perform bootstrap resampling to compute
 confidence intervals for differences in means between two datasets.
 
 Usage example:
-    python3 data_analysis/nonparametric_sampling.py --input PATH [--outdir DIR]
+    python data_analysis/nonparametric_sampling.py --input results/test_three_color_gap_amplification_pseudo_result.txt --outdir results/ci_intervals_pseudo.txt
 
 """
 
@@ -35,7 +35,7 @@ def bootstrap_mean_confidence_interval(a, alpha=0.05, n_resamples=10000, seed=No
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", "-i", required=True, help="Path to the result text file")
-    parser.add_argument("--outdir", "-o", default=".", help="Directory to save PNGs")
+    parser.add_argument("--outdir", "-o", default=".", help="Output file path or directory for CI results")
     args = parser.parse_args()
 
     if not os.path.isfile(args.input):
@@ -47,16 +47,45 @@ def main():
 
     _, amplified_gaps = parse_results.parse_results(lines)
 
-    mean1 = float(np.nanmean(amplified_gaps[0]))
+    if not amplified_gaps:
+        print("Error: no test cases found in input file", file=sys.stderr)
+        sys.exit(1)
+
+    non_empty_gaps = [ag for ag in amplified_gaps if len(ag) > 0]
+    if not non_empty_gaps:
+        print("Error: no gap samples found in input file", file=sys.stderr)
+        sys.exit(1)
+
+    mean1 = float(np.nanmean(non_empty_gaps[0]))
     print(f"mean of amplified gaps (test 1): {mean1}")
 
+    output_path = args.outdir
+    if os.path.isdir(output_path):
+        output_path = os.path.join(output_path, "ci_intervals.txt")
+    else:
+        parent = os.path.dirname(output_path)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+
     # bootstrap CIs for the mean of each test
-    ci_test1 = bootstrap_mean_confidence_interval(amplified_gaps[0], alpha=0.05, n_resamples=10000)
-    ci_test2 = bootstrap_mean_confidence_interval(amplified_gaps[1], alpha=0.05, n_resamples=10000)
-    ci_test3 = bootstrap_mean_confidence_interval(amplified_gaps[2], alpha=0.05, n_resamples=10000)
-    print(f"95% CI for mean (test1): ({ci_test1[0]:.5f}, {ci_test1[1]:.5f})")
-    print(f"95% CI for mean (test2): ({ci_test2[0]:.5f}, {ci_test2[1]:.5f})")
-    print(f"95% CI for mean (test3): ({ci_test3[0]:.5f}, {ci_test3[1]:.5f})")
+    with open(output_path, "w") as fout:
+        for idx, ag in enumerate(amplified_gaps):
+            ci = bootstrap_mean_confidence_interval(ag, alpha=0.05, n_resamples=10000)
+            line = f"Constraint {30 + idx * 10}: 95% CI for mean: ({ci[0]:.5f}, {ci[1]:.5f})"
+            print(line)
+            fout.write(line + "\n")
+        
+        # overall_ci = bootstrap_mean_confidence_interval(np.concatenate(non_empty_gaps), alpha=0.05, n_resamples=10000)
+        # overall_line = f"Overall: 95% CI for mean of all amplified gaps: ({overall_ci[0]:.5f}, {overall_ci[1]:.5f})"
+        
+        ci_30_60_120 = bootstrap_mean_confidence_interval(np.concatenate([non_empty_gaps[0], non_empty_gaps[3], non_empty_gaps[-1]]), alpha=0.05, n_resamples=10000)
+        
+        ci_30_60_120_line = f"30-60-120: 95% CI for mean: ({ci_30_60_120[0]:.5f}, {ci_30_60_120[1]:.5f})"
+        
+        print(ci_30_60_120_line)
+        fout.write(ci_30_60_120_line + "\n")
+
+    print(f"Saved CI results to: {output_path}")
 
 if __name__ == "__main__":
     main()

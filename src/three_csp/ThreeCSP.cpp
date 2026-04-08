@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include "three_csp/ThreeCSP.hpp"
 #include "pcp/BinaryDomain.hpp"
 
