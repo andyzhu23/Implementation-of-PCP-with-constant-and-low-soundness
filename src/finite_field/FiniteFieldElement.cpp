@@ -19,43 +19,43 @@ FiniteFieldElement::operator int() const {
     return value;
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator+(const FiniteFieldElement &other) const {
+FiniteFieldElement FiniteFieldElement::operator+(const FiniteFieldElement &other) const {
     return FiniteFieldElement((value + other.value) % FINITE_FIELD_SIZE);
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator-(const FiniteFieldElement &other) const {
+FiniteFieldElement FiniteFieldElement::operator-(const FiniteFieldElement &other) const {
     return FiniteFieldElement((value - other.value + FINITE_FIELD_SIZE) % FINITE_FIELD_SIZE);
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator*(const FiniteFieldElement &other) const {
+FiniteFieldElement FiniteFieldElement::operator*(const FiniteFieldElement &other) const {
     return FiniteFieldElement(((long long)value * other.value) % FINITE_FIELD_SIZE);
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator+=(const FiniteFieldElement &other) {
+FiniteFieldElement FiniteFieldElement::operator+=(const FiniteFieldElement &other) {
     value = (value + other.value) % FINITE_FIELD_SIZE;
     return *this;
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator-=(const FiniteFieldElement &other) {
+FiniteFieldElement FiniteFieldElement::operator-=(const FiniteFieldElement &other) {
     value = (value - other.value + FINITE_FIELD_SIZE) % FINITE_FIELD_SIZE;
     return *this;
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator*=(const FiniteFieldElement &other) {
+FiniteFieldElement FiniteFieldElement::operator*=(const FiniteFieldElement &other) {
     value = ((long long)value * other.value) % FINITE_FIELD_SIZE;
     return *this;
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator/(const FiniteFieldElement &other) const {
+FiniteFieldElement FiniteFieldElement::operator/(const FiniteFieldElement &other) const {
     return *this * other.inv();
 }
 
-inline FiniteFieldElement FiniteFieldElement::operator/=(const FiniteFieldElement &other) {
+FiniteFieldElement FiniteFieldElement::operator/=(const FiniteFieldElement &other) {
     *this = *this / other;
     return *this;
 }
 
-inline FiniteFieldElement FiniteFieldElement::exp(size_t exponent) const {
+FiniteFieldElement FiniteFieldElement::exp(size_t exponent) const {
     FiniteFieldElement result(1);
     FiniteFieldElement base(*this);
     while (exponent > 0) {
@@ -68,23 +68,23 @@ inline FiniteFieldElement FiniteFieldElement::exp(size_t exponent) const {
     return result;
 }
 
-inline FiniteFieldElement FiniteFieldElement::inv() const {
+FiniteFieldElement FiniteFieldElement::inv() const {
     // Using Fermat's little theorem: a^(p-2) mod p is the multiplicative inverse of a mod p
     return exp(FINITE_FIELD_SIZE - 2);
 }
 
-inline FiniteFieldElement get_random_element() {
+FiniteFieldElement get_random_element() {
     return FiniteFieldElement(constants::RANDOM_SEED() % FINITE_FIELD_SIZE);
 }
 
-inline FiniteFieldElement get_primitive_root_of_unity(size_t n) {
+FiniteFieldElement get_primitive_root_of_unity(size_t n) {
     if ((FINITE_FIELD_SIZE - 1) % n != 0) {
         throw std::invalid_argument("n must divide FINITE_FIELD_SIZE - 1 to have a primitive root of unity");
     }
     return FINITE_FIELD_GENERATOR.exp((FINITE_FIELD_SIZE - 1) / n);
 }
 
-inline FiniteFieldElement get_inv_primitive_root_of_unity(size_t n) {
+FiniteFieldElement get_inv_primitive_root_of_unity(size_t n) {
     if ((FINITE_FIELD_SIZE - 1) % n != 0) {
         throw std::invalid_argument("n must divide FINITE_FIELD_SIZE - 1 to have a primitive root of unity");
     }

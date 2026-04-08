@@ -14,30 +14,30 @@ public:
 
     explicit operator int() const;
 
-    inline FiniteFieldElement operator+(const FiniteFieldElement &other) const;
+    FiniteFieldElement operator+(const FiniteFieldElement &other) const;
 
-    inline FiniteFieldElement operator-(const FiniteFieldElement &other) const;
+    FiniteFieldElement operator-(const FiniteFieldElement &other) const;
 
-    inline FiniteFieldElement operator*(const FiniteFieldElement &other) const;
+    FiniteFieldElement operator*(const FiniteFieldElement &other) const;
 
-    inline FiniteFieldElement operator/(const FiniteFieldElement &other) const;
+    FiniteFieldElement operator/(const FiniteFieldElement &other) const;
 
-    inline FiniteFieldElement operator+=(const FiniteFieldElement &other);
+    FiniteFieldElement operator+=(const FiniteFieldElement &other);
 
-    inline FiniteFieldElement operator-=(const FiniteFieldElement &other);
+    FiniteFieldElement operator-=(const FiniteFieldElement &other);
 
-    inline FiniteFieldElement operator*=(const FiniteFieldElement &other);
+    FiniteFieldElement operator*=(const FiniteFieldElement &other);
 
-    inline FiniteFieldElement operator/=(const FiniteFieldElement &other);
+    FiniteFieldElement operator/=(const FiniteFieldElement &other);
 
     template <typename T>
     bool operator==(const T &other) const {
         return value == static_cast<int>(other);
     }
 
-    inline FiniteFieldElement exp(size_t exponent) const;
+    FiniteFieldElement exp(size_t exponent) const;
 
-    inline FiniteFieldElement inv() const; // multiplicative inverse
+    FiniteFieldElement inv() const; // multiplicative inverse
 
 private:
     int value;
