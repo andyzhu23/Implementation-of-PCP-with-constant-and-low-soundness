@@ -63,6 +63,25 @@ add_test(NAME Test_CSPSolver COMMAND test_CSPSolver)
 target_include_directories(test_CSPSolver PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(
+    test_UnivariatePolynomial
+    ./unit/test_UnivariatePolynomial.cpp
+    ../../src/finite_field/UnivariatePolynomial.cpp
+    ../../src/finite_field/FiniteFieldElement.cpp
+)
+add_test(NAME Test_UnivariatePolynomial COMMAND test_UnivariatePolynomial)
+target_include_directories(test_UnivariatePolynomial PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
+    test_Polynomial
+    ./unit/test_Polynomial.cpp
+    ../../src/finite_field/Polynomial.cpp
+    ../../src/finite_field/Monomial.cpp
+    ../../src/finite_field/FiniteFieldElement.cpp
+)
+add_test(NAME Test_Polynomial COMMAND test_Polynomial)
+target_include_directories(test_Polynomial PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(
     test_NumberTheoreticTransform
     ./unit/test_NumberTheoreticTransform.cpp
     ../../src/finite_field/NumberTheoreticTransform.cpp
