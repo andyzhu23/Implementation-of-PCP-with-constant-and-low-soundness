@@ -1,8 +1,3 @@
-/*
- * Author: Andy Zhu
- * @date    2025-11-22 10:27:26
- * @version 1.0.0
- */
 
 #ifndef HADAMARDTESTER_HPP
 #define HADAMARDTESTER_HPP
